@@ -1,0 +1,5 @@
+programme {
+    proc p {
+        blabla = 7;
+    }
+}

@@ -1,0 +1,5 @@
+programme {
+    fct g7 ret char {
+        var t1 : char;
+    }
+}

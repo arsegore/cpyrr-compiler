@@ -1,0 +1,5 @@
+programme {
+    typedef on7 : struct {
+        pm : bool
+    };
+}
