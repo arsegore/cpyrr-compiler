@@ -1,16 +1,17 @@
 %{
-
+int yylex();
+int yyerror(char *msg);
 %}
 %token PROG
 %token PV DP CO CF VIR PP PO PF AO AF        // ; : [ ] , .. ( ) { }
 %token TAB DE STRUCT
-%token CSTE_ENTIERE CSTE_CHAR CSTE_CHAINE CSTE_BOOL
+%token CSTE_ENTIERE CSTE_CHAR CSTE_CHAINE CSTE_BOOL CSTE_REELLE
 %token ENTIER REEL BOOL CHAR CHAINE 
 %token VAR TYPEDEF IDF
 %token PROC FCT RET
 %token SI ALORS SINON 
 %token TQ FAIRE 
-%token OPAFF INF SUP PL MO MU DIV MOD NON ET OU
+%token OPAFF INF SUP PL MO MU DIV MOD NON ET OU EGAL INFEGAL SUPEGAL
 
 
 %%
@@ -18,19 +19,18 @@ programme             : PROG AO corps AF
                       ;
 
 corps                 : liste_declarations liste_instructions
-                      | liste_instructions
                       ;
 
-liste_declarations    : declaration PV
-                      | liste_declarations declaration PV
+liste_declarations    : // aucune decla
+                      | liste_declarations declaration 
                       ;
 
-liste_instructions    : instruction PV
+liste_instructions    : // pas d'instruction
                       | liste_instructions instruction PV
                       ;
 
-declaration           : declaration_type
-                      | declaration_variable
+declaration           : declaration_type PV
+                      | declaration_variable PV
                       | declaration_procedure
                       | declaration_fonction
                       ;
@@ -81,7 +81,7 @@ declaration_procedure : PROC IDF PO liste_param PF AO corps AF
 declaration_fonction  : nom_type FCT IDF PO liste_param PF AO corps AF
                       ;
 
-liste_param           :
+liste_param           : // aucun parametre
                       | un_param
                       | liste_param VIR un_param
                       ;
@@ -93,18 +93,18 @@ instruction           : affectation
                       | condition
                       | tant_que
                       | appel
-                      |
                       | RET resultat_retourne
                       ;
 
-resultat_retourne     :
+resultat_retourne     : // pas de return
                       | expression
+                      | variable
                       ;
 
 appel                 : IDF liste_arguments
                       ;
 
-liste_arguments       :
+liste_arguments       : // aucun argument
                       | PO liste_args PF
                       ;
 
@@ -129,6 +129,11 @@ variable              : IDF
 
 expression            : e
                       | expression_booleenne
+                      | CSTE_BOOL
+                      | CSTE_CHAINE
+                      | CSTE_CHAR
+                      | CSTE_ENTIERE
+                      | CSTE_REELLE
                       ;
 
 e                     : e PL e1
@@ -143,16 +148,17 @@ e1                    : e1 MU e2
 
 e2                    : PO e PF
                       | CSTE_ENTIERE
+                      |
                       ;
 
-egalite_booleenne     : IDF OPAFF OPAFF IDF
+egalite_booleenne     : IDF EGAL IDF
                       | IDF INF IDF
                       | IDF SUP IDF
-                      | IDF INF OPAFF IDF
-                      | IDF SUP OPAFF IDF
-                      | CSTE_BOOL OPAFF OPAFF IDF
-                      | IDF OPAFF OPAFF CSTE_BOOL
-                      | CSTE_BOOL OPAFF OPAFF CSTE_BOOL
+                      | IDF INFEGAL IDF
+                      | IDF SUPEGAL IDF
+                      | CSTE_BOOL EGAL IDF
+                      | IDF EGAL CSTE_BOOL
+                      | CSTE_BOOL EGAL CSTE_BOOL
                       ;
 
 expression_booleenne  : egalite_booleenne
