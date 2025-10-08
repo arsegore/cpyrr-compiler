@@ -1,5 +1,5 @@
 programme {
-    fct g7(f = int) ret char {
+    char fct g7(f = int) {
         var t1 : char;
         return t1;
     }

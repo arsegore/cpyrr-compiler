@@ -1,5 +1,5 @@
 programme {
-    proc p() {
+    proc p {
         blabla = 7;
     }
 }
