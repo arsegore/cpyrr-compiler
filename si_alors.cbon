@@ -1,3 +1,5 @@
 programme {
-    tq i<3 faire ;
+    {
+        si i == e alors {o = 3} sinon {o = 4};
+    }
 }
