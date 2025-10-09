@@ -1,16 +1,21 @@
-.PHONY: grammaire lex.yy.o lex.yy.c y.tab.c
+.PHONY: all clean
 
-grammaire: lex.yy.o 
-	gcc y.tab.c -o grammaire lex.yy.o -ly
+all: bin/grammaire
 
-lex.yy.o: lex.yy.c y.tab.c
-	gcc -c lex.yy.c
+bin/grammaire: build/lex.yy.o build/y.tab.c
+	mkdir -p bin
+	gcc build/y.tab.c build/lex.yy.o -o bin/grammaire -ly
 
-lex.yy.c:
-	lex grammaire.l
+build/lex.yy.o: build/lex.yy.c build/y.tab.c
+	gcc -c build/lex.yy.c -o build/lex.yy.o
 
-y.tab.c: 
-	byacc -dv grammaire.y
+build/lex.yy.c: src/grammaire.l
+	mkdir -p build
+	lex -o build/lex.yy.c src/grammaire.l
 
-clean: 
-	rm -f y.tab.c lex.yy.c y.tab.h grammaire lex.yy.o
+build/y.tab.c: src/grammaire.y
+	mkdir -p build
+	byacc -dvo build/y.tab.c src/grammaire.y
+
+clean:
+	rm -rf build bin

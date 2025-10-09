@@ -26,12 +26,9 @@ liste_declarations    : // aucune decla
                       | liste_declarations declaration 
                       ;
 
-liste_instructions : AO suite_liste_instructions AF
+liste_instructions : instruction PV
+                   | liste_instructions instruction PV
                    ;
-
-suite_liste_instructions : instruction PV
-                         | suite_liste_instructions instruction PV
-                         ;
 
 declaration           : declaration_type PV
                       | declaration_variable PV
@@ -99,10 +96,10 @@ instruction           : affectation
                       | RET resultat_retourne
                       ;
 
-condition             : SI expression_booleenne ALORS liste_instructions SINON liste_instructions
+condition             : SI expression ALORS AO liste_instructions AF SINON AO liste_instructions AF
                       ;
 
-tant_que              : TQ expression_booleenne FAIRE liste_instructions
+tant_que              : TQ expression FAIRE AO liste_instructions AF
                       ;
 
 resultat_retourne     : expression
@@ -128,42 +125,47 @@ liste_args            : expression
                       ;
 
 
-expression            : e
-                      | expression_booleenne
-                      ;
+expression
+    : expression OU expression_et
+    | expression_et
+    ;
 
-e                     : e PL e1
-                      | e MO e1
-                      | e1
-                      ;
+expression_et
+    : expression_et ET expression_rel
+    | expression_rel
+    ;
 
-e1                    : e1 MU e2
-                      | e1 DIV e2
-                      | e2
-                      ;
+expression_rel
+    : expression_rel EGAL expression_arith
+    | expression_rel INF expression_arith
+    | expression_rel INFEGAL expression_arith
+    | expression_rel SUP expression_arith
+    | expression_rel SUPEGAL expression_arith
+    | expression_arith
+    ;
 
-e2                    : PO e PF
-                      | CSTE_ENTIERE
-                      | CSTE_REELLE
-                      | CSTE_CHAR
-                      | IDF
-                      ;
+expression_arith
+    : expression_arith PL expression_term
+    | expression_arith MO expression_term
+    | expression_term
+    ;
 
-egalite_booleenne     : IDF EGAL IDF
-                      | IDF INF IDF
-                      | IDF SUP IDF
-                      | IDF INFEGAL IDF
-                      | IDF SUPEGAL IDF
-                      | CSTE_BOOL EGAL IDF
-                      | IDF EGAL CSTE_BOOL
-                      | CSTE_BOOL EGAL CSTE_BOOL
-                      ;
+expression_term
+    : expression_term MU expression_fact
+    | expression_term DIV expression_fact
+    | expression_fact
+    ;
 
-expression_booleenne  : egalite_booleenne
-                      | NON expression_booleenne
-                      ;
+expression_fact
+    : PO expression PF
+    | CSTE_ENTIERE
+    | CSTE_REELLE
+    | CSTE_CHAR
+    | CSTE_CHAINE
+    | CSTE_BOOL
+    | IDF
+    ;
 
-
-
-
+                    
 %%
+
