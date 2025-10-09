@@ -19,15 +19,19 @@ programme             : PROG AO corps AF
                       ;
 
 corps                 : liste_declarations liste_instructions
+                      | liste_declarations 
                       ;
 
 liste_declarations    : // aucune decla
                       | liste_declarations declaration 
                       ;
 
-liste_instructions    : // pas d'instruction
-                      | liste_instructions instruction PV
-                      ;
+liste_instructions : AO suite_liste_instructions AF
+                   ;
+
+suite_liste_instructions : instruction PV
+                         | suite_liste_instructions instruction PV
+                         ;
 
 declaration           : declaration_type PV
                       | declaration_variable PV
@@ -59,21 +63,8 @@ liste_champs          : un_champ
 un_champ              : IDF DP nom_type PV
                       ;
 
-nom_type              : type_simple
-                      | IDF
-                      ;
-
-type_simple           : ENTIER
-                      | REEL
-                      | BOOL
-                      | CHAR
-                      | CHAINE CO CSTE_ENTIERE CF
-                      ;
-
 declaration_variable  : VAR IDF DP nom_type
                       ;
-
-/* LES 2 EN-DESSOUS LA FAUT METTRE RET PEUT-ETRE APRES CORPS DANS FONC, ET GERER PROC JSP COMMENT FORCE ET NTM PAUL PERSONNE T'AIME */
 
 declaration_procedure : PROC IDF PO liste_param PF AO corps AF
                       ;
@@ -86,36 +77,35 @@ liste_param           : // aucun parametre
                       | liste_param VIR un_param
                       ;
 
-un_param              : IDF DP type_simple
+un_param              : IDF DP nom_type
+                      ;
+
+nom_type              : type_simple
+                      | IDF
+                      ;
+
+type_simple           : ENTIER
+                      | REEL
+                      | BOOL
+                      | CHAR
+                      | CHAINE CO CSTE_ENTIERE CF
                       ;
 
 instruction           : affectation
                       | condition
                       | tant_que
                       | appel
+                      |
                       | RET resultat_retourne
-                      ;
-
-resultat_retourne     : // pas de return
-                      | expression
-                      | variable
-                      ;
-
-appel                 : IDF liste_arguments
-                      ;
-
-liste_arguments       : // aucun argument
-                      | PO liste_args PF
-                      ;
-
-liste_args            : expression
-                      | liste_args VIR expression
                       ;
 
 condition             : SI expression_booleenne ALORS liste_instructions SINON liste_instructions
                       ;
 
 tant_que              : TQ expression_booleenne FAIRE liste_instructions
+                      ;
+
+resultat_retourne     : expression
                       ;
 
 affectation           : variable OPAFF expression
@@ -126,14 +116,20 @@ variable              : IDF
                       | IDF CO CSTE_ENTIERE CF
                       ;
 
+appel                 : IDF liste_arguments
+                      ;
+
+liste_arguments       :
+                      | PO liste_args PF
+                      ;
+
+liste_args            : expression
+                      | liste_args VIR expression
+                      ;
+
 
 expression            : e
                       | expression_booleenne
-                      | CSTE_BOOL
-                      | CSTE_CHAINE
-                      | CSTE_CHAR
-                      | CSTE_ENTIERE
-                      | CSTE_REELLE
                       ;
 
 e                     : e PL e1
@@ -148,7 +144,9 @@ e1                    : e1 MU e2
 
 e2                    : PO e PF
                       | CSTE_ENTIERE
-                      |
+                      | CSTE_REELLE
+                      | CSTE_CHAR
+                      | IDF
                       ;
 
 egalite_booleenne     : IDF EGAL IDF
@@ -164,4 +162,8 @@ egalite_booleenne     : IDF EGAL IDF
 expression_booleenne  : egalite_booleenne
                       | NON expression_booleenne
                       ;
+
+
+
+
 %%
