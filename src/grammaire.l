@@ -1,6 +1,7 @@
 %{
     #include "y.tab.h"
     #include <stdio.h>
+
 %}
 IDF [a-zA-Z][a-zA-Z0-9]*
 INT [1-9][0-9]*|0
@@ -48,7 +49,8 @@ faire                {return(FAIRE);}
 !                    {return(NON);}
 et                   {return(ET);}
 ou                   {return(OU);}
-(true|false)         {return(CSTE_BOOL);}
+true                 {return(CSTE_BOOL);}
+false                {return(CSTE_BOOL);}
 {IDF}                {return(IDF);}
 {INT}                {return(CSTE_ENTIERE);}
 \'([^\'\\]|\\.)\'    {return(CSTE_CHAR);}
@@ -67,3 +69,4 @@ int yyerror(char *msg){
 int yywrap(){
     return(1);
 }
+

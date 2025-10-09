@@ -1,0 +1,28 @@
+programme {
+    var i: int;
+    var c: char; 
+    int fct blabla(i: int){
+
+    }
+
+    c = 'c';
+    c = 'c';
+    c = 'c';
+    c = (true < 2);
+    test = true et false;
+
+    si true alors {
+        i = 2;
+    } sinon {
+        i = 3;
+    };
+
+    tq (false) faire {
+        i = i + 1;
+    };
+
+}
+
+
+
+    
