@@ -1,5 +1,9 @@
 programme {
-    int fct test(blabla: char, feur: int){
-        var bonjour: char;
+    {
+        i = "test";
     }
 }
+
+
+
+    
