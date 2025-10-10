@@ -96,16 +96,16 @@ instruction           : affectation
                       | RET resultat_retourne
                       ;
 
-condition             : SI expression ALORS AO liste_instructions AF SINON AO liste_instructions AF
+condition             : SI exp ALORS AO liste_instructions AF SINON AO liste_instructions AF
                       ;
 
-tant_que              : TQ expression FAIRE AO liste_instructions AF
+tant_que              : TQ exp FAIRE AO liste_instructions AF
                       ;
 
-resultat_retourne     : expression
+resultat_retourne     : exp
                       ;
 
-affectation           : variable OPAFF expression
+affectation           : variable OPAFF exp
                       ;
 
                       // description des formes possibles des variables 
@@ -120,51 +120,44 @@ liste_arguments       :
                       | PO liste_args PF
                       ;
 
-liste_args            : expression
-                      | liste_args VIR expression
+liste_args            : exp
+                      | liste_args VIR exp
                       ;
 
-
-expression
-    : expression OU expression_et
-    | expression_et
+exp : exp OU exp_et
+    | exp_et
     ;
 
-expression_et
-    : expression_et ET expression_rel
-    | expression_rel
-    ;
+exp_et : exp_et ET exp_comp
+       | exp_comp
+       ;
 
-expression_rel
-    : expression_rel EGAL expression_arith
-    | expression_rel INF expression_arith
-    | expression_rel INFEGAL expression_arith
-    | expression_rel SUP expression_arith
-    | expression_rel SUPEGAL expression_arith
-    | expression_arith
-    ;
+exp_comp : exp_comp EGAL exp_arith1
+         | exp_comp INF exp_arith1
+         | exp_comp INFEGAL exp_arith1
+         | exp_comp SUP exp_arith1
+         | exp_comp SUPEGAL exp_arith1
+         | exp_arith1
+         ;
 
-expression_arith
-    : expression_arith PL expression_term
-    | expression_arith MO expression_term
-    | expression_term
-    ;
+exp_arith1 : exp_arith1 PL exp_arith2
+           | exp_arith1 MO exp_arith2
+           | exp_arith2
+           ;
 
-expression_term
-    : expression_term MU expression_fact
-    | expression_term DIV expression_fact
-    | expression_fact
-    ;
+exp_arith2 : exp_arith2 MU exp_finale
+           | exp_arith2 DIV exp_finale
+           | exp_finale
+           ;
 
-expression_fact
-    : PO expression PF
-    | CSTE_ENTIERE
-    | CSTE_REELLE
-    | CSTE_CHAR
-    | CSTE_CHAINE
-    | CSTE_BOOL
-    | IDF
-    ;
+exp_finale : PO exp PF
+           | CSTE_ENTIERE
+           | CSTE_REELLE
+           | CSTE_CHAR
+           | CSTE_CHAINE
+           | CSTE_BOOL
+           | IDF
+           ;
 
                     
 %%
