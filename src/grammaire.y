@@ -125,8 +125,8 @@ liste_args            : exp
                       ;
 
 exp : exp OU exp_et
-           | exp_et
-           ;
+    | exp_et
+    ;
 
 exp_et : exp_et ET exp_comp
        | exp_comp
