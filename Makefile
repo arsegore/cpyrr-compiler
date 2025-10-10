@@ -1,4 +1,4 @@
-.PHONY: all clean
+.PHONY: all clean rendu
 
 all: bin/grammaire
 
@@ -16,6 +16,12 @@ build/lex.yy.c: src/grammaire.l
 build/y.tab.c: src/grammaire.y
 	mkdir -p build
 	byacc -dvo build/y.tab.c src/grammaire.y
+
+rendu:
+	mkdir -p rendus
+	mkdir -p rendus/ARCHIVE$(shell date +%Y%m%d)
+	cp -r src tests Makefile rendus/ARCHIVE$(shell date +%Y%m%d)/
+	cd rendus && zip -r ARCHIVE$(shell date +%Y%m%d).zip ARCHIVE$(shell date +%Y%m%d)
 
 clean:
 	rm -rf build bin
