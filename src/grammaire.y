@@ -127,7 +127,6 @@ liste_args            : exp
 
 exp                   : expa
                       | expb
-                      | expc
                       ;
 
 expa                  : expa PL expa1
@@ -146,7 +145,6 @@ expa2                 : PO expa PF
                       | appel
                       | CSTE_REELLE
                       | CSTE_ENTIERE
-
                       ;
 
 expb                  : expb OU expb1
@@ -157,39 +155,28 @@ expb1                 : expb1 ET expb2
                       | expb2 
                       ;
 
-expb2                 : NON expb3
-                      | expb3
+expb2                 : NON PO expb3 PF
+                      | PO expb3 PF
                       ;
 
-expb3                 : CSTE_BOOL
-                      | comp
-                      | PO expb PF
-                      ;
-
-comp                  : expa SUPEGAL expa 
+expb3                 : expa SUPEGAL expa 
                       | expa SUP expa
                       | expa INFEGAL expa
                       | expa INF expa
                       | expa EGAL expa
                       | expa DIFF expa
-                      //| CSTE_BOOL EGAL expb
-                      //| CSTE_BOOL DIFF expb
-                      //| expb EGAL CSTE_BOOL
-                      //| expb DIFF CSTE_BOOL
+                      | CSTE_BOOL EGAL variable
+                      | CSTE_BOOL DIFF variable
+                      | variable EGAL CSTE_BOOL
+                      | variable DIFF CSTE_BOOL
                       ;
 
-expc                  : CSTE_CHAR
-                      ;
-
-expch                 : expch PL expch
-                      | CSTE_CHAINE
-                      ;
 
 
 %%
 
 int yyerror(char *msg) {
-    printf("Erreur con de ta mère là\n");
+    printf("Erreur de syntaxe\n");
     return 1;
 }
 

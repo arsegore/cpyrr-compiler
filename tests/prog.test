@@ -6,31 +6,13 @@ programme {
       rien;
     }
 
-    i = 1;
-    c = 'c';
-    v = vrai;
-
-    si i == 1 alors {
-        i = 2;
+    tq (i != vrai) faire {
+      rien;
     }
 
-    si i == 3 alors {
-        rien;
+    si (1+1 < 1+2) alors {
+      rien;
     } sinon {
-        i = i + 4;
+      rien;
     }
-
-    si v != vrai alors {
-        v = vrai;
-    } sinon {
-        si v == faux alors {
-            rien;
-        }
-    }
-    
-
 }
-
-
-
-    
