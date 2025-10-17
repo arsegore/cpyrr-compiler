@@ -7,7 +7,7 @@
 %token PV DP CO CF VIR PP PO PF AO AF        // ; : [ ] , .. ( ) { }
 %token TAB DE STRUCT
 %token CSTE_ENTIERE CSTE_CHAR CSTE_CHAINE CSTE_BOOL CSTE_REELLE
-%token ENTIER REEL BOOL CHAR CHAINE 
+%token ENTIER REEL BOOL CHAR //on a enlevé CHAINE (aussi dans le lex) 
 %token VAR TYPEDEF IDF
 %token PROC FCT RET RIEN
 %token SI ALORS SINON 
@@ -85,7 +85,7 @@ type_simple           : ENTIER
                       | REEL
                       | BOOL
                       | CHAR
-                      | CHAINE CO CSTE_ENTIERE CF
+                      | CHAR CO CSTE_ENTIERE CF
                       ;
 
 instruction           : affectation PV
@@ -96,7 +96,8 @@ instruction           : affectation PV
                       | RET resultat_retourne PV
                       ;
 
-condition             : SI expb ALORS AO liste_instructions AF SINON AO liste_instructions AF
+condition             : SI expb ALORS AO liste_instructions AF
+                      | SI expb ALORS AO liste_instructions AF SINON AO liste_instructions AF
                       ;
 
 tant_que              : TQ expb FAIRE AO liste_instructions AF
@@ -116,7 +117,7 @@ variable              : IDF
 appel                 : IDF liste_arguments
                       ;
 
-liste_arguments       :
+liste_arguments       : PO PF //modif (avant y avait rien)
                       | PO liste_args PF
                       ;
 
@@ -126,6 +127,7 @@ liste_args            : exp
 
 exp                   : expa
                       | expb
+                      | expc
                       ;
 
 expa                  : expa PL expa1
@@ -144,6 +146,7 @@ expa2                 : PO expa PF
                       | appel
                       | CSTE_REELLE
                       | CSTE_ENTIERE
+
                       ;
 
 expb                  : expb OU expb1
@@ -154,25 +157,39 @@ expb1                 : expb1 ET expb2
                       | expb2 
                       ;
 
-expb2                 : NON PO expb3 PF
-                      | PO expb3 PF
+expb2                 : NON expb3
+                      | expb3
                       ;
 
-expb3                 : expa SUPEGAL expa 
+expb3                 : CSTE_BOOL
+                      | comp
+                      | PO expb PF
+                      ;
+
+comp                  : expa SUPEGAL expa 
                       | expa SUP expa
                       | expa INFEGAL expa
                       | expa INF expa
                       | expa EGAL expa
                       | expa DIFF expa
-                      | expb EGAL expb
-                      | expb DIFF expb
+                      //| CSTE_BOOL EGAL expb
+                      //| CSTE_BOOL DIFF expb
+                      //| expb EGAL CSTE_BOOL
+                      //| expb DIFF CSTE_BOOL
+                      ;
+
+expc                  : CSTE_CHAR
+                      ;
+
+expch                 : expch PL expch
+                      | CSTE_CHAINE
                       ;
 
 
 %%
 
 int yyerror(char *msg) {
-    printf("Erreur\n");
+    printf("Erreur con de ta mère là\n");
     return 1;
 }
 

@@ -23,7 +23,6 @@ int                  {return(ENTIER);}
 float                {return(REEL);}
 bool                 {return(BOOL);}
 char                 {return(CHAR);}
-string               {return(CHAINE);}
 var                  {return(VAR);}
 typedef              {return(TYPEDEF);}
 proc                 {return(PROC);}
@@ -49,8 +48,8 @@ faire                {return(FAIRE);}
 !=                   {return(DIFF);}
 et                   {return(ET);}
 ou                   {return(OU);}
-true                 {return(CSTE_BOOL);}
-false                {return(CSTE_BOOL);}
+vrai                 {return(CSTE_BOOL);}
+faux                 {return(CSTE_BOOL);}
 rien                 {return(RIEN);}
 {IDF}                {return(IDF);}
 {INT}                {return(CSTE_ENTIERE);}
