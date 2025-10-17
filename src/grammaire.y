@@ -1,4 +1,5 @@
 %{
+    #include <stdio.h>
 int yylex();
 int yyerror(char *msg);
 %}
@@ -26,8 +27,8 @@ liste_declarations    : // aucune decla
                       | liste_declarations declaration 
                       ;
 
-liste_instructions : instruction PV
-                   | liste_instructions instruction PV
+liste_instructions : instruction
+                   | liste_instructions instruction
                    ;
 
 declaration           : declaration_type PV
@@ -88,12 +89,12 @@ type_simple           : ENTIER
                       | CHAINE CO CSTE_ENTIERE CF
                       ;
 
-instruction           : affectation
+instruction           : affectation PV
                       | condition
                       | tant_que
-                      | appel
+                      | appel PV
                       |
-                      | RET resultat_retourne
+                      | RET resultat_retourne PV
                       ;
 
 condition             : SI exp ALORS AO liste_instructions AF SINON AO liste_instructions AF
@@ -162,3 +163,10 @@ exp_finale : PO exp PF
                     
 %%
 
+int yyerror(char *msg) {
+    printf("Erreur\n");
+}
+
+int main() {
+    return(yyparse());
+}

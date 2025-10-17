@@ -1,6 +1,5 @@
 %{
     #include "y.tab.h"
-    #include <stdio.h>
 
 %}
 IDF [a-zA-Z][a-zA-Z0-9]*
@@ -62,9 +61,6 @@ false                {return(CSTE_BOOL);}
 .                    {printf("Mauvais caractère : %s\n", yytext);}
 
 %%
-int yyerror(char *msg){
-    return printf("%s\n", msg);
-}
 
 int yywrap(){
     return(1);

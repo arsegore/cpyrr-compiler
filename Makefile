@@ -4,7 +4,7 @@ all: bin/grammaire
 
 bin/grammaire: build/lex.yy.o build/y.tab.c
 	mkdir -p bin
-	gcc build/y.tab.c build/lex.yy.o -o bin/grammaire -ly
+	gcc build/y.tab.c build/lex.yy.o -o bin/grammaire
 
 build/lex.yy.o: build/lex.yy.c build/y.tab.c
 	gcc -c build/lex.yy.c -o build/lex.yy.o
