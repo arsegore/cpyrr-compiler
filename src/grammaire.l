@@ -46,10 +46,12 @@ faire                {return(FAIRE);}
 \>                   {return(SUP);}
 \%                   {return(MOD);}
 !                    {return(NON);}
+!=                   {return(DIFF);}
 et                   {return(ET);}
 ou                   {return(OU);}
 true                 {return(CSTE_BOOL);}
 false                {return(CSTE_BOOL);}
+rien                 {return(RIEN);}
 {IDF}                {return(IDF);}
 {INT}                {return(CSTE_ENTIERE);}
 \'([^\'\\]|\\.)\'    {return(CSTE_CHAR);}
