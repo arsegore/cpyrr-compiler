@@ -1,6 +1,10 @@
 .PHONY: all clean rendu
 
-all: bin/grammaire
+all: bin/tab_lexico bin/grammaire
+
+bin/tab_lexico: 
+	mkdir -p bin
+	gcc src/tab_lexico.c -o bin/tab_lexico
 
 bin/grammaire: build/lex.yy.o build/y.tab.c
 	mkdir -p bin
