@@ -1,28 +1,18 @@
 programme {
     var i: int;
-    var c: char; 
+    var c: char;
+    var v: bool;
     int fct blabla(i: int){
-
+      rien;
     }
 
-    c = 'c';
-    c = 'c';
-    c = 'c';
-    c = (true < 2);
-    test = true et false;
+    tq (i != vrai) faire {
+      rien;
+    }
 
-    si true alors {
-        i = 2;
+    si (1+1 < 1+2) alors {
+      rien;
     } sinon {
-        i = 3;
-    };
-
-    tq (false) faire {
-        i = i + 1;
-    };
-
+      rien;
+    }
 }
-
-
-
-    
