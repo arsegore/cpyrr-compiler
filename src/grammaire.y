@@ -1,17 +1,18 @@
 %{
-int yylex();
-int yyerror(char *msg);
+    #include <stdio.h>
+    int yylex();
+    int yyerror(char *msg);
 %}
 %token PROG
 %token PV DP CO CF VIR PP PO PF AO AF        // ; : [ ] , .. ( ) { }
 %token TAB DE STRUCT
 %token CSTE_ENTIERE CSTE_CHAR CSTE_CHAINE CSTE_BOOL CSTE_REELLE
-%token ENTIER REEL BOOL CHAR CHAINE 
+%token ENTIER REEL BOOL CHAR //on a enlevé CHAINE (aussi dans le lex) 
 %token VAR TYPEDEF IDF
-%token PROC FCT RET
+%token PROC FCT RET RIEN
 %token SI ALORS SINON 
 %token TQ FAIRE 
-%token OPAFF INF SUP PL MO MU DIV MOD NON ET OU EGAL INFEGAL SUPEGAL
+%token OPAFF INF SUP PL MO MU DIV MOD NON ET OU EGAL INFEGAL SUPEGAL DIFF
 
 
 %%
@@ -19,15 +20,14 @@ programme             : PROG AO corps AF
                       ;
 
 corps                 : liste_declarations liste_instructions
-                      | liste_declarations 
                       ;
 
 liste_declarations    : // aucune decla
                       | liste_declarations declaration 
                       ;
 
-liste_instructions : instruction PV
-                   | liste_instructions instruction PV
+liste_instructions : instruction
+                   | liste_instructions instruction
                    ;
 
 declaration           : declaration_type PV
@@ -85,21 +85,22 @@ type_simple           : ENTIER
                       | REEL
                       | BOOL
                       | CHAR
-                      | CHAINE CO CSTE_ENTIERE CF
+                      | CHAR CO CSTE_ENTIERE CF
                       ;
 
-instruction           : affectation
+instruction           : affectation PV
                       | condition
                       | tant_que
-                      | appel
-                      |
-                      | RET resultat_retourne
+                      | appel PV
+                      | RIEN PV
+                      | RET resultat_retourne PV
                       ;
 
-condition             : SI exp ALORS AO liste_instructions AF SINON AO liste_instructions AF
+condition             : SI expb ALORS AO liste_instructions AF
+                      | SI expb ALORS AO liste_instructions AF SINON AO liste_instructions AF
                       ;
 
-tant_que              : TQ exp FAIRE AO liste_instructions AF
+tant_que              : TQ expb FAIRE AO liste_instructions AF
                       ;
 
 resultat_retourne     : exp
@@ -116,7 +117,7 @@ variable              : IDF
 appel                 : IDF liste_arguments
                       ;
 
-liste_arguments       :
+liste_arguments       : PO PF //modif (avant y avait rien)
                       | PO liste_args PF
                       ;
 
@@ -124,41 +125,61 @@ liste_args            : exp
                       | liste_args VIR exp
                       ;
 
-exp : exp OU exp_et
-    | exp_et
-    ;
+exp                   : expa
+                      | expb
+                      ;
 
-exp_et : exp_et ET exp_comp
-       | exp_comp
-       ;
+expa                  : expa PL expa1
+                      | expa MO expa1
+                      | expa2
+                      ;
 
-exp_comp : exp_comp EGAL exp_arith1
-         | exp_comp INF exp_arith1
-         | exp_comp INFEGAL exp_arith1
-         | exp_comp SUP exp_arith1
-         | exp_comp SUPEGAL exp_arith1
-         | exp_arith1
-         ;
+expa1                 : expa1 MU expa2
+                      | expa1 DIV expa2
+                      | expa1 MOD expa2 
+                      | expa2
+                      ;
 
-exp_arith1 : exp_arith1 PL exp_arith2
-           | exp_arith1 MO exp_arith2
-           | exp_arith2
-           ;
+expa2                 : PO expa PF 
+                      | variable
+                      | appel
+                      | CSTE_REELLE
+                      | CSTE_ENTIERE
+                      ;
 
-exp_arith2 : exp_arith2 MU exp_finale
-           | exp_arith2 DIV exp_finale
-           | exp_finale
-           ;
+expb                  : expb OU expb1
+                      | expb1
+                      ;
 
-exp_finale : PO exp PF
-           | CSTE_ENTIERE
-           | CSTE_REELLE
-           | CSTE_CHAR
-           | CSTE_CHAINE
-           | CSTE_BOOL
-           | IDF
-           ;
+expb1                 : expb1 ET expb2
+                      | expb2 
+                      ;
 
-                    
+expb2                 : NON PO expb3 PF
+                      | PO expb3 PF
+                      ;
+
+expb3                 : expa SUPEGAL expa 
+                      | expa SUP expa
+                      | expa INFEGAL expa
+                      | expa INF expa
+                      | expa EGAL expa
+                      | expa DIFF expa
+                      | CSTE_BOOL EGAL variable
+                      | CSTE_BOOL DIFF variable
+                      // | variable EGAL CSTE_BOOL
+                      // | variable DIFF CSTE_BOOL
+                      ;
+
+
+
 %%
 
+int yyerror(char *msg) {
+    printf("Erreur de syntaxe\n");
+    return 1;
+}
+
+int main() {
+    return(yyparse());
+}

@@ -1,6 +1,5 @@
 %{
     #include "y.tab.h"
-    #include <stdio.h>
 
 %}
 IDF [a-zA-Z][a-zA-Z0-9]*
@@ -24,7 +23,6 @@ int                  {return(ENTIER);}
 float                {return(REEL);}
 bool                 {return(BOOL);}
 char                 {return(CHAR);}
-string               {return(CHAINE);}
 var                  {return(VAR);}
 typedef              {return(TYPEDEF);}
 proc                 {return(PROC);}
@@ -47,10 +45,12 @@ faire                {return(FAIRE);}
 \>                   {return(SUP);}
 \%                   {return(MOD);}
 !                    {return(NON);}
+!=                   {return(DIFF);}
 et                   {return(ET);}
 ou                   {return(OU);}
-true                 {return(CSTE_BOOL);}
-false                {return(CSTE_BOOL);}
+vrai                 {return(CSTE_BOOL);}
+faux                 {return(CSTE_BOOL);}
+rien                 {return(RIEN);}
 {IDF}                {return(IDF);}
 {INT}                {return(CSTE_ENTIERE);}
 \'([^\'\\]|\\.)\'    {return(CSTE_CHAR);}
@@ -62,9 +62,6 @@ false                {return(CSTE_BOOL);}
 .                    {printf("Mauvais caractère : %s\n", yytext);}
 
 %%
-int yyerror(char *msg){
-    return printf("%s\n", msg);
-}
 
 int yywrap(){
     return(1);
