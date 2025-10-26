@@ -6,7 +6,7 @@ programme {
       rien;
     }
 
-    tq (i != vrai) faire {
+    tq (vrai != i) faire {
       rien;
     }
 

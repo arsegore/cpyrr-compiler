@@ -1,9 +1,4 @@
 # cpyrr-compiler
-Compilateur du langage CPYRR
-
-* Lex et YACC plus ou moins fonctionnels au 10 Octobre
-* Les fichiers de test se trouvent dans le répertoire `/tests/`
-
 
 ## Auteurs : 
 *  Adam
@@ -11,3 +6,29 @@ Compilateur du langage CPYRR
 *  Louis
 *  Damien
 *  Baptiste
+
+---
+
+## Avancée
+
+### Fonctionnels
+* Lex et Yacc
+* Table lexicographique (avec table de hash-code)
+
+### En développement
+* Table des déclarations
+
+### À faire 
+* Table des régions 
+* Table des entêtes de sous-programme 
+* TAD arbre
+* Gestion des erreurs syntaxiques
+* Gestion des erreurs sémantiques
+* Actions sémantiques 
+* ...
+
+--- 
+
+## Utilisation
+
+__TBA...__
