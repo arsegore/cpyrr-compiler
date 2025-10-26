@@ -1,5 +1,5 @@
 %{
-    #include "y.tab.h"
+    #include "../inc/y.tab.h"
 
 %}
 IDF [a-zA-Z][a-zA-Z0-9]*
