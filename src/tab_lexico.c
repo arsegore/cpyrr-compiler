@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "tab_lexico.h"
+#include "../inc/tab_lexico.h"
 
 /**
  * tab_lexico.c 
@@ -12,7 +12,8 @@
  */
 
 t_tab_lexico tab_lexico;
-int premiere_ligne_libre = 32;
+int tab_hash_code[TAILLE_TAB_HASH_CODE];
+int premiere_ligne_libre = 0;
 
 /**
  * Initialise la table lexico, notamment en mettant le champ longueur à -1
@@ -24,6 +25,10 @@ void init_tab_lexico() {
         tab_lexico[i].longueur = -1;
         tab_lexico[i].lexeme = NULL;
         tab_lexico[i].suivant = -1;
+    }
+
+    for (i = 0; i < TAILLE_TAB_HASH_CODE; i++) {
+        tab_hash_code[i] = -1;
     }
 }
 
@@ -61,13 +66,13 @@ void afficher_tab_lexico(int depart, int arrivee) {
 }
 
 /**
- * Renvoie le hach-code d'un léxème, permettant de définir 
+ * Renvoie le hash-code d'un léxème, permettant de définir 
  * dans quelle zone de la table lexico il sera doit être inséré
  *
  * @param lexeme : Un léxème 
- * @return : Le hach-code du léxème
+ * @return : Le hash-code du léxème
  */
-int calculer_hach_code(char *lexeme) {
+int calculer_hash_code(char *lexeme) {
     int i;
     int somme = 0;
     for (i = 0; lexeme[i] != '\0'; i++) {
@@ -90,32 +95,37 @@ char *recuperer_lexeme(int num_lexico) {
 /** 
  * Insère un léxème dans la table lexico.
  *
- * De 0 à 31 : Les premiers léxèmes du hach-code correspondant à l'indice
- * de 32 à 500 : Les léxèmes de même hach-code qu'un léxème déjà rencontré 
- *
  * @param lexeme : Le léxème à insérer dans la table lexico 
- * @return : Le numéro lexico du léxème inséré
+ * @return : Le numéro lexico du léxème inséré (si le léxème était déjà présent dans 
+ * la table, retourne quand même son numéro lexico)
  */
 int inserer_lexeme(char *lexeme) {
-    int hach_code, ligne_courante, num_lexico;
+    int hash, ligne_courante, num_lexico;
 
-    hach_code = calculer_hach_code(lexeme);
+    hash = calculer_hash_code(lexeme);
 
-    if (tab_lexico[hach_code].longueur == -1) {
-       tab_lexico[hach_code].longueur = strlen(lexeme);
-       tab_lexico[hach_code].lexeme = lexeme;
-       num_lexico = hach_code;
+    if (tab_hash_code[hash] == -1) {
+        num_lexico = premiere_ligne_libre++;
+        tab_lexico[num_lexico].longueur = strlen(lexeme);
+        tab_lexico[num_lexico].lexeme = lexeme;
+        tab_hash_code[hash] = num_lexico;
     } else {
-        ligne_courante = hach_code;
+        ligne_courante = tab_hash_code[hash];
         while (tab_lexico[ligne_courante].suivant != -1) {
+            // si léxèmes de même longueur, on compare
+            if (strlen(lexeme) == tab_lexico[ligne_courante].longueur
+                && (strcmp(lexeme, tab_lexico[ligne_courante].lexeme) == 0)) {
+                num_lexico = ligne_courante;
+                return num_lexico;
+            }
             ligne_courante = tab_lexico[ligne_courante].suivant;
         }
-        tab_lexico[premiere_ligne_libre].longueur = strlen(lexeme);
-        tab_lexico[premiere_ligne_libre].lexeme = lexeme;
-        tab_lexico[ligne_courante].suivant = premiere_ligne_libre;
-        num_lexico = premiere_ligne_libre;
-        premiere_ligne_libre++;
+        num_lexico = premiere_ligne_libre++;
+        tab_lexico[ligne_courante].suivant = num_lexico;
+        tab_lexico[num_lexico].longueur = strlen(lexeme);
+        tab_lexico[num_lexico].lexeme = lexeme;
     }
+    
     return num_lexico;
 }
 
@@ -123,15 +133,18 @@ int inserer_lexeme(char *lexeme) {
 /*
 int main(int argc, char **argv) {
     init_tab_lexico();
-    printf("Hach-code de 'feur' = %d\n", 
-            calculer_hach_code("feur"));
+    printf("Hash-code de 'feur' = %d\n", 
+            calculer_hash_code("feur"));
     inserer_lexeme("feur");
     inserer_lexeme("reuf");
     inserer_lexeme("uerf");
     inserer_lexeme("bonjour");
     inserer_lexeme("caramba");
     inserer_lexeme("pausecafe");
-    afficher_tab_lexico(0, 60);
+    inserer_lexeme("nobruoj");
+    printf("Numéro lexico de 'bonjour' : %d\n",
+    inserer_lexeme("bonjour"));
+    afficher_tab_lexico(0, 20);
     exit(EXIT_SUCCESS);
 }
 */

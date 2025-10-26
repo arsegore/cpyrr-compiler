@@ -11,6 +11,7 @@
  */
 
 #define TAILLE_TAB_LEXICO 500
+#define TAILLE_TAB_HASH_CODE 32
 
 typedef struct {
     int longueur;
@@ -22,9 +23,11 @@ typedef t_cellule_lexico t_tab_lexico[TAILLE_TAB_LEXICO];
 
 extern t_tab_lexico tab_lexico;
 
+extern int tab_hash_code[TAILLE_TAB_HASH_CODE];
+
 void init_tab_lexico();
 
-int calculer_hach_code(char *lexeme);
+int calculer_hash_code(char *lexeme);
 
 char *recuperer_lexeme(int num_lexico);
 
