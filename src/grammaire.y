@@ -1,17 +1,20 @@
 %{
-int yylex();
-int yyerror(char *msg);
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include "../inc/tab_lexico.h"
+    int yylex();
+    int yyerror(char *msg);
 %}
 %token PROG
 %token PV DP CO CF VIR PP PO PF AO AF        // ; : [ ] , .. ( ) { }
 %token TAB DE STRUCT
 %token CSTE_ENTIERE CSTE_CHAR CSTE_CHAINE CSTE_BOOL CSTE_REELLE
-%token ENTIER REEL BOOL CHAR CHAINE 
+%token ENTIER REEL BOOL CHAR //on a enlevé CHAINE (aussi dans le lex) 
 %token VAR TYPEDEF IDF
-%token PROC FCT RET
+%token PROC FCT RET RIEN
 %token SI ALORS SINON 
 %token TQ FAIRE 
-%token OPAFF INF SUP PL MO MU DIV MOD NON ET OU EGAL INFEGAL SUPEGAL
+%token OPAFF INF SUP PL MO MU DIV MOD NON ET OU EGAL INFEGAL SUPEGAL DIFF
 
 
 %%
@@ -19,15 +22,14 @@ programme             : PROG AO corps AF
                       ;
 
 corps                 : liste_declarations liste_instructions
-                      | liste_declarations 
                       ;
 
 liste_declarations    : // aucune decla
                       | liste_declarations declaration 
                       ;
 
-liste_instructions : instruction PV
-                   | liste_instructions instruction PV
+liste_instructions : instruction
+                   | liste_instructions instruction
                    ;
 
 declaration           : declaration_type PV
@@ -85,27 +87,28 @@ type_simple           : ENTIER
                       | REEL
                       | BOOL
                       | CHAR
-                      | CHAINE CO CSTE_ENTIERE CF
+                      | CHAR CO CSTE_ENTIERE CF
                       ;
 
-instruction           : affectation
+instruction           : affectation PV
                       | condition
                       | tant_que
-                      | appel
-                      |
-                      | RET resultat_retourne
+                      | appel PV
+                      | RIEN PV
+                      | RET resultat_retourne PV
                       ;
 
-condition             : SI expression ALORS AO liste_instructions AF SINON AO liste_instructions AF
+condition             : SI expb ALORS AO liste_instructions AF
+                      | SI expb ALORS AO liste_instructions AF SINON AO liste_instructions AF
                       ;
 
-tant_que              : TQ expression FAIRE AO liste_instructions AF
+tant_que              : TQ expb FAIRE AO liste_instructions AF
                       ;
 
-resultat_retourne     : expression
+resultat_retourne     : exp
                       ;
 
-affectation           : variable OPAFF expression
+affectation           : variable OPAFF exp
                       ;
 
                       // description des formes possibles des variables 
@@ -116,56 +119,85 @@ variable              : IDF
 appel                 : IDF liste_arguments
                       ;
 
-liste_arguments       :
+liste_arguments       : PO PF //modif (avant y avait rien)
                       | PO liste_args PF
                       ;
 
-liste_args            : expression
-                      | liste_args VIR expression
+liste_args            : exp
+                      | liste_args VIR exp
+                      ;
+
+exp                   : expa
+                      | expb
+                      ;
+
+expa                  : expa PL expa1
+                      | expa MO expa1
+                      | expa2
+                      ;
+
+expa1                 : expa1 MU expa2
+                      | expa1 DIV expa2
+                      | expa1 MOD expa2 
+                      | expa2
+                      ;
+
+expa2                 : PO expa PF 
+                      | variable
+                      | appel
+                      | CSTE_REELLE
+                      | CSTE_ENTIERE
+                      ;
+
+expb                  : expb OU expb1
+                      | expb1
+                      ;
+
+expb1                 : expb1 ET expb2
+                      | expb2 
+                      ;
+
+expb2                 : NON PO expb3 PF
+                      | PO expb3 PF
+                      ;
+
+expb3                 : expa SUPEGAL expa 
+                      | expa SUP expa
+                      | expa INFEGAL expa
+                      | expa INF expa
+                      | expa EGAL expa
+                      | expa DIFF expa
+                      | CSTE_BOOL EGAL variable
+                      | CSTE_BOOL DIFF variable
+                      // | variable EGAL CSTE_BOOL
+                      // | variable DIFF CSTE_BOOL
                       ;
 
 
-expression
-    : expression OU expression_et
-    | expression_et
-    ;
 
-expression_et
-    : expression_et ET expression_rel
-    | expression_rel
-    ;
-
-expression_rel
-    : expression_rel EGAL expression_arith
-    | expression_rel INF expression_arith
-    | expression_rel INFEGAL expression_arith
-    | expression_rel SUP expression_arith
-    | expression_rel SUPEGAL expression_arith
-    | expression_arith
-    ;
-
-expression_arith
-    : expression_arith PL expression_term
-    | expression_arith MO expression_term
-    | expression_term
-    ;
-
-expression_term
-    : expression_term MU expression_fact
-    | expression_term DIV expression_fact
-    | expression_fact
-    ;
-
-expression_fact
-    : PO expression PF
-    | CSTE_ENTIERE
-    | CSTE_REELLE
-    | CSTE_CHAR
-    | CSTE_CHAINE
-    | CSTE_BOOL
-    | IDF
-    ;
-
-                    
 %%
 
+int yyerror(char *msg) {
+    printf("Erreur de syntaxe\n");
+    return 1;
+}
+
+int main(int argc, char **argv){
+    // return yyparse();
+    
+    init_tab_lexico();
+    printf("Hash-code de 'feur' = %d\n", 
+            calculer_hash_code("feur"));
+    inserer_lexeme("feur");
+    inserer_lexeme("reuf");
+    inserer_lexeme("uerf");
+    inserer_lexeme("bonjour");
+    inserer_lexeme("caramba");
+    inserer_lexeme("pausecafe");
+    inserer_lexeme("nobruoj");
+    printf("Numéro lexico de 'bonjour' : %d\n",
+    inserer_lexeme("bonjour"));
+    afficher_tab_lexico(0, 20);
+    exit(EXIT_SUCCESS);
+    
+}
