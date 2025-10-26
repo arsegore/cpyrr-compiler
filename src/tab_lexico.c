@@ -129,23 +129,5 @@ int inserer_lexeme(char *lexeme) {
     return num_lexico;
 }
 
-/* Main temporaire pour les tests...*/
-/*
-int main(int argc, char **argv) {
-    init_tab_lexico();
-    printf("Hash-code de 'feur' = %d\n", 
-            calculer_hash_code("feur"));
-    inserer_lexeme("feur");
-    inserer_lexeme("reuf");
-    inserer_lexeme("uerf");
-    inserer_lexeme("bonjour");
-    inserer_lexeme("caramba");
-    inserer_lexeme("pausecafe");
-    inserer_lexeme("nobruoj");
-    printf("Numéro lexico de 'bonjour' : %d\n",
-    inserer_lexeme("bonjour"));
-    afficher_tab_lexico(0, 20);
-    exit(EXIT_SUCCESS);
-}
-*/
+
 

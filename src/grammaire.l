@@ -1,6 +1,5 @@
 %{
     #include "../inc/y.tab.h"
-
 %}
 IDF [a-zA-Z][a-zA-Z0-9]*
 INT [1-9][0-9]*|0
@@ -66,4 +65,6 @@ rien                 {return(RIEN);}
 int yywrap(){
     return(1);
 }
+
+
 
