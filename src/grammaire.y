@@ -2,6 +2,7 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include "../inc/tab_lexico.h"
+    #include "../inc/tab_decla.h"
     int yylex();
     int yyerror(char *msg);
 %}
@@ -185,6 +186,19 @@ int yyerror(char *msg) {
 int main(int argc, char **argv){
     // return yyparse();
     
+     table_decl table;
+     int i;
+
+     initialiser(table, 15);
+     for(i = 0; i < 10; i++){
+         ajouter_element(table, N_VAR, 1);
+     }
+     modifier_champ(table, 5, 4, 2);
+     affichage(table, 15);
+     afficher_element(table, 5);
+    
+    // Tests table lexico
+    /*
     init_tab_lexico();
     printf("Hash-code de 'feur' = %d\n", 
             calculer_hash_code("feur"));
@@ -198,6 +212,8 @@ int main(int argc, char **argv){
     printf("Numéro lexico de 'bonjour' : %d\n",
     inserer_lexeme("bonjour"));
     afficher_tab_lexico(0, 20);
+    */
+ 
     exit(EXIT_SUCCESS);
     
 }

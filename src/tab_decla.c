@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "table_declarations.h"
+#include "../inc/tab_decla.h"
 
 /* a faire
    - chainage
@@ -80,18 +80,4 @@ void ajouter_element(table_decl table, int nature, int region){
     
 }
 
-/* int main(){ */
-/*     table_decl table; */
-/*     int i; */
-
-/*     initialiser(table, 15); */
-/*     for(i = 0; i < 10; i++){ */
-/*         ajouter_element(table, N_VAR, 1); */
-/*     } */
-/*     modifier_champ(table, 5, 4, 2); */
-/*     affichage(table, 15); */
-/*     afficher_element(table, 5); */
-    
-/*     exit(EXIT_SUCCESS); */
-/* } */
     
