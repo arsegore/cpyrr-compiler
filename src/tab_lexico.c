@@ -13,7 +13,7 @@
 
 t_tab_lexico tab_lexico;
 int tab_hash_code[TAILLE_TAB_HASH_CODE];
-int premiere_ligne_libre = 0;
+int premiere_ligne_libre_lexico = 0;
 
 void init_tab_lexico() {
     int i; 
@@ -75,7 +75,7 @@ int inserer_lexeme(char *lexeme) {
     hash = calculer_hash_code(lexeme);
 
     if (tab_hash_code[hash] == -1) {
-        num_lexico = premiere_ligne_libre++;
+        num_lexico = premiere_ligne_libre_lexico++;
         tab_lexico[num_lexico].longueur = strlen(lexeme);
         tab_lexico[num_lexico].lexeme = lexeme;
         tab_hash_code[hash] = num_lexico;
@@ -90,7 +90,7 @@ int inserer_lexeme(char *lexeme) {
             }
             ligne_courante = tab_lexico[ligne_courante].suivant;
         }
-        num_lexico = premiere_ligne_libre++;
+        num_lexico = premiere_ligne_libre_lexico++;
         tab_lexico[ligne_courante].suivant = num_lexico;
         tab_lexico[num_lexico].longueur = strlen(lexeme);
         tab_lexico[num_lexico].lexeme = lexeme;
