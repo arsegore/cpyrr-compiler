@@ -185,34 +185,18 @@ int yyerror(char *msg) {
 
 int main(int argc, char **argv){
     // return yyparse();
-    
-     table_decl table;
-     int i;
-
-     initialiser(table, 15);
-     for(i = 0; i < 10; i++){
-         ajouter_element(table, N_VAR, 1);
-     }
-     modifier_champ(table, 5, 4, 2);
-     affichage(table, 15);
-     afficher_element(table, 5);
-    
+    int test;
     // Tests table lexico
-    /*
     init_tab_lexico();
-    printf("Hash-code de 'feur' = %d\n", 
-            calculer_hash_code("feur"));
-    inserer_lexeme("feur");
-    inserer_lexeme("reuf");
-    inserer_lexeme("uerf");
-    inserer_lexeme("bonjour");
-    inserer_lexeme("caramba");
-    inserer_lexeme("pausecafe");
-    inserer_lexeme("nobruoj");
-    printf("Numéro lexico de 'bonjour' : %d\n",
-    inserer_lexeme("bonjour"));
-    afficher_tab_lexico(0, 20);
-    */
+    init_tab_decla();
+    inserer_declaration(inserer_lexeme("feur"),
+                        N_VAR,
+                        1);
+    test = inserer_lexeme("caramba");
+    inserer_declaration(test, N_VAR, 2);
+    inserer_declaration(test, N_FONC, 3);
+    afficher_tab_lexico(0, 5);
+    afficher_tab_decla();
  
     exit(EXIT_SUCCESS);
     
