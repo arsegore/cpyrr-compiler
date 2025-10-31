@@ -20,17 +20,11 @@
 #define DEBORDEMENT 500
 
 
-
-// on définit une matrice qui est capable de stocker pour chaque variable sa nature
-// col 0 -> Nature
-// col 1 -> Chainage sur declaration du meme nom
-// col 2 -> Num de region qui contient la declaration
-// col 3 -> si nature = 1 ou 2 index de la table contenant descrip
-// col 3 -> si nature = 3 ou 4 index du type ( si 0, 1, 2 ou 3 alors type primaire
-// col 3 -> sinon index de la table description d'entête
-// col 4 -> si nature = 1 ou 2 taille a l'execution de la valeur de ce type
-// col 4 -> si nature = 3 ou 4  deplacement a l'execution de l'emplacement associe
-// col 4 -> sinon numero de la regio nassocie a la procedure ou fonction
+/**
+ * Implantation de la table des déclarations (pas encore au point) 
+ *
+ * Auteurs:  Louis,  Paul,  Adam 
+ */
 
 extern int table_decl[HAUTEUR][LARGEUR];
 
@@ -53,7 +47,12 @@ void afficher_ligne(int num, int entete);
 void afficher_tab_decla();
 
 /**
- * todo
+ * Insère un nouvel élement dans la table des déclarations
+ *
+ * @param num_lexico : Le numéro lexico du léxème correspondant
+ * @param nature : La nature de la déclaration 
+ * @param region : La région dans laquelle elle a été rencontrée 
+ * ... pas terminé
  */
 void inserer_declaration(int num_lexico, int nature, int region);
 
