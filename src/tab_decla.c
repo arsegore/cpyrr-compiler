@@ -10,74 +10,70 @@
    
 */
 
-// mise a -1 /!\ attention penser si des valeurs negatives peuvent exister
-// tout definir a -1 ou juste juqu'a n ? 
-void initialiser(table_decl table, int n){
+int premiere_ligne_libre_decla = DEBORDEMENT; // indice 1ere case LIBRE de la zone de debordementt
+int tab_decla[HAUTEUR][LARGEUR]; 
+
+void init_tab_decla(){
     int i, j;
 
-    for(i = 0; i < n; i++){
-        for(j = 0; j < 5; j++){   
-            table[i][j] = -1;
+    for(i = 0; i < HAUTEUR; i++){
+        for(j = 0; j < LARGEUR; j++){   
+            tab_decla[i][j] = -1;
         }
     }
 }
 
-// affiche tous les champs d'une ligne passé en parametre
-void modifier_champ(table_decl table, int ligne, int colonne, int val){
-    table[ligne][colonne] = val;
-}
-
-void afficher_element(table_decl table, int ligne){
+void afficher_ligne(int num, int entete){
     int i;
     // En-tête du tableau
-    printf("%-3s | %-8s | %-8s | %-8s | %-12s | %-10s |\n",
-           "ID", "nature", "suivant", "region", "description", "execution");
-    printf("------------------------------------------------------------------\n");
-
-    printf("%-3d | ",ligne);
-    for(i = 0; i < 3; i++){
-        printf("%-8d | ",table[ligne][i]);
+    if (entete) {
+        printf("%-4s | %-8s | %-8s | %-8s | %-12s | %-10s |\n",
+               "ID", "nature", "suivant", "region", "description", "execution");
+        printf("------------------------------------------------------------------\n");
     }
-    printf("%-12d | ",table[ligne][3]);
-    printf("%-10d | ",table[ligne][4]);
-    printf("\n");
+    printf("%-4d | %-8d | %-8d | %-8d | %-12d | %-10d |\n",
+            num,
+            tab_decla[num][NATURE],
+            tab_decla[num][SUIVANT],
+            tab_decla[num][REGION],
+            tab_decla[num][DESCRIPTION],
+            tab_decla[num][EXECUTION]);
 }
     
-void affichage(table_decl table, int n){
-    int i,j;
+void afficher_tab_decla(){
+    int i=0 ,j;
 
-    // En-tête du tableau
-    printf("%-3s | %-8s | %-8s | %-8s | %-12s | %-10s |\n",
+    printf("%-4s | %-8s | %-8s | %-8s | %-12s | %-10s |\n",
            "ID", "nature", "suivant", "region", "description", "execution");
     printf("------------------------------------------------------------------\n");
-
-    
-    for(i = 0; i < n; i++){
-        printf("%-3d | ", i);
-        for(j = 0; j < 3; j++){
-            printf("%-8d | ",table[i][j]);
-        }
-        printf("%-12d | ",table[i][3]);
-        printf("%-10d | ",table[i][4]);
-        printf("\n");
+    while ((tab_decla[i][NATURE] != - 1) && i < DEBORDEMENT) { 
+        afficher_ligne(i++, 0);
     }
-}
-
-// prends la nature en entrée, le numero de region
-void ajouter_element(table_decl table, int nature, int region){
-    int i;
-
-    // on cherche l'incide juste après le dernier ajouter
-    while(table[i][0] != -1){
+    printf("-------------------------Zone de debordement----------------------\n");
+    i = DEBORDEMENT;
+    while (tab_decla[i][NATURE] != -1){
+        afficher_ligne(i, 0);
         i++;
     }
-    // on met la nature dans le champ 0
-    table[i][0] = nature;
-    table[i][1] = -1; // avoir une fct chainage ? si il est le premier laisser -1 ?
-    table[i][2] = region;
-    table[i][3] = -1; // avoir les index des declaration de type, entete machin chouettea
-    table[i][4] = -1; // ppir l'instant aucune idee de lexec
-    
 }
 
+void inserer_declaration(int num_lexico, int nature, int region){
+    int i, indice;
+
+    if (tab_decla[num_lexico][NATURE] != -1){
+        i = num_lexico;
+        while (tab_decla[i][SUIVANT] != -1) {
+            i = tab_decla[i][SUIVANT];
+        }
+        
+        indice = premiere_ligne_libre_decla++;
+        tab_decla[i][SUIVANT] = indice; 
+    } else {
+        indice = num_lexico;
+    }
+   
+    tab_decla[indice][NATURE] = nature;
+    tab_decla[indice][REGION] = region;
+    // TODO : insérer le reste
     
+}
