@@ -1,6 +1,7 @@
 #ifndef _TAB_DECLA_H_
 #define _TAB_DECLA_H_
 
+#define N_TYPE_B 0
 #define N_STRUCT 1
 #define N_TAB 2
 #define N_VAR 3
