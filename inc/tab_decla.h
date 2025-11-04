@@ -7,8 +7,9 @@
 #define N_VAR 3
 #define N_PARAM 4 
 #define N_PROC 5
-#define N_FONC 6
+#define N_FCT 6
 #define N_CH_STRUCT 7
+#define N_ARG 8
 
 #define HAUTEUR 5000
 #define LARGEUR 5
@@ -55,6 +56,6 @@ void afficher_tab_decla();
  * @param region : La région dans laquelle elle a été rencontrée 
  * ... pas terminé
  */
-void inserer_declaration(int num_lexico, int nature, int region);
+void inserer_declaration(int num_lexico, int nature, int region, int description);
 
 #endif

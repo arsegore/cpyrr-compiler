@@ -34,13 +34,16 @@ void afficher_tab_desc(int depart, int arrivee) {
         j = arrivee;
     }
 
-    printf("--- Table descriptive ---\n");
-    printf("| %-10s | %-10s | \n", "Id", "Valeur");
+    printf("-----Table Desc-----\n");
+    printf("| %4s | %10s | \n", "Id", "Valeur");
+    printf("--------------------\n");
     for (; i <= j; i++) {
-        printf("| %-10d | %-10d | \n",
+        printf("| %4d | %10d | \n",
             i,
             tab_desc[i]);
     }
+    printf("\n");
+
 }
 
 /**
