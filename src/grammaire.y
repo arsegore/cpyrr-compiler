@@ -3,6 +3,7 @@
     #include <stdlib.h>
     #include "../inc/tab_lexico.h"
     #include "../inc/tab_decla.h"
+    #include "../inc/tab_desc.h"
     int yylex();
     int yyerror(char *msg);
 %}
@@ -189,14 +190,48 @@ int main(int argc, char **argv){
     // Tests table lexico
     init_tab_lexico();
     init_tab_decla();
-    inserer_declaration(inserer_lexeme("feur"),
-                        N_VAR,
-                        1);
-    test = inserer_lexeme("caramba");
-    inserer_declaration(test, N_VAR, 2);
-    inserer_declaration(test, N_FONC, 3);
-    afficher_tab_lexico(0, 5);
+    init_tab_desc();
+
+    //int fct blabla(i: int)
+    inserer_declaration(inserer_lexeme("blabla"),
+                        N_FCT,
+                        0,
+                        inserer_description(
+                                D_FCT,
+                                1,
+                                TYPE_INT,
+                                inserer_lexeme("i"),
+                                TYPE_INT)
+                        );
+
+    // pour l'argument i:int (devra être géré proprement par
+    // l'action sémantique..?
+    inserer_declaration(inserer_lexeme("i"), N_ARG, 0, TYPE_INT);
+    inserer_declaration(
+        inserer_lexeme("albalb"),
+        N_VAR,
+        0,
+        TYPE_BOOL);
+    // typedef blabla: struct{ch1, ch2}
+
+    inserer_declaration(
+         inserer_lexeme("blabla"),
+         N_STRUCT,
+         0,
+         inserer_description(
+                D_STRUCT,
+                2,
+                inserer_lexeme("ch1"),
+                TYPE_INT,
+                -1,
+                inserer_lexeme("ch2"),
+                TYPE_CHAR,
+                -1)
+         );
+
+    afficher_tab_lexico(0, 10);
     afficher_tab_decla();
+    afficher_tab_desc(0, 10);
  
     exit(EXIT_SUCCESS);
     
