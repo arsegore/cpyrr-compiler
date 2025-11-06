@@ -1,8 +1,8 @@
-#include "../inc/tab_decla.h"
+#include "../../inc/tables/tab_decla.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../inc/tab_lexico.h"
+#include "../../inc/tables/tab_lexico.h"
 
 /* a faire
    - chainage

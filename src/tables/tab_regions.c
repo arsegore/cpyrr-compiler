@@ -1,6 +1,6 @@
+#include "../../inc/tables/tab_regions.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "../inc/tab_regions.h"
 
 tab_region_t tab_region;
 

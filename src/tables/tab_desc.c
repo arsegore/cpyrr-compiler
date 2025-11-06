@@ -1,4 +1,4 @@
-#include "../inc/tab_desc.h"
+#include "../../inc/tables/tab_desc.h"
 #include <stdarg.h>
 #include <stdio.h>
 

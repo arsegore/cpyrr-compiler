@@ -1,10 +1,10 @@
-#include <stdlib.h>
+#include "../../inc/tables/tab_lexico.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include "../inc/tab_lexico.h"
 
 /**
- * tab_lexico.c 
+ * tab_lexico.c
  *
  * Implantation des fonctions de manipulation de la table Lexicographique
  *
