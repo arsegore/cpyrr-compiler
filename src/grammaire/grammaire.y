@@ -1,9 +1,10 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
-    #include "../inc/tab_lexico.h"
-    #include "../inc/tab_decla.h"
-    #include "../inc/tab_desc.h"
+    #include "../inc/tables/tab_lexico.h"
+    #include "../inc/tables/tab_decla.h"
+    #include "../inc/tables/tab_desc.h"
+    #include "../inc/tables/tab_regions.h"
     int yylex();
     int yyerror(char *msg);
 %}

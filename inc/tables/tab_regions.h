@@ -1,7 +1,7 @@
 #ifndef _TAB_REGIONS_H
 #define _TAB_REGIONS_H
 
-#include "../inc/arbre.h"
+#include "../arbre/arbre.h"
 
 /**
  * tab_regions.h
