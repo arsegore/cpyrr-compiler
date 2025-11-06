@@ -1,7 +1,10 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
-    #include "../inc/tab_lexico.h"
+    #include "../inc/tables/tab_lexico.h"
+    #include "../inc/tables/tab_decla.h"
+    #include "../inc/tables/tab_desc.h"
+    #include "../inc/tables/tab_regions.h"
     int yylex();
     int yyerror(char *msg);
 %}
@@ -184,20 +187,53 @@ int yyerror(char *msg) {
 
 int main(int argc, char **argv){
     // return yyparse();
-    
+    int test;
+    // Tests table lexico
     init_tab_lexico();
-    printf("Hash-code de 'feur' = %d\n", 
-            calculer_hash_code("feur"));
-    inserer_lexeme("feur");
-    inserer_lexeme("reuf");
-    inserer_lexeme("uerf");
-    inserer_lexeme("bonjour");
-    inserer_lexeme("caramba");
-    inserer_lexeme("pausecafe");
-    inserer_lexeme("nobruoj");
-    printf("Numéro lexico de 'bonjour' : %d\n",
-    inserer_lexeme("bonjour"));
-    afficher_tab_lexico(0, 20);
+    init_tab_decla();
+    init_tab_desc();
+
+    //int fct blabla(i: int)
+    inserer_declaration(inserer_lexeme("blabla"),
+                        N_FCT,
+                        0,
+                        inserer_description(
+                                D_FCT,
+                                1,
+                                TYPE_INT,
+                                inserer_lexeme("i"),
+                                TYPE_INT)
+                        );
+
+    // pour l'argument i:int (devra être géré proprement par
+    // l'action sémantique..?
+    inserer_declaration(inserer_lexeme("i"), N_ARG, 0, TYPE_INT);
+    inserer_declaration(
+        inserer_lexeme("albalb"),
+        N_VAR,
+        0,
+        TYPE_BOOL);
+    // typedef blabla: struct{ch1, ch2}
+
+    inserer_declaration(
+         inserer_lexeme("blabla"),
+         N_STRUCT,
+         0,
+         inserer_description(
+                D_STRUCT,
+                2,
+                inserer_lexeme("ch1"),
+                TYPE_INT,
+                -1,
+                inserer_lexeme("ch2"),
+                TYPE_CHAR,
+                -1)
+         );
+
+    afficher_tab_lexico(0, 10);
+    afficher_tab_decla();
+    afficher_tab_desc(0, 10);
+ 
     exit(EXIT_SUCCESS);
     
 }
