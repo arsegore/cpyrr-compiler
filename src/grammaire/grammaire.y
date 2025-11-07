@@ -174,6 +174,7 @@ expb3                 : expa SUPEGAL expa
                       | expa DIFF expa
                       | CSTE_BOOL EGAL variable
                       | CSTE_BOOL DIFF variable
+                      | CSTE_BOOL
                       // | variable EGAL CSTE_BOOL
                       // | variable DIFF CSTE_BOOL
                       ;
