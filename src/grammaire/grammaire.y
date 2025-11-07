@@ -1,10 +1,11 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
-    #include "../inc/tables/tab_lexico.h"
-    #include "../inc/tables/tab_decla.h"
-    #include "../inc/tables/tab_desc.h"
-    #include "../inc/tables/tab_regions.h"
+    #include "tables/tab_lexico.h"
+    #include "tables/tab_decla.h"
+    #include "tables/tab_desc.h"
+    #include "tables/tab_regions.h"
+    #include "tables/pile_regions.h"
     int yylex();
     int yyerror(char *msg);
 %}
@@ -18,8 +19,6 @@
 %token SI ALORS SINON 
 %token TQ FAIRE 
 %token OPAFF INF SUP PL MO MU DIV MOD NON ET OU EGAL INFEGAL SUPEGAL DIFF
-
-
 %%
 programme             : PROG AO corps AF
                       ;
@@ -190,10 +189,24 @@ int yyerror(char *msg) {
 
 int main(int argc, char **argv){
     init_tab_lexico();
+    init_tab_regions();
 
-    yyparse();
+    for (int i = 0; i < 5; i++) inserer_region();
+    afficher_pile_regions();
 
-    // afficher_tab_lexico(0, 5);
+    arbre a1 = creer_noeud(A_AFFECT, 0);
+    arbre a2 = creer_noeud(A_IDF, 1);
+    arbre a3 = creer_noeud(A_PLUS, 0);
+    arbre a4 = creer_noeud(A_CSTE_ENTIERE, 2);
+    arbre a5 = creer_noeud(A_CSTE_ENTIERE, 3);
+
+    // Construction de l’arbre :
+    concat_pere_fils(a1, a2);          // a1 -> a2
+    concat_pere_frere(a2, a3);         // a2 -> a3
+    concat_pere_fils(a3, a4);          // a3 -> a4
+    concat_pere_frere(a4, a5);         // a4 -> a5
+
+    afficher_arbre(a1);
  
     exit(EXIT_SUCCESS);
     
