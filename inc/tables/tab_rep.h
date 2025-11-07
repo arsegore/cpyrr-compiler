@@ -21,10 +21,13 @@
 #define TAILLE_TAB_REP 1000
 
 extern int tab_rep[TAILLE_TAB_REP];
-extern int indice_pv;
-extern int indice_dv;
-
-
+extern int idx_premier_libre;
+extern int idx_nb_element;
+extern int nbparam;
+extern int nbchamps;
+extern int nbdimension;
+extern int deplacement;
+extern int idx_type_element;
 
 /**
  * Initialise la table de description
@@ -40,5 +43,19 @@ void init_tab_rep();
 void afficher_tab_rep(int depart, int arrivee);
 
 void inserer_tab_rep(int val);
+
+void inserer_tab_rep_premier(int val);
+
+void inserer_tab_type(int val);
+
+/* -------------- debut --------------- */
+void debut_proc();
+
+void debut_struct();
+
+void debut_fct();
+
+void debut_dimension();
+
 
 #endif
