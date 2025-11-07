@@ -1,10 +1,12 @@
-#include "../../inc/tables/pile_regions.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "tables/pile_regions.h"
 
 int pile_regions[150];
 
 int nb_regions_pile = 0;
+
+int num_region_courante;
 
 void init_pile_regions() {
     int i;
@@ -12,7 +14,6 @@ void init_pile_regions() {
     for (i = 0; i < TAILLE_PILE_REGIONS; i++) {
         pile_regions[i] = -1;
     }
-    inserer_region();
 }
 
 int sommet_pile_region() {
@@ -31,4 +32,14 @@ void depiler_pile_regions() {
 
 int nb_regions_englobantes() {
     return nb_regions_pile - 1;
+}
+
+void maj_region_courante() {
+    num_region_courante = sommet_pile_region();
+}
+
+void afficher_pile_regions() {
+    int i;
+    for (i = 0; i < TAILLE_PILE_REGIONS; i++) printf("| %3d ", pile_regions[i]);
+    printf("\n");
 }
