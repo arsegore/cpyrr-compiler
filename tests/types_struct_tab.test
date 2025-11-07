@@ -1,8 +1,10 @@
 programme {
   typedef TPersonne: struct {
     age: int;
+    est_drole: bool;
   };
 
+  typedef TTabEntier: tab[1..10] de int;
 
   var p: TPersonne;
   var t: TTabEntier;
