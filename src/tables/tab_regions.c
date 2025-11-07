@@ -1,14 +1,11 @@
 #include "../../inc/tables/tab_regions.h"
+#include "../../inc/tables/pile_regions.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 tab_region_t tab_region;
 
-int pile_regions[150];
-
 int num_region_courante = 0;
-
-int nb_regions_pile = 0;
 
 int nb_regions_total = 0;
 
@@ -20,40 +17,12 @@ void init_tab_regions() {
         tab_region[i].nis = -1;
         tab_region[i].arbre_region = NULL;
     }
-
     tab_region[0].nis = 0;
     // TODO : ajouter l'initialisation des autres champs de la région 0
 }
 
-int sommet_pile_region() {
-    return pile_regions[nb_regions_pile - 1];
-}
-
 void maj_region_courante() {
     num_region_courante = sommet_pile_region();
-}
-
-void empiler_pile_regions(int num_region) {
-    pile_regions[nb_regions_pile++] = num_region;
-    maj_region_courante();
-}
-
-void depiler_pile_regions() {
-    nb_regions_pile--;
-    maj_region_courante();
-}
-
-int nb_regions_englobantes() {
-    return nb_regions_pile - 1;
-}
-
-void init_pile_regions() {
-    int i;
-
-    for (i = 0; i < TAILLE_PILE_REGIONS; i++) {
-        pile_regions[i] = -1;
-    }
-    inserer_region();
 }
 
 int inserer_region() {
