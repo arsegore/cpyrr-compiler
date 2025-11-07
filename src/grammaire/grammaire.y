@@ -9,7 +9,7 @@
     int yyerror(char *msg);
 %}
 %token PROG
-%token PV DP CO CF VIR PP PO PF AO AF        // ; : [ ] , .. ( ) { }
+%token PV DP CO CF VIR PP PO PF AO AF POINT        // ; : [ ] , .. ( ) { } .
 %token TAB DE STRUCT
 %token CSTE_ENTIERE CSTE_CHAR CSTE_CHAINE CSTE_BOOL CSTE_REELLE
 %token ENTIER REEL BOOL CHAR //on a enlevé CHAINE (aussi dans le lex) 
@@ -44,7 +44,7 @@ declaration           : declaration_type PV
 declaration_type      : TYPEDEF IDF DP suite_declaration_type
                       ;
 
-suite_declaration_type : STRUCT AO liste_champs AF PV
+suite_declaration_type : STRUCT AO liste_champs AF
                        | TAB dimension DE nom_type
                        ;
 
@@ -111,12 +111,14 @@ tant_que              : TQ expb FAIRE AO liste_instructions AF
 resultat_retourne     : exp
                       ;
 
-affectation           : variable OPAFF exp
+affectation           : variable OPAFF CSTE_BOOL
+                      | variable OPAFF exp
                       ;
 
                       // description des formes possibles des variables 
 variable              : IDF
                       | IDF CO CSTE_ENTIERE CF
+                      | IDF POINT variable
                       ;
 
 appel                 : IDF liste_arguments
@@ -136,7 +138,7 @@ exp                   : expa
 
 expa                  : expa PL expa1
                       | expa MO expa1
-                      | expa2
+                      | expa1
                       ;
 
 expa1                 : expa1 MU expa2
@@ -186,53 +188,11 @@ int yyerror(char *msg) {
 }
 
 int main(int argc, char **argv){
-    // return yyparse();
-    int test;
-    // Tests table lexico
     init_tab_lexico();
-    init_tab_decla();
-    init_tab_desc();
 
-    //int fct blabla(i: int)
-    inserer_declaration(inserer_lexeme("blabla"),
-                        N_FCT,
-                        0,
-                        inserer_description(
-                                D_FCT,
-                                1,
-                                TYPE_INT,
-                                inserer_lexeme("i"),
-                                TYPE_INT)
-                        );
+    yyparse();
 
-    // pour l'argument i:int (devra être géré proprement par
-    // l'action sémantique..?
-    inserer_declaration(inserer_lexeme("i"), N_ARG, 0, TYPE_INT);
-    inserer_declaration(
-        inserer_lexeme("albalb"),
-        N_VAR,
-        0,
-        TYPE_BOOL);
-    // typedef blabla: struct{ch1, ch2}
-
-    inserer_declaration(
-         inserer_lexeme("blabla"),
-         N_STRUCT,
-         0,
-         inserer_description(
-                D_STRUCT,
-                2,
-                inserer_lexeme("ch1"),
-                TYPE_INT,
-                -1,
-                inserer_lexeme("ch2"),
-                TYPE_CHAR,
-                -1)
-         );
-
-    afficher_tab_lexico(0, 10);
-    afficher_tab_decla();
-    afficher_tab_desc(0, 10);
+    // afficher_tab_lexico(0, 5);
  
     exit(EXIT_SUCCESS);
     

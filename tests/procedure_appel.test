@@ -1,0 +1,9 @@
+programme {
+  proc afficher(i: int) {
+    rien;
+  }
+
+  var x: int;
+  x = 10;
+  afficher(x);
+}
