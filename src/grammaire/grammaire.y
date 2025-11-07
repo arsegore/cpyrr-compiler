@@ -3,7 +3,7 @@
     #include <stdlib.h>
     #include "../inc/tables/tab_lexico.h"
     #include "../inc/tables/tab_decla.h"
-    #include "../inc/tables/tab_desc.h"
+    #include "../inc/tables/tab_rep.h"
     #include "../inc/tables/tab_regions.h"
     int yylex();
     int yyerror(char *msg);
@@ -31,9 +31,9 @@ liste_declarations    : // aucune decla
                       | liste_declarations declaration 
                       ;
 
-liste_instructions : instruction
-                   | liste_instructions instruction
-                   ;
+liste_instructions    : instruction
+                      | liste_instructions instruction
+                      ;
 
 declaration           : declaration_type PV
                       | declaration_variable PV
@@ -41,37 +41,45 @@ declaration           : declaration_type PV
                       | declaration_fonction
                       ;
 
-declaration_type      : TYPEDEF IDF DP suite_declaration_type
+declaration_type      : TYPEDEF IDF DP {debut_struct();}
+                        suite_declaration_type {inserer_tab_rep_premier(nbchamps);}
                       ;
 
-suite_declaration_type : STRUCT AO liste_champs AF
-                       | TAB dimension DE nom_type
+suite_declaration_type : STRUCT {deplacement = 0;}
+                         AO liste_champs AF
+                       | TAB {debut_dimension();}
+                         dimension DE nom_type {inserer_tab_type($4); inserer_tab_rep_premier(nbdimension);} 
                        ;
 
 dimension             : CO liste_dimensions CF
                       ;
 
-liste_dimensions      : une_dimension
+liste_dimensions      : une_dimension {nbdimension++;}
                       | liste_dimensions VIR une_dimension
                       ;
 
-une_dimension         : CSTE_ENTIERE PP CSTE_ENTIERE
+une_dimension         : CSTE_ENTIERE PP CSTE_ENTIERE {inserer_tab_rep($1); inserer_tab_rep($3);}
                       ;
 
-liste_champs          : un_champ
-                      | liste_champs PV un_champ
+liste_champs          : un_champ {nbchamps++;}
+                      | liste_champs PV un_champ {nbchamps++;}
                       ;
 
-un_champ              : IDF DP nom_type PV
+                      // la première insertion est pour le num lexico ??? ça marche ?? manque fct tailletype et associationtype/nom
+un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); deplacement+=1;}
                       ;
 
 declaration_variable  : VAR IDF DP nom_type
                       ;
 
-declaration_procedure : PROC IDF PO liste_param PF AO corps AF
+declaration_procedure : PROC IDF {debut_proc();}
+                        PO liste_param PF {inserer_tab_rep_premier(nbparam);}
+                        AO corps AF
                       ;
 
-declaration_fonction  : nom_type FCT IDF PO liste_param PF AO corps AF
+declaration_fonction  : nom_type FCT IDF {debut_fct($1);}
+                        PO liste_param PF {inserer_tab_rep_premier(nbparam);}
+                        AO corps AF
                       ;
 
 liste_param           : // aucun parametre
@@ -79,17 +87,17 @@ liste_param           : // aucun parametre
                       | liste_param VIR un_param
                       ;
 
-un_param              : IDF DP nom_type
+un_param              : IDF DP nom_type {inserer_tab_rep($1); inserer_tab_rep($3); nbparam++;}
                       ;
 
 nom_type              : type_simple
                       | IDF
                       ;
 
-type_simple           : ENTIER
-                      | REEL
-                      | BOOL
-                      | CHAR
+type_simple           : ENTIER {$$ = 0;}
+                      | REEL {$$ = 1;}
+                      | BOOL {$$ = 2;}
+                      | CHAR {$$ = 3;}
                       | CHAR CO CSTE_ENTIERE CF
                       ;
 

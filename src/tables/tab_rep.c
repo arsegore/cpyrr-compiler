@@ -9,7 +9,12 @@
  * Auteur: Adam 
  */
 int tab_desc[1000];
-int premiere_ligne_libre_desc = 0;
+int idx_premier_libre = 0;
+int nbparam = 0;
+int nbchamps = 0;
+int deplacement = 0;
+int nbdimension = 0;
+
 
 void init_tab_rep() {
     int i;
@@ -21,6 +26,7 @@ void init_tab_rep() {
 
 void afficher_tab_rep(int depart, int arrivee) {
     int i, j;
+    
 
     if (depart == -1) {
         i = 0;
@@ -53,5 +59,42 @@ void afficher_tab_rep(int depart, int arrivee) {
  */
 
 void inserer_tab_rep(int val) {
-    tab_rep[indice_pv++] = val;
+    tab_rep[idx_premier_libre++] = val;
+}
+
+void inserer_tab_rep_premier(int val){
+    tab_rep[idx_nb_element] = val;
+}_
+
+void debut_proc(){
+    idx_nb_element = idx_premier_libre;
+    nbparam = 0;
+    idx_premier_libre++;
+}
+
+/* exactement la même que proc, faut il vraiment refaire uen fct ? */
+void debut_struct(){
+    idx_nb_element = idx_premier_libre;
+    nbchamps = 0;
+    idx_premier_libre++;
+}
+
+/**
+ * Permet de commencer le debut d'une fonction
+ * @param valeur de retour de type inserer a la deuxième case libre
+ */
+void debut_fct(int val){
+    idx_nb_element = idx_premier_libre++;
+    tab_rep[idx_premier_libre++] = val;
+    nbparam = 0;
+}
+
+void debut_tab(){
+    idx_nb_element = idx_premier_libre++;
+    idx_type_element = idx_premier_libre++;
+    nbdimension = 0;
+}
+
+void inserer_tab_type(int val){
+    tab_rep[idx_type_element] = val;
 }
