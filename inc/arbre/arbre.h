@@ -21,12 +21,12 @@
  * qui sont ses fils (sous forme d'un pointeur sur le fils gauche
  * et d'une chaîne de frères droits
  */
-typedef struct noeud {
+struct noeud {
     int nature;
     int valeur;
     struct noeud *filsGauche;
     struct noeud *frereDroit;
-} noeud;
+};
 typedef struct noeud *arbre;
 
 /**
