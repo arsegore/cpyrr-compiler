@@ -1,6 +1,6 @@
-#include "../../inc/tables/tab_desc.h"
 #include <stdarg.h>
 #include <stdio.h>
+#include "tables/tab_desc.h"
 
 /**
  * Implantation de la table de description des types et des en-têtes de
