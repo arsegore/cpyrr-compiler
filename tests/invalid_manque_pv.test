@@ -1,0 +1,4 @@
+programme {
+  var x: int
+  x = 3;
+}

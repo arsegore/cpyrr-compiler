@@ -1,0 +1,11 @@
+programme {
+  typedef TPersonne: struct {
+    age: int;
+  };
+
+
+  var p: TPersonne;
+  var t: TTabEntier;
+
+  p.age = 12;
+}
