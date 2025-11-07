@@ -7,8 +7,6 @@
 * GRANJON Damien
 * MOULIN Baptiste
 
----
-
 ## Avancée
 
 ### Fonctionnels
@@ -17,17 +15,16 @@
 
 ### En développement
 * Table des déclarations
+* Table des régions 
+* Table de représentation
+* TAD arbre
 
 ### À faire 
-* Table des régions 
-* Table des entêtes de sous-programme 
-* TAD arbre
+
 * Gestion des erreurs syntaxiques
 * Gestion des erreurs sémantiques
 * Actions sémantiques 
 * ...
-
---- 
 
 ## Utilisation
 
