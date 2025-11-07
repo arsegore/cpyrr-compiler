@@ -59,13 +59,13 @@ declaration           : declaration_type PV
                       ;
 
 declaration_type      : TYPEDEF IDF DP {debut_struct();}
-                        suite_declaration_type {inserer_tab_rep_premier(nbchamps);}
+                        suite_declaration_type {inserer_tab_rep_nb_elem(nbchamps);}
                       ;
 
 suite_declaration_type : STRUCT {deplacement = 0;}
                          AO liste_champs AF
                        | TAB {debut_tab();}
-                         dimension DE nom_type {inserer_tab_rep_type($5); inserer_tab_rep_premier(nbdimension); } 
+                         dimension DE nom_type {inserer_tab_rep_type($5); inserer_tab_rep_nb_elem(nbdimension); } 
 
 dimension             : CO liste_dimensions CF
                       ;
@@ -89,12 +89,12 @@ declaration_variable  : VAR IDF DP nom_type
                       ;
 
 declaration_procedure : PROC IDF {debut_proc();}
-                        PO liste_param PF {inserer_tab_rep_premier(nbparam);}
+                        PO liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF
                       ;
 
 declaration_fonction  : nom_type FCT IDF {debut_fct($1);}
-                        PO liste_param PF {inserer_tab_rep_premier(nbparam);}
+                        PO liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF
                       ;
 
