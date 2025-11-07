@@ -53,11 +53,12 @@ char *recuperer_lexeme(int num_lexico);
 /** 
  * Insère un léxème dans la table lexico.
  *
- * @param lexeme : Le léxème à insérer dans la table lexico 
- * @return : Le numéro lexico du léxème inséré (ou du léxème déjà présent le 
+ * @param lexeme : Le léxème à insérer dans la table lexico
+ * @param longueur : La longueur du léxème
+ * @return : Le numéro lexico du léxème inséré (ou du léxème déjà présent le
  * cas écheant)
  */
-int inserer_lexeme(char *lexeme);
+int inserer_lexeme(char *lexeme, int longueur);
 
 /**
  * Affiche la table lexico de depart à arrivee, ou entierement si les 
