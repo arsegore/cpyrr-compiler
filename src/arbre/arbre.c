@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include "../../inc/arbre/arbre.h"
 
+/**
+ * Auteur : Damien 
+ */
+
 /*
 struct noeud {
     int nature;
@@ -72,7 +76,7 @@ void afficher_arbre(arbre a) {
         return;
     }
 
-    // Racine de l’arbre
+    // Racine de l'arbre
     printf("└── ");
     switch (a->nature) {
         case A_IDF: printf("IDF (%d)\n", a->valeur); break;
@@ -85,31 +89,10 @@ void afficher_arbre(arbre a) {
         default: printf("INCONNU (%d)\n", a->valeur); break;
     }
 
-    // On appelle la récursion pour tous les fils de la racine
+    // On appelle la récursion pour tous les fils de la racine avec le bon préfixe
     arbre fils = a->fils_gauche;
     while (fils) {
-        afficher_arbre_rec(fils, "", fils->frere_droit == NULL);
+        afficher_arbre_rec(fils, "    ", fils->frere_droit == NULL);
         fils = fils->frere_droit;
     }
-}
-
-
-int main() {
-    arbre a1 = creer_noeud(A_AFFECT, 0);
-    arbre a2 = creer_noeud(A_IDF, 1);
-    arbre a3 = creer_noeud(A_PLUS, 0);
-    arbre a4 = creer_noeud(A_CSTE_ENTIERE, 2);
-    arbre a5 = creer_noeud(A_CSTE_ENTIERE, 3);
-
-    // Construction de l’arbre :
-    concat_pere_fils(a1, a2);          // a1 -> a2
-    concat_pere_frere(a2, a3);         // a2 -> a3
-    concat_pere_fils(a3, a4);          // a3 -> a4
-    concat_pere_frere(a4, a5);         // a4 -> a5
-
-    printf("a1->fils_gauche = %p\n", (void*)a1->fils_gauche);
-    printf("a2->frere_droit = %p\n", (void*)a2->frere_droit);
-    printf("a3->fils_gauche = %p\n", (void*)a3->fils_gauche);
-    printf("a4->frere_droit = %p\n", (void*)a4->frere_droit);
-    return 0;
 }

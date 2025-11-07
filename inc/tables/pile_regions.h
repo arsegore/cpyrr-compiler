@@ -1,7 +1,7 @@
-#ifndef _TAB_REGIONS_H
-#define _TAB_REGIONS_H
+#ifndef _TAB_REGIONS_H_
+#define _TAB_REGIONS_H_
 
-#include "../arbre/arbre.h"
+#include "arbre/arbre.h"
 
 /**
  * tab_regions.h
@@ -16,6 +16,8 @@
 extern int pile_regions[TAILLE_PILE_REGIONS];
 
 extern int nb_regions_pile;
+
+extern int num_region_courante;
 
 /**
  * Initialise la pile des régions
@@ -42,5 +44,15 @@ void depiler_pile_regions();
  * @return Le nombre de régions actuellement englobantes
  */
 int nb_regions_englobantes();
+
+/**
+ * Met à jour la variable globale num_region_courante
+ */
+void maj_region_courante();
+
+/**
+ * Affiche la pile des régions
+ */
+void afficher_pile_regions();
 
 #endif
