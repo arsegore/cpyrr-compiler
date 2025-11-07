@@ -1,0 +1,7 @@
+programme {
+  proc test(i: int) {
+    rien;
+  }
+
+  test 3;
+}

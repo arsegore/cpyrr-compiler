@@ -1,0 +1,12 @@
+programme {
+  int fct inc(x: int) {
+    ret x + 1;
+  }
+
+  var y: int;
+  y = 5;
+
+  si (inc(y) == 6) alors {
+    rien;
+  }
+}
