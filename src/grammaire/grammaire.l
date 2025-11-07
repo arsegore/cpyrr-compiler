@@ -1,6 +1,7 @@
 %{
     #include "../inc/y.tab.h"
     #include "../inc/tables/tab_lexico.h"
+    int yyval;
 %}
 IDF [a-zA-Z][a-zA-Z0-9]*
 INT [1-9][0-9]*|0
@@ -52,7 +53,10 @@ ou                   {return(OU);}
 vrai                 {return(CSTE_BOOL);}
 faux                 {return(CSTE_BOOL);}
 rien                 {return(RIEN);}
-{IDF}                {inserer_lexeme(yytext); return(IDF);}
+{IDF}                {
+                        yyval = inserer_lexeme(yytext, yyleng);
+                        return(IDF);
+                     }
 {INT}                {return(CSTE_ENTIERE);}
 \'([^\'\\]|\\.)\'    {return(CSTE_CHAR);}
 \"([^\"\\]|\\.)*\"   {return(CSTE_CHAINE);}
