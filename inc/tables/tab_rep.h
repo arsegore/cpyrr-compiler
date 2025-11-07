@@ -1,11 +1,13 @@
 #ifndef _TAB_DESC_H
 #define _TAB_DESC_H
 
+// TODO: CORRIGER LES FONCTIONS (et/ou actions ?) SUR LES TYPES TAB
+
 /**
  * Définition de la table de description des types et des en-têtes
  * de sous-programme
  *
- * Auteur : Adam 
+ * Auteur : Louis , Adam 
  */
 
 #define D_FCT 0
@@ -30,32 +32,54 @@ extern int deplacement;
 extern int idx_type_element;
 
 /**
- * Initialise la table de description
+ * Initialise la table de représentation
  */
 void init_tab_rep();
 
 /**
- * Insère une entrée dans la table de description.
- * @return Le numéro de description correspondant à l'entrée (son indice de
- * départ)
+ * Affiche la table de représentation de départ à arrivée,
+ * ou entièrement si départ = arrivée = -1 
+ * 
+ * @param depart Indice de départ
+ * @param arrivee Indice d'arrivée
  */
-
 void afficher_tab_rep(int depart, int arrivee);
 
+/**
+ * Insère val dans la première case libre de la table rep
+ * 
+ * @param val La valeur à insérer
+ */
 void inserer_tab_rep(int val);
 
-void inserer_tab_rep_premier(int val);
+/**
+ * Insère le nb d'éléments (param/champs/dim) dans la table rep,
+ * à l'indice préparé par la fonction "début" correspondante
+ * 
+ * @param val Le nb d'éléments à insérer
+ */
+void inserer_tab_rep_nb_elem(int val);
 
-void inserer_tab_type(int val);
+/**
+ * Insère le type des élements d'un tableau dans la table rep,
+ * à l'indice préparé par la fonction debut_tab
+ * 
+ * @param val Le type des élements du tableau
+ */
+void inserer_tab_rep_type(int type);
 
-/* -------------- debut --------------- */
+/*------------------------------------------------------*/
+/* Fonctions appelées pour préparer les indices globaux */
+/*------------------------------------------------------*/
 void debut_proc();
 
 void debut_struct();
 
-void debut_fct();
+/**
+ * @param type Le type de retour de la fonction
+ */
+void debut_fct(int type);
 
-void debut_dimension();
-
+void debut_tab();
 
 #endif

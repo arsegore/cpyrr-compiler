@@ -1,24 +1,41 @@
+/**
+ * YACC 
+ * Auteurs :
+ *      Grammaire - Tout le groupe
+ *      Actions - Louis , Adam 
+ */ 
+
 %{
     #include <stdio.h>
     #include <stdlib.h>
-    #include "../inc/tables/tab_lexico.h"
-    #include "../inc/tables/tab_decla.h"
-    #include "../inc/tables/tab_rep.h"
-    #include "../inc/tables/tab_regions.h"
+    #include "tables/tab_lexico.h"
+    #include "tables/tab_decla.h"
+    #include "tables/tab_rep.h"
+    #include "tables/tab_regions.h"
+    #include "tables/pile_regions.h"
     int yylex();
     int yyerror(char *msg);
 %}
+// pr les types, cf https://www.ibm.com/docs/en/zos/3.1.0?topic=yacc-types 
+%union {
+    int intval;
+}
+
 %token PROG
 %token PV DP CO CF VIR PP PO PF AO AF POINT        // ; : [ ] , .. ( ) { } .
 %token TAB DE STRUCT
-%token CSTE_ENTIERE CSTE_CHAR CSTE_CHAINE CSTE_BOOL CSTE_REELLE
-%token ENTIER REEL BOOL CHAR //on a enlevé CHAINE (aussi dans le lex) 
-%token VAR TYPEDEF IDF
+%token CSTE_CHAR CSTE_CHAINE CSTE_BOOL CSTE_REELLE
+%token VAR TYPEDEF
 %token PROC FCT RET RIEN
 %token SI ALORS SINON 
 %token TQ FAIRE 
 %token OPAFF INF SUP PL MO MU DIV MOD NON ET OU EGAL INFEGAL SUPEGAL DIFF
 
+%type <intval> type_simple nom_type
+
+%token <intval> CSTE_ENTIERE
+%token <intval> IDF
+%token <intval> ENTIER REEL BOOL CHAR  
 
 %%
 programme             : PROG AO corps AF
@@ -47,9 +64,8 @@ declaration_type      : TYPEDEF IDF DP {debut_struct();}
 
 suite_declaration_type : STRUCT {deplacement = 0;}
                          AO liste_champs AF
-                       | TAB {debut_dimension();}
-                         dimension DE nom_type {inserer_tab_type($4); inserer_tab_rep_premier(nbdimension);} 
-                       ;
+                       | TAB {debut_tab();}
+                         dimension DE nom_type {inserer_tab_rep_type($5); inserer_tab_rep_premier(nbdimension); } 
 
 dimension             : CO liste_dimensions CF
                       ;
@@ -62,7 +78,7 @@ une_dimension         : CSTE_ENTIERE PP CSTE_ENTIERE {inserer_tab_rep($1); inser
                       ;
 
 liste_champs          : un_champ {nbchamps++;}
-                      | liste_champs PV un_champ {nbchamps++;}
+                      | liste_champs un_champ {nbchamps++;}
                       ;
 
                       // la première insertion est pour le num lexico ??? ça marche ?? manque fct tailletype et associationtype/nom
@@ -90,14 +106,14 @@ liste_param           : // aucun parametre
 un_param              : IDF DP nom_type {inserer_tab_rep($1); inserer_tab_rep($3); nbparam++;}
                       ;
 
-nom_type              : type_simple
+nom_type              : type_simple {$$ = $1;}
                       | IDF
                       ;
 
-type_simple           : ENTIER {$$ = 0;}
-                      | REEL {$$ = 1;}
-                      | BOOL {$$ = 2;}
-                      | CHAR {$$ = 3;}
+type_simple           : ENTIER {$$ = $1;}
+                      | REEL {$$ = $1;}
+                      | BOOL {$$ = $1;}
+                      | CHAR {$$ = $1;}
                       | CHAR CO CSTE_ENTIERE CF
                       ;
 
@@ -120,6 +136,8 @@ resultat_retourne     : exp
                       ;
 
 affectation           : variable OPAFF CSTE_BOOL
+                      | variable OPAFF CSTE_CHAR
+                      | variable OPAFF CSTE_CHAINE
                       | variable OPAFF exp
                       ;
 
@@ -198,11 +216,15 @@ int yyerror(char *msg) {
 
 int main(int argc, char **argv){
     init_tab_lexico();
+    init_tab_decla();
+    init_tab_rep();
 
     yyparse();
 
-    // afficher_tab_lexico(0, 5);
- 
+    afficher_tab_lexico(0, 10);
+    afficher_tab_decla();
+    afficher_tab_rep(0, 20);
+
     exit(EXIT_SUCCESS);
     
 }

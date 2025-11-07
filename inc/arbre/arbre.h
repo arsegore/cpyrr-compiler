@@ -5,7 +5,7 @@
  * Définition d'un TAD Arbre utilisé pour la construction
  * des arbres abstraits
  *
- * Auteur : Adam 
+ * Auteurs :  Damien,  Adam
  */
 
 #define A_IDF 1
@@ -19,13 +19,13 @@
 /**
  * Chaque noeud connait sa nature et sa valeur, ainsi qu'évidemment
  * qui sont ses fils (sous forme d'un pointeur sur le fils gauche
- * et d'une chaîne de frères droits
+ * et d'une chaîne de frères droits)
  */
 typedef struct noeud {
     int nature;
     int valeur;
-    struct noeud *filsGauche;
-    struct noeud *frereDroit;
+    struct noeud *fils_gauche;
+    struct noeud *frere_droit;
 } noeud;
 typedef struct noeud *arbre;
 
@@ -36,7 +36,7 @@ typedef struct noeud *arbre;
  * @param fils : Le fils à ajouter
  * @return : L'arbre résultat
  */
-arbre concatPereFils(arbre pere, arbre fils);
+arbre concat_pere_fils(arbre pere, arbre fils);
 
 /**
  * Ajoute un frère à un arbre
@@ -45,7 +45,7 @@ arbre concatPereFils(arbre pere, arbre fils);
  * @param frere : Le frère à ajouter
  * @return : L'arbre résultat
  */
-arbre concatPereFrere(arbre pere, arbre frere);
+arbre concat_pere_frere(arbre pere, arbre frere);
 
 /**
  * Crée un noeud (un nouvel arbre)
@@ -54,7 +54,7 @@ arbre concatPereFrere(arbre pere, arbre frere);
  * @param valeur : La valeur du noeud
  * @return : L'arbre résultat
  */
-arbre creerNoeud(int nature, int valeur);
+arbre creer_noeud(int nature, int valeur);
 
 /**
  * Affiche un arbre

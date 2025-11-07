@@ -1,4 +1,4 @@
-#include "../../inc/tables/tab_rep.h"
+#include "tables/tab_rep.h"
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -6,10 +6,12 @@
  * Implantation de la table de description des types et des en-têtes de
  * sous-programme
  *
- * Auteur: Adam 
+ * Auteur: Louis , Adam 
  */
-int tab_desc[1000];
+int tab_rep[1000];
 int idx_premier_libre = 0;
+int idx_nb_element = 0;
+int idx_type_element = 0;
 int nbparam = 0;
 int nbchamps = 0;
 int deplacement = 0;
@@ -19,8 +21,8 @@ int nbdimension = 0;
 void init_tab_rep() {
     int i;
 
-    for (i = 0; i < TAILLE_TAB_DESC; i++) {
-        tab_desc[i] = -1;
+    for (i = 0; i < TAILLE_TAB_REP; i++) {
+        tab_rep[i] = -1;
     }
 }
 
@@ -35,36 +37,35 @@ void afficher_tab_rep(int depart, int arrivee) {
     }
 
     if (arrivee == -1) {
-        j = TAILLE_TAB_DESC - 1;
+        j = TAILLE_TAB_REP - 1;
     } else {
         j = arrivee;
     }
 
-    printf("-----Table Desc-----\n");
+    printf("----- Table Rep -----\n");
     printf("| %4s | %10s | \n", "Id", "Valeur");
     printf("--------------------\n");
     for (; i <= j; i++) {
         printf("| %4d | %10d | \n",
             i,
-            tab_desc[i]);
+            tab_rep[i]);
     }
     printf("\n");
 
 }
 
-/**
- * Diverses fonctions auxiliaires, mais seule l'interface
- * inserer_tab_desc() est publique (pour uniformiser l'écriture des
- * actions sémantiques
- */
-
 void inserer_tab_rep(int val) {
     tab_rep[idx_premier_libre++] = val;
 }
 
-void inserer_tab_rep_premier(int val){
+void inserer_tab_rep_nb_elem(int val){
     tab_rep[idx_nb_element] = val;
-}_
+}
+
+void inserer_tab_rep_type(int type){
+    tab_rep[idx_type_element] = type;
+    printf("Type du tab dans [%d] == %d\n", idx_type_element, type);
+}
 
 void debut_proc(){
     idx_nb_element = idx_premier_libre;
@@ -79,22 +80,16 @@ void debut_struct(){
     idx_premier_libre++;
 }
 
-/**
- * Permet de commencer le debut d'une fonction
- * @param valeur de retour de type inserer a la deuxième case libre
- */
-void debut_fct(int val){
+void debut_fct(int type){
     idx_nb_element = idx_premier_libre++;
-    tab_rep[idx_premier_libre++] = val;
+    tab_rep[idx_premier_libre++] = type;
     nbparam = 0;
 }
 
 void debut_tab(){
-    idx_nb_element = idx_premier_libre++;
     idx_type_element = idx_premier_libre++;
+    idx_nb_element = idx_premier_libre++;
+    printf("indice du type du tab = %d\n", idx_type_element);
+    printf("indice du nbdim du tab = %d\n", idx_nb_element);
     nbdimension = 0;
-}
-
-void inserer_tab_type(int val){
-    tab_rep[idx_type_element] = val;
 }
