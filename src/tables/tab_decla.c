@@ -13,19 +13,19 @@ int premiere_ligne_libre_decla = DEBORDEMENT;
 int tab_decla[HAUTEUR][LARGEUR];
 
 void init_types_base() {
-    inserer_declaration(inserer_lexeme("int"),
+    inserer_declaration(inserer_lexeme("int", 3),
                         N_TYPE_B,
                         0,
                         -1);
-    inserer_declaration(inserer_lexeme("float"),
+    inserer_declaration(inserer_lexeme("float", 5),
                         N_TYPE_B,
                         0,
                         -1);
-    inserer_declaration(inserer_lexeme("bool"),
+    inserer_declaration(inserer_lexeme("bool", 4),
                         N_TYPE_B,
                         0,
                         -1);
-    inserer_declaration(inserer_lexeme("char"),
+    inserer_declaration(inserer_lexeme("char", 4),
                         N_TYPE_B,
                         0,
                         -1);
