@@ -59,19 +59,19 @@ declaration           : declaration_type PV
                       ;
 
 declaration_type      : TYPEDEF IDF DP {debut_struct();}
-                        suite_declaration_type {inserer_tab_rep_nb_elem(nbchamps);}
+                        suite_declaration_type {inserer_tab_rep_nb_elem(nbdimension);}
                       ;
 
 suite_declaration_type : STRUCT {deplacement = 0;}
                          AO liste_champs AF
                        | TAB {debut_tab();}
-                         dimension DE nom_type {inserer_tab_rep_type($5); inserer_tab_rep_nb_elem(nbdimension); } 
+                         dimension DE nom_type {inserer_tab_rep_type($5);} 
 
 dimension             : CO liste_dimensions CF
                       ;
 
 liste_dimensions      : une_dimension {nbdimension++;}
-                      | liste_dimensions VIR une_dimension
+                      | liste_dimensions VIR une_dimension{nbdimension++;}
                       ;
 
 une_dimension         : CSTE_ENTIERE PP CSTE_ENTIERE {inserer_tab_rep($1); inserer_tab_rep($3);}
@@ -224,10 +224,10 @@ int main(int argc, char **argv){
 
     yyparse();
 
-    afficher_tab_lexico(0, 10);
-    afficher_tab_decla();
+    /*afficher_tab_lexico(0, 10);
+    afficher_tab_decla(); */
     afficher_tab_rep(0, 20);
-    afficher_tab_regions(0, 10);
+   /* afficher_tab_regions(0, 10); */
 
     exit(EXIT_SUCCESS);
     
