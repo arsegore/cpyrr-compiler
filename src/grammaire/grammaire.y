@@ -218,12 +218,16 @@ int main(int argc, char **argv){
     init_tab_lexico();
     init_tab_decla();
     init_tab_rep();
+    init_tab_regions();
+
+    for (int i = 0; i < 5; i++) inserer_region();
 
     yyparse();
 
     afficher_tab_lexico(0, 10);
     afficher_tab_decla();
     afficher_tab_rep(0, 20);
+    afficher_tab_regions(0, 10);
 
     exit(EXIT_SUCCESS);
     
