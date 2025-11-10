@@ -1,7 +1,7 @@
-#include "../../inc/tables/tab_lexico.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "tables/tab_lexico.h"
 
 /**
  * tab_lexico.c

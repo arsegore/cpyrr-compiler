@@ -1,17 +1,16 @@
 #ifndef _TAB_REGIONS_H
 #define _TAB_REGIONS_H
 
-#include "../arbre/arbre.h"
+#include "arbre/arbre.h"
 
 /**
  * tab_regions.h
  *
  * Définition de la table des régions et de ses fonctions
  *
- * Auteur : Adam HADDADI
+ * Auteur : HADDADI Adam, GRANJON Damien
  */
 #define TAILLE_TAB_REGIONS 150
-#define TAILLE_PILE_REGIONS 150
 
 typedef struct {
     int taille_exec;
@@ -23,22 +22,10 @@ typedef cellule_region tab_region_t[TAILLE_TAB_REGIONS];
 
 extern tab_region_t tab_region;
 
-extern int pile_regions[TAILLE_PILE_REGIONS];
-
-extern int num_region_courante;
-
-extern int nb_regions_pile;
-
 /**
  * @return Le numéro de la région courante
  */
 int region_courante();
-
-/**
- *
- * @return Le nombre de régions actuellement englobantes
- */
-int nb_regions_englobantes();
 
 /**
  * Initialise la table des régions
