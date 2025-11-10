@@ -1,5 +1,5 @@
 programme {
-  int fct carre(i: int) {
+  int fct carre(i: int, b: char, t: bool) {
     ret i * i;
   }
 
