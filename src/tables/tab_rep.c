@@ -15,7 +15,7 @@ int idx_type_element = 0;
 int nbparam = 0;
 int nbchamps = 0;
 int deplacement = 0;
-int nbdimension = 0;
+int nbdimension;
 
 
 void init_tab_rep() {

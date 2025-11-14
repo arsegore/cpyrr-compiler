@@ -57,7 +57,7 @@ rien                 {return(RIEN);}
                         yylval.intval = inserer_lexeme(yytext, yyleng);
                         return(IDF);
                      }
-{INT}                {return(CSTE_ENTIERE);}
+{INT}                {yylval.intval = atoi(yytext); return(CSTE_ENTIERE);}
 \'([^\'\\]|\\.)\'    {return(CSTE_CHAR);}
 \"([^\"\\]|\\.)*\"   {return(CSTE_CHAINE);}
 {INT}"."{INT}        {return(CSTE_REELLE);}
