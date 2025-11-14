@@ -129,7 +129,7 @@ void execute_arbre(arbre a) {
     }
 }
 
-int evalue_arbre(arbre a) {
+int evalue_arbre_int(arbre a) {
     int i;
     switch (a->nature) {
         case A_IDF:
