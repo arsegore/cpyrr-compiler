@@ -58,43 +58,43 @@ declaration           : declaration_type PV
                       | declaration_fonction
                       ;
 
-declaration_type      : TYPEDEF IDF DP
+declaration_type      : TYPEDEF IDF {determiner_ligne_decla($2);} DP
                         suite_declaration_type
                       ;
 
-suite_declaration_type : STRUCT {debut_struct();}
-                         AO liste_champs AF {inserer_tab_rep_nb_elem(nbchamps);}
-                       | TAB {debut_tab();}
-                         dimension DE nom_type {inserer_tab_rep_nb_elem(nbdimension); inserer_tab_rep_type($5);} 
+suite_declaration_type : STRUCT                     {debut_struct(); remplir_nature(decla_courante, N_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, idx_premier_libre);} 
+                         AO liste_champs AF         {inserer_tab_rep_nb_elem(nbchamps);}
+                       | TAB                        {debut_tab(); remplir_nature(decla_courante, N_TAB); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, idx_premier_libre);}
+                         dimension DE nom_type      {inserer_tab_rep_nb_elem(nbdimension); inserer_tab_rep_type($5);} 
 
 dimension             : CO liste_dimensions CF
                       ;
 
-liste_dimensions      : une_dimension {nbdimension++;}
-                      | liste_dimensions VIR une_dimension{nbdimension++;}
+liste_dimensions      : une_dimension                                       {nbdimension++;}
+                      | liste_dimensions VIR une_dimension                  {nbdimension++;}
                       ;
 
-une_dimension         : CSTE_ENTIERE PP CSTE_ENTIERE {inserer_tab_rep($1); inserer_tab_rep($3);}
+une_dimension         : CSTE_ENTIERE PP CSTE_ENTIERE                        {inserer_tab_rep($1); inserer_tab_rep($3);}
                       ;
 
-liste_champs          : un_champ {nbchamps++;}
-                      | liste_champs un_champ {nbchamps++;}
+liste_champs          : un_champ                                            {nbchamps++;}
+                      | liste_champs un_champ                               {nbchamps++;}
                       ;
 
                       // la première insertion est pour le num lexico ??? ça marche ?? manque fct tailletype et associationtype/nom
-un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); deplacement+=1;}
+un_champ              : IDF DP nom_type PV                                  {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); deplacement+=1;}
                       ;
 
 declaration_variable  : VAR IDF DP nom_type
                       ;
 
-declaration_procedure : PROC IDF {debut_proc();}
-                        PO liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
+declaration_procedure : PROC IDF                                            {debut_proc();}
+                        PO liste_param PF                                   {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF
                       ;
 
-declaration_fonction  : nom_type FCT IDF {debut_fct($1);}
-                        PO liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
+declaration_fonction  : nom_type FCT IDF                                    {debut_fct($1);}
+                        PO liste_param PF                                   {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF
                       ;
 
@@ -103,17 +103,17 @@ liste_param           : // aucun parametre
                       | liste_param VIR un_param
                       ;
 
-un_param              : IDF DP nom_type {inserer_tab_rep($1); inserer_tab_rep($3); nbparam++;}
+un_param              : IDF DP nom_type                                     {inserer_tab_rep($1); inserer_tab_rep($3); nbparam++;}
                       ;
 
-nom_type              : type_simple {$$ = $1;}
+nom_type              : type_simple                                         {$$ = $1;}
                       | IDF
                       ;
 
-type_simple           : ENTIER {$$ = $1;}
-                      | REEL {$$ = $1;}
-                      | BOOL {$$ = $1;}
-                      | CHAR {$$ = $1;}
+type_simple           : ENTIER                                              {$$ = $1;}
+                      | REEL                                                {$$ = $1;}
+                      | BOOL                                                {$$ = $1;}
+                      | CHAR                                                {$$ = $1;}
                       | CHAR CO CSTE_ENTIERE CF
                       ;
 
@@ -219,8 +219,6 @@ int main(int argc, char **argv){
     init_tab_decla();
     init_tab_rep();
     init_tab_regions();
-
-    for (int i = 0; i < 5; i++) inserer_region();
 
     yyparse();
 

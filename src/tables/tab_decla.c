@@ -12,24 +12,33 @@
 
 int premiere_ligne_libre_decla = DEBORDEMENT;
 int tab_decla[HAUTEUR][LARGEUR];
+int decla_courante = -1;
 
 void init_types_base() {
-    inserer_declaration(inserer_lexeme("int", 3),
-                        N_TYPE_B,
-                        0,
-                        -1);
-    inserer_declaration(inserer_lexeme("float", 5),
-                        N_TYPE_B,
-                        0,
-                        -1);
-    inserer_declaration(inserer_lexeme("bool", 4),
-                        N_TYPE_B,
-                        0,
-                        -1);
-    inserer_declaration(inserer_lexeme("char", 4),
-                        N_TYPE_B,
-                        0,
-                        -1);
+    determiner_ligne_decla(inserer_lexeme("int", 3));
+    remplir_nature(decla_courante, N_TYPE_B);
+    remplir_desc(decla_courante, -1);
+    remplir_region(decla_courante, 0);
+    remplir_exec(decla_courante, 1);
+
+    determiner_ligne_decla(inserer_lexeme("float", 3));
+    remplir_nature(decla_courante, N_TYPE_B);
+    remplir_desc(decla_courante, -1);
+    remplir_region(decla_courante, 0);
+    remplir_exec(decla_courante, 1);
+
+    determiner_ligne_decla(inserer_lexeme("bool", 3));
+    remplir_nature(decla_courante, N_TYPE_B);
+    remplir_desc(decla_courante, -1);
+    remplir_region(decla_courante, 0);
+    remplir_exec(decla_courante, 1);
+
+    determiner_ligne_decla(inserer_lexeme("char", 3));
+    remplir_nature(decla_courante, N_TYPE_B);
+    remplir_desc(decla_courante, -1);
+    remplir_region(decla_courante, 0);
+    remplir_exec(decla_courante, 1);
+    
 }
 
 void init_tab_decla() {
@@ -101,7 +110,7 @@ void afficher_tab_decla() {
     printf("\n");
 }
 
-void inserer_declaration(int num_lexico, int nature, int region, int description) {
+void determiner_ligne_decla(int num_lexico){
     int i, indice;
 
     if (tab_decla[num_lexico][NATURE] != -1) {
@@ -116,8 +125,21 @@ void inserer_declaration(int num_lexico, int nature, int region, int description
         indice = num_lexico;
     }
 
-    tab_decla[indice][NATURE] = nature;
-    tab_decla[indice][REGION] = region;
-    tab_decla[indice][DESCRIPTION] = description;
-    // TODO : insérer le reste
+    decla_courante = indice;
+}
+
+void remplir_nature(int num_decla, int nature){
+    tab_decla[num_decla][NATURE] = nature;
+}
+
+void remplir_region(int num_decla, int region){
+    tab_decla[num_decla][REGION] = region;
+}
+
+void remplir_desc(int num_decla, int desc){
+    tab_decla[num_decla][DESCRIPTION] = desc;
+}
+
+void remplir_exec(int num_decla, int exec){
+    tab_decla[num_decla][EXECUTION] = exec;
 }
