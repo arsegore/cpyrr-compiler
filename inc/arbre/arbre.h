@@ -85,9 +85,6 @@ int execute_arbre_fct(arbre a);
  * @param a : L'arbre à évaluer
  * @return : L'évaluation de l'arbre
  */
-int evalue_arbre(arbre a);
-
-// à faire
 int evalue_arbre_int(arbre a);
 
 #endif
