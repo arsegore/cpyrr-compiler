@@ -10,6 +10,7 @@
 #define N_FCT 6
 #define N_CH_STRUCT 7
 #define N_ARG 8
+#define TYPE 9
 
 #define HAUTEUR 5000
 #define LARGEUR 5

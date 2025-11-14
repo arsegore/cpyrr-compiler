@@ -7,7 +7,7 @@
  * Définition de la table de description des types et des en-têtes
  * de sous-programme
  *
- * Auteur : Louis , Adam 
+ * Auteur : Louis , Adam , Baptiste 
  */
 
 #define D_FCT 0
@@ -81,5 +81,13 @@ void debut_struct();
 void debut_fct(int type);
 
 void debut_tab();
+
+void incr_nb_dim();
+
+void incr_nb_champ();
+
+void incr_depl();
+
+void incr_param();
 
 #endif

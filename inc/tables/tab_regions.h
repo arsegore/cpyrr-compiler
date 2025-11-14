@@ -8,12 +8,12 @@
  *
  * Définition de la table des régions et de ses fonctions
  *
- * Auteur :  Adam,  Damien
+ * Auteur :  Adam,  Damien, Baptiste 
  */
 #define TAILLE_TAB_REGIONS 150
 
 typedef struct {
-    int taille_exec;
+    int taille;
     int nis;
     arbre *arbre_region;
 }cellule_region;
@@ -23,11 +23,6 @@ typedef cellule_region tab_region_t[TAILLE_TAB_REGIONS];
 extern tab_region_t tab_region;
 
 /**
- * @return Le numéro de la région courante
- */
-int region_courante();
-
-/**
  * Initialise la table des régions
  */
 void init_tab_regions();
@@ -35,10 +30,8 @@ void init_tab_regions();
 /**
  * Insère une nouvelle région dans la table, remplit automatiquement son
  * champ NIS
- *
- * @return Le numéro de région associé
  */
-int inserer_region();
+void inserer_region();
 
 /**
  * Affiche la table des régions de depart à arrivee, ou entierement si les
@@ -53,9 +46,9 @@ void afficher_tab_regions(int depart, int arrivee);
  *  Modifie le champ taille_exec d'une région
  *
  * @param num_region Le numéro de la région
- * @param exec Sa nouvelle taille à l'éxécution
+ * @param taille Sa nouvelle taille à l'éxécution
  */
-void modifier_taille_exec(int num_region, int exec);
+void modifier_taille(int num_region, int taille);
 
 /**
  * Modifie le pointeur vers l'arbre de la région d'une région

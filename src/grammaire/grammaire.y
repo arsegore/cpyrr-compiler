@@ -2,7 +2,7 @@
  * YACC 
  * Auteurs :
  *      Grammaire - Tout le groupe
- *      Actions - Louis , Adam 
+ *      Actions - Louis , Adam , Baptiste 
  */ 
 
 %{
@@ -13,6 +13,7 @@
     #include "tables/tab_rep.h"
     #include "tables/tab_regions.h"
     #include "tables/pile_regions.h"
+    // #include "tables/association_noms.h"
     int yylex();
     int yyerror(char *msg);
 %}
@@ -38,7 +39,8 @@
 %token <intval> ENTIER REEL BOOL CHAR  
 
 %%
-programme             : PROG AO corps AF
+programme             : PROG {inserer_region();}
+                        AO corps AF {depiler_pile_regions();}
                       ;
 
 corps                 : liste_declarations liste_instructions
@@ -70,32 +72,36 @@ suite_declaration_type : STRUCT                     {debut_struct(); remplir_nat
 dimension             : CO liste_dimensions CF
                       ;
 
-liste_dimensions      : une_dimension                                       {nbdimension++;}
-                      | liste_dimensions VIR une_dimension                  {nbdimension++;}
+liste_dimensions      : une_dimension {incr_nb_dim();}
+                      | liste_dimensions VIR une_dimension{incr_nb_dim();}
                       ;
 
 une_dimension         : CSTE_ENTIERE PP CSTE_ENTIERE                        {inserer_tab_rep($1); inserer_tab_rep($3);}
                       ;
 
-liste_champs          : un_champ                                            {nbchamps++;}
-                      | liste_champs un_champ                               {nbchamps++;}
+liste_champs          : un_champ {incr_nb_champ();}
+                      | liste_champs un_champ {incr_nb_champ();}
                       ;
 
                       // la première insertion est pour le num lexico ??? ça marche ?? manque fct tailletype et associationtype/nom
-un_champ              : IDF DP nom_type PV                                  {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); deplacement+=1;}
+un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); incr_depl();}
                       ;
 
 declaration_variable  : VAR IDF DP nom_type
                       ;
 
-declaration_procedure : PROC IDF                                            {debut_proc();}
-                        PO liste_param PF                                   {inserer_tab_rep_nb_elem(nbparam);}
-                        AO corps AF
+declaration_procedure : PROC {inserer_region();} //si ici ça marche pas faut ptet test l'autre en dessous
+                        IDF {debut_proc();}
+                        PO //{inserer_region();}
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
+                        AO corps AF {depiler_pile_regions();}
                       ;
-
-declaration_fonction  : nom_type FCT IDF                                    {debut_fct($1);}
-                        PO liste_param PF                                   {inserer_tab_rep_nb_elem(nbparam);}
-                        AO corps AF
+ 
+declaration_fonction  : nom_type FCT {inserer_region();} //si ici ça marche pas faut ptet test l'autre en dessous
+                        IDF {debut_fct($1);}
+                        PO //{inserer_region();}
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
+                        AO corps AF {depiler_pile_regions();}
                       ;
 
 liste_param           : // aucun parametre
@@ -103,11 +109,11 @@ liste_param           : // aucun parametre
                       | liste_param VIR un_param
                       ;
 
-un_param              : IDF DP nom_type                                     {inserer_tab_rep($1); inserer_tab_rep($3); nbparam++;}
+un_param              : IDF DP nom_type {inserer_tab_rep($1); inserer_tab_rep($3); incr_param();}
                       ;
 
-nom_type              : type_simple                                         {$$ = $1;}
-                      | IDF
+nom_type              : type_simple {$$ = $1;}
+                      | IDF {association_noms($1, TYPE);}
                       ;
 
 type_simple           : ENTIER                                              {$$ = $1;}
@@ -225,7 +231,7 @@ int main(int argc, char **argv){
     afficher_tab_lexico(0, 10);
     afficher_tab_decla();
     afficher_tab_rep(0, 20);
-   /* afficher_tab_regions(0, 10); */
+    afficher_tab_regions(0, 10);
 
     exit(EXIT_SUCCESS);
     
