@@ -15,6 +15,12 @@
 #define A_MOINS 5
 #define A_MULT 6
 #define A_DIV 7
+#define A_OPAFF 8
+#define A_APPEL_PROC 9
+#define A_APPEL_FCT 10
+#define A_LISTE_I 11
+#define A_TANT_QUE 12
+#define A_IF_THEN_ELSE 13
 
 /**
  * Chaque noeud connait sa nature et sa valeur, ainsi qu'évidemment
@@ -62,5 +68,26 @@ arbre creer_noeud(int nature, int valeur);
  * @param a : L'arbre à afficher
  */
 void afficher_arbre(arbre a);
+
+/**
+ * Exécute un arbre
+ * 
+ * @param a : L'arbre à exécuter
+ */
+void execute_arbre(arbre a);
+
+// à faire
+int execute_arbre_fct(arbre a);
+
+/**
+ * Evalue un arbre
+ * 
+ * @param a : L'arbre à évaluer
+ * @return : L'évaluation de l'arbre
+ */
+int evalue_arbre(arbre a);
+
+// à faire
+int evalue_arbre_int(arbre a);
 
 #endif

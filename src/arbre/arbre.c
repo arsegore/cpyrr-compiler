@@ -96,3 +96,60 @@ void afficher_arbre(arbre a) {
         fils = fils->frere_droit;
     }
 }
+
+void execute_arbre(arbre a) {
+    int i, v;
+    switch (a->nature) {
+        case A_OPAFF:
+            i = recuperer_case_variable(a->fils_gauche); // fct à faire
+            v = evalue_arbre_int(a->fils_gauche->frere_droit);
+            stocker_pile_donnees(i, v); // fct à faire
+            break;
+        case A_APPEL_PROC:
+            // gerer pile (mise en place de "pointeurs")
+            execute_arbre(a);
+            // gerer pile
+            break;
+        case A_APPEL_FCT:
+            // gerer pile
+            v = execute_arbre_fct(a);
+            // gerer pile
+            break;
+        case A_LISTE_I:
+            execute_arbre(a->fils_gauche);
+            execute_arbre(a->fils_gauche->frere_droit);
+            break;
+        case A_IDF:
+        case A_CSTE_ENTIERE:
+        case A_AFFECT:
+        case A_PLUS:
+        case A_MOINS:
+        case A_MULT:
+        case A_DIV:
+    }
+}
+
+int evalue_arbre(arbre a) {
+    int i;
+    switch (a->nature) {
+        case A_IDF:
+            i = recuperer_case_variable(a); // fct à faire
+            return (valeur_pile(i)); // fct à faire
+            break;
+        case A_CSTE_ENTIERE:
+            return a->valeur;
+            break;
+        case A_PLUS:
+            evalue_arbre_int(a->fils_gauche) + evalue_arbre_int(a->fils_gauche->frere_droit);
+            break;
+        case A_MOINS:
+            evalue_arbre_int(a->fils_gauche) - evalue_arbre_int(a->fils_gauche->frere_droit);
+            break;
+        case A_MULT:
+            evalue_arbre_int(a->fils_gauche) * evalue_arbre_int(a->fils_gauche->frere_droit);
+            break;
+        case A_DIV:
+            evalue_arbre_int(a->fils_gauche) / evalue_arbre_int(a->fils_gauche->frere_droit);
+            break;
+    }
+}
