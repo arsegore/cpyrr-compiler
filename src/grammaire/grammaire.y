@@ -13,6 +13,7 @@
     #include "tables/tab_rep.h"
     #include "tables/tab_regions.h"
     #include "tables/pile_regions.h"
+    // #include "tables/association_noms.h"
     int yylex();
     int yyerror(char *msg);
 %}
@@ -107,7 +108,7 @@ un_param              : IDF DP nom_type {inserer_tab_rep($1); inserer_tab_rep($3
                       ;
 
 nom_type              : type_simple {$$ = $1;}
-                      | IDF
+                      | IDF {association_noms($1, TYPE);}
                       ;
 
 type_simple           : ENTIER {$$ = $1;}
@@ -218,12 +219,16 @@ int main(int argc, char **argv){
     init_tab_lexico();
     init_tab_decla();
     init_tab_rep();
+    init_tab_regions();
+
+    for (int i = 0; i < 5; i++) inserer_region();
 
     yyparse();
 
     afficher_tab_lexico(0, 10);
     afficher_tab_decla();
     afficher_tab_rep(0, 20);
+    afficher_tab_regions(0, 10);
 
     exit(EXIT_SUCCESS);
     

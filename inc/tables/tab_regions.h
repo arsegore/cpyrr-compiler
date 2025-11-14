@@ -22,8 +22,6 @@ typedef cellule_region tab_region_t[TAILLE_TAB_REGIONS];
 
 extern tab_region_t tab_region;
 
-extern int num_region_courante;
-
 /**
  * @return Le numéro de la région courante
  */
