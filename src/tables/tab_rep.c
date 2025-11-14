@@ -6,7 +6,7 @@
  * Implantation de la table de description des types et des en-têtes de
  * sous-programme
  *
- * Auteur: Louis PELOUX, Adam HADDADI
+ * Auteur: Louis PELOUX, Adam HADDADI, Baptiste Moulin
  */
 int tab_rep[1000];
 int idx_premier_libre = 0;
@@ -93,3 +93,21 @@ void debut_tab(){
     printf("indice du nbdim du tab = %d\n", idx_nb_element);
     nbdimension = 0;
 }
+
+void incr_nb_dim() {
+    nbdimension++;
+}
+
+void incr_nb_champ() {
+    nbchamps++;
+}
+
+void incr_depl() {
+    deplacement++;
+}
+
+void incr_param() {
+    nbparam++;
+}
+
+
