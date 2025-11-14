@@ -5,6 +5,10 @@
 #include "tables/tab_decla.h"
 #include "tables/tab_lexico.h"
 
+/**
+ * Auteur: Paul RODRIGUES
+ */
+
 // NOTE : il faut aussi se servir de la pile des régions, voir notes tp
 #include "tables/pile_regions.h"
 
@@ -15,10 +19,10 @@ Est-ce vraiment un probleme?
 */
 
 int association_noms(int num_lex, int nature){
-    int i = num_lex, /* pour parcourir la table des decla */
-        j = 0, /* servira a simuler le depilement */
-        asso_ok = 0, /* pour savoir si j'ai bien trouve l'association */
-        s; /* le sommet de pile */
+    int i = num_lex,    /* pour parcourir la table des decla */
+        j = 0,          /* servira a simuler le depilement */
+        asso_ok = 0,    /* pour savoir si j'ai bien trouve l'association */
+        s;              /* le sommet de pile */
 
 
     while (asso_ok == 0){
