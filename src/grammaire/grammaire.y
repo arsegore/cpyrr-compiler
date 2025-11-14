@@ -2,7 +2,7 @@
  * YACC 
  * Auteurs :
  *      Grammaire - Tout le groupe
- *      Actions - Louis , Adam 
+ *      Actions - Louis , Adam , Baptiste 
  */ 
 
 %{
@@ -70,19 +70,19 @@ suite_declaration_type : STRUCT {debut_struct();}
 dimension             : CO liste_dimensions CF
                       ;
 
-liste_dimensions      : une_dimension {nbdimension++;}
-                      | liste_dimensions VIR une_dimension{nbdimension++;}
+liste_dimensions      : une_dimension {incr_nb_dim();}
+                      | liste_dimensions VIR une_dimension{incr_nb_dim();}
                       ;
 
 une_dimension         : CSTE_ENTIERE PP CSTE_ENTIERE {inserer_tab_rep($1); inserer_tab_rep($3);}
                       ;
 
-liste_champs          : un_champ {nbchamps++;}
-                      | liste_champs un_champ {nbchamps++;}
+liste_champs          : un_champ {incr_nb_champ();}
+                      | liste_champs un_champ {incr_nb_champ();}
                       ;
 
                       // la première insertion est pour le num lexico ??? ça marche ?? manque fct tailletype et associationtype/nom
-un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); deplacement+=1;}
+un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); incr_depl();}
                       ;
 
 declaration_variable  : VAR IDF DP nom_type
@@ -103,7 +103,7 @@ liste_param           : // aucun parametre
                       | liste_param VIR un_param
                       ;
 
-un_param              : IDF DP nom_type {inserer_tab_rep($1); inserer_tab_rep($3); nbparam++;}
+un_param              : IDF DP nom_type {inserer_tab_rep($1); inserer_tab_rep($3); incr_param();}
                       ;
 
 nom_type              : type_simple {$$ = $1;}
