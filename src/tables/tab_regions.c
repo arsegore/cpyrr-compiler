@@ -5,8 +5,6 @@
 
 tab_region_t tab_region;
 
-int num_region_courante = 0;
-
 int nb_regions_total = 0;
 
 void init_tab_regions() {
