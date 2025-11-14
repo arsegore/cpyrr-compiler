@@ -3,17 +3,8 @@
 #include "../../inc/arbre/arbre.h"
 
 /**
- * Auteur : Damien GRANJON
+ * Auteur : GRANJON Damien
  */
-
-/*
-struct noeud {
-    int nature;
-    int valeur;
-    struct noeud *fils_gauche;
-    struct noeud *frere_droit;
-};
-typedef struct noeud *arbre;*/
 
 arbre concat_pere_fils(arbre pere, arbre fils) {
     pere->fils_gauche = fils;
@@ -38,15 +29,19 @@ arbre creer_noeud(int nature, int valeur) {
     return a;
 }
 
-void afficher_arbre_rec(arbre a, const char *prefix, int is_last) {
-    if (a == NULL)
+void afficher_arbre_rec(arbre a, const char *prefixe, int is_last) {
+    char nouveau_prefixe[1024];
+    arbre fils = a->fils_gauche;
+
+    if (a == NULL) {
         return;
+    }
 
     // Affiche le préfixe et la branche
-    printf("%s", prefix);
+    printf("%s", prefixe);
     printf("%s", is_last ? "└── " : "├── ");
 
-    // Affiche le contenu du nœud
+    // Affiche le contenu du noeud
     switch (a->nature) {
         case A_IDF: printf("IDF (%d)\n", a->valeur); break;
         case A_CSTE_ENTIERE: printf("CSTE_ENTIERE (%d)\n", a->valeur); break;
@@ -59,18 +54,17 @@ void afficher_arbre_rec(arbre a, const char *prefix, int is_last) {
     }
 
     // Nouveau préfixe pour les fils
-    char new_prefix[1024];
-    snprintf(new_prefix, sizeof(new_prefix), "%s%s", prefix, is_last ? "    " : "│   ");
+    snprintf(nouveau_prefixe, sizeof(nouveau_prefixe), "%s%s", prefixe, is_last ? "    " : "│   ");
 
-    // Parcourt les fils (le premier, puis ses frères)
-    arbre fils = a->fils_gauche;
+    // Parcourt les fils
     while (fils) {
-        afficher_arbre_rec(fils, new_prefix, fils->frere_droit == NULL);
+        afficher_arbre_rec(fils, nouveau_prefixe, fils->frere_droit == NULL);
         fils = fils->frere_droit;
     }
 }
 
 void afficher_arbre(arbre a) {
+    arbre fils = a->fils_gauche;
     if (a == NULL) {
         printf("(arbre vide)\n");
         return;
@@ -90,7 +84,6 @@ void afficher_arbre(arbre a) {
     }
 
     // On appelle la récursion pour tous les fils de la racine avec le bon préfixe
-    arbre fils = a->fils_gauche;
     while (fils) {
         afficher_arbre_rec(fils, "    ", fils->frere_droit == NULL);
         fils = fils->frere_droit;
@@ -112,7 +105,7 @@ void execute_arbre(arbre a) {
             break;
         case A_APPEL_FCT:
             // gerer pile
-            v = execute_arbre_fct(a);
+            v = execute_arbre_fct(a); // fct à faire
             // gerer pile
             break;
         case A_LISTE_I:
@@ -126,6 +119,7 @@ void execute_arbre(arbre a) {
         case A_MOINS:
         case A_MULT:
         case A_DIV:
+        case A_MOD:
     }
 }
 
@@ -150,6 +144,9 @@ int evalue_arbre_int(arbre a) {
             break;
         case A_DIV:
             evalue_arbre_int(a->fils_gauche) / evalue_arbre_int(a->fils_gauche->frere_droit);
+            break;
+        case A_MOD:
+            evalue_arbre_int(a->fils_gauche) % evalue_arbre_int(a->fils_gauche->frere_droit);
             break;
     }
 }
