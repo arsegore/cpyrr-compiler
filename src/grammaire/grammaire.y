@@ -13,6 +13,7 @@
     #include "tables/tab_rep.h"
     #include "tables/tab_regions.h"
     #include "tables/pile_regions.h"
+    // #include "tables/association_noms.h"
     int yylex();
     int yyerror(char *msg);
 %}
@@ -112,7 +113,7 @@ un_param              : IDF DP nom_type {inserer_tab_rep($1); inserer_tab_rep($3
                       ;
 
 nom_type              : type_simple {$$ = $1;}
-                      | IDF
+                      | IDF {association_noms($1, TYPE);}
                       ;
 
 type_simple           : ENTIER {$$ = $1;}
