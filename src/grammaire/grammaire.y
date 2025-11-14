@@ -38,7 +38,8 @@
 %token <intval> ENTIER REEL BOOL CHAR  
 
 %%
-programme             : PROG AO corps AF
+programme             : PROG {inserer_region();}
+                        AO corps AF {depiler_pile_regions();}
                       ;
 
 corps                 : liste_declarations liste_instructions
@@ -88,14 +89,18 @@ un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep
 declaration_variable  : VAR IDF DP nom_type
                       ;
 
-declaration_procedure : PROC IDF {debut_proc();}
-                        PO liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
-                        AO corps AF
+declaration_procedure : PROC {inserer_region();} //si ici ça marche pas faut ptet test l'autre en dessous
+                        IDF {debut_proc();}
+                        PO //{inserer_region();}
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
+                        AO corps AF {depiler_pile_regions();}
                       ;
-
-declaration_fonction  : nom_type FCT IDF {debut_fct($1);}
-                        PO liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
-                        AO corps AF
+ 
+declaration_fonction  : nom_type FCT {inserer_region();} //si ici ça marche pas faut ptet test l'autre en dessous
+                        IDF {debut_fct($1);}
+                        PO //{inserer_region();}
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
+                        AO corps AF {depiler_pile_regions();}
                       ;
 
 liste_param           : // aucun parametre
@@ -220,14 +225,12 @@ int main(int argc, char **argv){
     init_tab_rep();
     init_tab_regions();
 
-    for (int i = 0; i < 5; i++) inserer_region();
-
     yyparse();
 
     afficher_tab_lexico(0, 10);
     afficher_tab_decla();
     afficher_tab_rep(0, 20);
-   /* afficher_tab_regions(0, 10); */
+    afficher_tab_regions(0, 10);
 
     exit(EXIT_SUCCESS);
     
