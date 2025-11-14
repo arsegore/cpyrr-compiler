@@ -15,12 +15,13 @@
 #define A_MOINS 5
 #define A_MULT 6
 #define A_DIV 7
-#define A_OPAFF 8
-#define A_APPEL_PROC 9
-#define A_APPEL_FCT 10
-#define A_LISTE_I 11
-#define A_TANT_QUE 12
-#define A_IF_THEN_ELSE 13
+#define A_MOD 8
+#define A_OPAFF 9
+#define A_APPEL_PROC 10
+#define A_APPEL_FCT 11
+#define A_LISTE_I 12
+#define A_TANT_QUE 13
+#define A_IF_THEN_ELSE 14
 
 /**
  * Chaque noeud connait sa nature et sa valeur, ainsi qu'évidemment
