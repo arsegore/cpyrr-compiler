@@ -1,5 +1,5 @@
 programme {
-  typedef Tab10: tab [1..10] de int;
+  typedef Tab10: tab [1..10, 20..30] de float;
   var t: Tab10;
   t[3] = 42;
 }
