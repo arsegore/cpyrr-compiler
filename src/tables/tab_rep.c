@@ -9,6 +9,7 @@
  * Auteur: Louis PELOUX, Adam HADDADI, Baptiste Moulin
  */
 int tab_rep[1000];
+int id_rep_courante;
 int idx_premier_libre = 0;
 int idx_nb_element = 0;
 int idx_type_element = 0;
@@ -64,33 +65,32 @@ void inserer_tab_rep_nb_elem(int val){
 
 void inserer_tab_rep_type(int type){
     tab_rep[idx_type_element] = type;
-    printf("Type du tab dans [%d] == %d\n", idx_type_element, type);
 }
 
 void debut_proc(){
-    idx_nb_element = idx_premier_libre;
+    id_rep_courante = idx_premier_libre++;
+    idx_nb_element = id_rep_courante;
     nbparam = 0;
-    idx_premier_libre++;
 }
 
 /* exactement la même que proc, faut il vraiment refaire uen fct ? */
 void debut_struct(){
-    idx_nb_element = idx_premier_libre;
+    id_rep_courante = idx_premier_libre++;
+    idx_nb_element = id_rep_courante;
     nbchamps = 0;
-    idx_premier_libre++;
 }
 
 void debut_fct(int type){
-    idx_nb_element = idx_premier_libre++;
+    id_rep_courante = idx_premier_libre++;
+    idx_nb_element = id_rep_courante;
     tab_rep[idx_premier_libre++] = type;
     nbparam = 0;
 }
 
 void debut_tab(){
-    idx_type_element = idx_premier_libre++;
+    id_rep_courante = idx_premier_libre++;
+    idx_type_element = id_rep_courante;
     idx_nb_element = idx_premier_libre++;
-    printf("indice du type du tab = %d\n", idx_type_element);
-    printf("indice du nbdim du tab = %d\n", idx_nb_element);
     nbdimension = 0;
 }
 

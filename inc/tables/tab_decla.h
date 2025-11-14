@@ -29,7 +29,7 @@
  * Auteurs: PELOUX Louis, RODRIGUES Paul, HADDADI Adam 
  */
 
-extern int table_decl[HAUTEUR][LARGEUR];
+extern int tab_decla[HAUTEUR][LARGEUR];
 extern int decla_courante;
 
 /**

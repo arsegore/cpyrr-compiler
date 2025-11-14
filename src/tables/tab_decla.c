@@ -97,7 +97,7 @@ void afficher_tab_decla() {
            "suivant", "region", "description", "execution");
     printf(
         "------------------------------------------------------------------------\n");
-    while ((tab_decla[i][NATURE] != -1) && i < DEBORDEMENT) {
+    while (i < DEBORDEMENT && (tab_decla[i][NATURE] != -1)) {
         afficher_ligne(i++, 0);
     }
     printf(
