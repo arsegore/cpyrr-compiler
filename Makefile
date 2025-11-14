@@ -15,7 +15,7 @@ else
 	# Configuration Linux (par défaut)
 	YACC   = yacc
 	LEX    = lex
-	LIBS   = -ll   # lex (classique) nécessite libl
+	LIBS   =   # lex (classique) nécessite libl
 	YFLAGS = -dv
 	LFLAGS = 
 endif
