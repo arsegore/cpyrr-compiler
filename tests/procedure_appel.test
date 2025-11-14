@@ -1,5 +1,12 @@
 programme {
   proc afficher(i: int) {
+    proc afficherrrr(ug: int) {
+      rien;
+    }
+    rien;
+  }
+
+  proc afficherr(ie: int) {
     rien;
   }
 
