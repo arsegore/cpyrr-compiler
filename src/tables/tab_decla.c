@@ -102,7 +102,7 @@ void afficher_tab_decla() {
 }
 
 void inserer_declaration(int num_lexico, int nature, int region, int description) {
-    int i, indice;
+    int i, indice, exec;
 
     if (tab_decla[num_lexico][NATURE] != -1) {
         i = num_lexico;
@@ -119,5 +119,24 @@ void inserer_declaration(int num_lexico, int nature, int region, int description
     tab_decla[indice][NATURE] = nature;
     tab_decla[indice][REGION] = region;
     tab_decla[indice][DESCRIPTION] = description;
+    
+    switch (nature){
+
+        // exec = taille à l'exécution d'une valeur de ce type (en tenant compte qu'il s'agit d'une machine C, cf ci-dessous).
+        // fonction taille_type?
+    case N_STRUCT : exec = -1; break;
+    case N_TAB    : exec = -1; break;
+
+        // exec = déplacement à l'exécution, de l'emplacement associé à la variable ou du paramètre dans la zone de données correspondante.
+        // variable deplacement?
+    case N_VAR    : exec = -1; break;
+    case N_PARAM  : exec = -1; break;
+        
+        // exec = num de region
+    case N_PROC   : exec = region; break;
+    case N_FCT    : exec = region; break;
+    }
+    
+    tab_decla[indice][EXECUTION] = exec;
     // TODO : insérer le reste
 }
