@@ -109,9 +109,9 @@ void execute_arbre(arbre a) {
             break;
 
         case A_AFFECT:
-            i = recuperer_case_variable(a->fils_gauche); // fct à faire
+            //i = recuperer_case_variable(a->fils_gauche); // fct à faire
             v = evalue_arbre_int(a->fils_gauche->frere_droit);
-            stocker_pile_donnees(i, v); // fct à faire
+            //stocker_pile_donnees(i, v); // fct à faire
             break;
         case A_PLUS:
             break;
@@ -134,7 +134,7 @@ void execute_arbre(arbre a) {
             break;
         case A_APPEL_FCT:
             // gerer pile
-            v = execute_arbre_fct(a); // fct à faire
+            //v = execute_arbre_fct(a); // fct à faire
             // gerer pile
             break;
         // normalement on aura pas ça :
@@ -179,8 +179,8 @@ int evalue_arbre_int(arbre a) {
     switch (a->nature) {
 
         case A_IDF:
-            i = recuperer_case_variable(a); // fct à faire
-            return (valeur_pile(i)); // fct à faire
+            //i = recuperer_case_variable(a); // fct à faire
+            //return (valeur_pile(i)); // fct à faire
             break;
 
         case A_CSTE_ENTIERE:
@@ -202,7 +202,7 @@ int evalue_arbre_int(arbre a) {
         case A_MOD:
             return evalue_arbre_int(a->fils_gauche) % evalue_arbre_int(a->fils_gauche->frere_droit);
             break;
-            
+
         case A_EGAL:
             if (evalue_arbre_int(a->fils_gauche) == evalue_arbre_int(a->fils_gauche->frere_droit)) {
                 return 1;
