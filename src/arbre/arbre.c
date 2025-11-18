@@ -93,8 +93,10 @@ void afficher_arbre(arbre a) {
 void execute_arbre(arbre a) {
     int i, v;
     switch (a->nature) {
+        
         case A_IDF:
             break;
+
         case A_CSTE_ENTIERE:
             break;
         case A_CSTE_BOOL:
@@ -105,6 +107,7 @@ void execute_arbre(arbre a) {
             break;
         case A_CSTE_REELLE:
             break;
+
         case A_AFFECT:
             i = recuperer_case_variable(a->fils_gauche); // fct à faire
             v = evalue_arbre_int(a->fils_gauche->frere_droit);
@@ -120,8 +123,10 @@ void execute_arbre(arbre a) {
             break;
         case A_MOD:
             break;
+
         case A_RIEN:
             break;
+
         case A_APPEL_PROC:
             // gerer pile (mise en place de "pointeurs")
             execute_arbre(a);
@@ -132,16 +137,21 @@ void execute_arbre(arbre a) {
             v = execute_arbre_fct(a); // fct à faire
             // gerer pile
             break;
-        case A_RET:
-            break;
+        // normalement on aura pas ça :
+        /* case A_RET:
+            break;*/
+        // vu qu'on est pas dans une fonction
+
         case A_LISTE_I:
             execute_arbre(a->fils_gauche);
             execute_arbre(a->fils_gauche->frere_droit);
             break;
+
         case A_TANT_QUE:
             break;
         case A_SI_ALORS_SINON:
             break;
+
         case A_ET:
             break;
         case A_OU:
@@ -160,45 +170,74 @@ void execute_arbre(arbre a) {
             break;
         case A_SUPEGAL:
             break;
+
     }
 }
 
 int evalue_arbre_int(arbre a) {
     int i;
     switch (a->nature) {
+
         case A_IDF:
             i = recuperer_case_variable(a); // fct à faire
             return (valeur_pile(i)); // fct à faire
             break;
+
         case A_CSTE_ENTIERE:
             return a->valeur;
             break;
+
         case A_PLUS:
-            evalue_arbre_int(a->fils_gauche) + evalue_arbre_int(a->fils_gauche->frere_droit);
+            return evalue_arbre_int(a->fils_gauche) + evalue_arbre_int(a->fils_gauche->frere_droit);
             break;
         case A_MOINS:
-            evalue_arbre_int(a->fils_gauche) - evalue_arbre_int(a->fils_gauche->frere_droit);
+            return evalue_arbre_int(a->fils_gauche) - evalue_arbre_int(a->fils_gauche->frere_droit);
             break;
         case A_MULT:
-            evalue_arbre_int(a->fils_gauche) * evalue_arbre_int(a->fils_gauche->frere_droit);
+            return evalue_arbre_int(a->fils_gauche) * evalue_arbre_int(a->fils_gauche->frere_droit);
             break;
         case A_DIV:
-            evalue_arbre_int(a->fils_gauche) / evalue_arbre_int(a->fils_gauche->frere_droit);
+            return evalue_arbre_int(a->fils_gauche) / evalue_arbre_int(a->fils_gauche->frere_droit);
             break;
         case A_MOD:
-            evalue_arbre_int(a->fils_gauche) % evalue_arbre_int(a->fils_gauche->frere_droit);
+            return evalue_arbre_int(a->fils_gauche) % evalue_arbre_int(a->fils_gauche->frere_droit);
             break;
+            
         case A_EGAL:
+            if (evalue_arbre_int(a->fils_gauche) == evalue_arbre_int(a->fils_gauche->frere_droit)) {
+                return 1;
+            }
+            return 0;
             break;
         case A_DIFF:
+            if (evalue_arbre_int(a->fils_gauche) != evalue_arbre_int(a->fils_gauche->frere_droit)) {
+                return 1;
+            }
+            return 0;
             break;
         case A_INF:
+            if (evalue_arbre_int(a->fils_gauche) < evalue_arbre_int(a->fils_gauche->frere_droit)) {
+                return 1;
+            }
+            return 0;
             break;
         case A_SUP:
+            if (evalue_arbre_int(a->fils_gauche) > evalue_arbre_int(a->fils_gauche->frere_droit)) {
+                return 1;
+            }
+            return 0;
             break;
         case A_INFEGAL:
+            if (evalue_arbre_int(a->fils_gauche) <= evalue_arbre_int(a->fils_gauche->frere_droit)) {
+                return 1;
+            }
+            return 0;
             break;
         case A_SUPEGAL:
+            if (evalue_arbre_int(a->fils_gauche) >= evalue_arbre_int(a->fils_gauche->frere_droit)) {
+                return 1;
+            }
+            return 0;
             break;
     }
 }
