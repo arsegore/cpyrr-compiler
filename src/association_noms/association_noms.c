@@ -39,7 +39,17 @@ int association_noms(int num_lex, int nature){
         }
 
         /* je verifie que la nature de la decla correspond a la nature recherchee */
+
+        // Cas geneal
         if (tab_decla[i][NATURE] == nature){
+            asso_ok = 1;
+        }
+
+        // Cas Tab ou Struct (Appel avec TYPE)
+        if (nature == TYPE
+            && (table_decla[i][NATURE] == N_STRUCT
+                || table_decla[i][NATURE] == N_TAB)){
+
             asso_ok = 1;
         }
     }
