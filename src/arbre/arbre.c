@@ -93,10 +93,34 @@ void afficher_arbre(arbre a) {
 void execute_arbre(arbre a) {
     int i, v;
     switch (a->nature) {
-        case A_OPAFF:
+        case A_IDF:
+            break;
+        case A_CSTE_ENTIERE:
+            break;
+        case A_CSTE_BOOL:
+            break;
+        case A_CSTE_CHAINE:
+            break;
+        case A_CSTE_CHAR:
+            break;
+        case A_CSTE_REELLE:
+            break;
+        case A_AFFECT:
             i = recuperer_case_variable(a->fils_gauche); // fct à faire
             v = evalue_arbre_int(a->fils_gauche->frere_droit);
             stocker_pile_donnees(i, v); // fct à faire
+            break;
+        case A_PLUS:
+            break;
+        case A_MOINS:
+            break;
+        case A_MULT:
+            break;
+        case A_DIV:
+            break;
+        case A_MOD:
+            break;
+        case A_RIEN:
             break;
         case A_APPEL_PROC:
             // gerer pile (mise en place de "pointeurs")
@@ -108,18 +132,34 @@ void execute_arbre(arbre a) {
             v = execute_arbre_fct(a); // fct à faire
             // gerer pile
             break;
+        case A_RET:
+            break;
         case A_LISTE_I:
             execute_arbre(a->fils_gauche);
             execute_arbre(a->fils_gauche->frere_droit);
             break;
-        case A_IDF:
-        case A_CSTE_ENTIERE:
-        case A_AFFECT:
-        case A_PLUS:
-        case A_MOINS:
-        case A_MULT:
-        case A_DIV:
-        case A_MOD:
+        case A_TANT_QUE:
+            break;
+        case A_SI_ALORS_SINON:
+            break;
+        case A_ET:
+            break;
+        case A_OU:
+            break;
+        case A_NON:
+            break;
+        case A_EGAL:
+            break;
+        case A_DIFF:
+            break;
+        case A_INF:
+            break;
+        case A_SUP:
+            break;
+        case A_INFEGAL:
+            break;
+        case A_SUPEGAL:
+            break;
     }
 }
 
@@ -147,6 +187,18 @@ int evalue_arbre_int(arbre a) {
             break;
         case A_MOD:
             evalue_arbre_int(a->fils_gauche) % evalue_arbre_int(a->fils_gauche->frere_droit);
+            break;
+        case A_EGAL:
+            break;
+        case A_DIFF:
+            break;
+        case A_INF:
+            break;
+        case A_SUP:
+            break;
+        case A_INFEGAL:
+            break;
+        case A_SUPEGAL:
             break;
     }
 }
