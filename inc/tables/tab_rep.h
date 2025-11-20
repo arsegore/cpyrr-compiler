@@ -87,7 +87,7 @@ void incr_nb_dim();
 
 void incr_nb_champ();
 
-void incr_depl();
+void incr_depl(int num_lexico);
 
 void incr_param();
 

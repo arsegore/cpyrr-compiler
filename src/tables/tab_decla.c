@@ -3,7 +3,8 @@
 
 #include "tables/tab_lexico.h"
 #include "tables/tab_decla.h"
-
+#include "tables/tab_rep.h"
+#include "tables/pile_regions.h"
 
 /* a faire
    - chainage
@@ -19,25 +20,26 @@ void init_types_base() {
     remplir_nature(decla_courante, N_TYPE_B);
     remplir_desc(decla_courante, -1);
     remplir_region(decla_courante, 0);
-    remplir_exec(decla_courante, 1);
+    
 
     determiner_ligne_decla(inserer_lexeme("float", 3));
     remplir_nature(decla_courante, N_TYPE_B);
     remplir_desc(decla_courante, -1);
     remplir_region(decla_courante, 0);
-    remplir_exec(decla_courante, 1);
 
     determiner_ligne_decla(inserer_lexeme("bool", 3));
     remplir_nature(decla_courante, N_TYPE_B);
     remplir_desc(decla_courante, -1);
     remplir_region(decla_courante, 0);
-    remplir_exec(decla_courante, 1);
 
     determiner_ligne_decla(inserer_lexeme("char", 3));
     remplir_nature(decla_courante, N_TYPE_B);
     remplir_desc(decla_courante, -1);
     remplir_region(decla_courante, 0);
-    remplir_exec(decla_courante, 1);
+
+    for(int i = 0; i < 4; i++){
+        tab_decla[i][EXECUTION] = 1;
+    }
     
 }
 
@@ -140,6 +142,58 @@ void remplir_desc(int num_decla, int desc){
     tab_decla[num_decla][DESCRIPTION] = desc;
 }
 
-void remplir_exec(int num_decla, int exec){
-    tab_decla[num_decla][EXECUTION] = exec;
+void remplir_exec(int num_decla){
+    int nature = tab_decla[num_decla][NATURE];
+    switch(nature){
+    case 1:
+    case 2:
+        tab_decla[num_decla][EXECUTION] = taille_type(num_decla);
+        break;
+    case 3:
+    case 4:
+        tab_decla[num_decla][EXECUTION] = deplacement;
+        break;
+    case 5:
+    case 6:
+        tab_decla[num_decla][EXECUTION] = num_region_courante;
+        break;
+    }
+}
+
+int taille_type(int num_type){
+    int nature = tab_decla[num_type][NATURE];
+    int acc = 0, i,
+        commencement = tab_decla[num_type][DESCRIPTION],
+        nb_champs = tab_rep[commencement];
+    if(nature == N_TYPE_B){
+        return 1;
+    }
+
+    switch(nature){
+    case N_STRUCT:
+        for(i = commencement+2; i < commencement+(nb_champs * 3); i +=3){
+            acc += tab_decla[tab_rep[i]][EXECUTION];
+        }
+        break;
+
+    case N_TAB:
+        nb_champs = tab_rep[commencement+1];
+        acc = tab_decla[tab_rep[commencement+1]][EXECUTION];
+        for(i = commencement+3; i <= commencement+3+(nb_champs); i+=2){
+            printf("on passe %d fois\n",i);
+            acc*= tab_rep[i];
+        }
+        break;
+
+    case N_VAR:
+        acc = tab_decla[tab_rep[commencement]][EXECUTION];
+        break;
+
+    case N_PARAM:
+         printf("on passe la ?4\n");
+        acc = tab_decla[tab_rep[commencement]][EXECUTION];
+        break;
+    }
+    return acc;
+
 }

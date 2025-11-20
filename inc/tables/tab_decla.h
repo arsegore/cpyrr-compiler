@@ -62,6 +62,8 @@ void remplir_region(int num_decla, int region);
 
 void remplir_desc(int num_decla, int desc);
 
-void remplir_exec(int num_decla, int exec);
+void remplir_exec(int num_decla);
+
+int taille_type(int num_type);
 
 #endif

@@ -1,4 +1,5 @@
 #include "tables/tab_rep.h"
+#include "tables/tab_decla.h"
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -102,8 +103,8 @@ void incr_nb_champ() {
     nbchamps++;
 }
 
-void incr_depl() {
-    deplacement++;
+void incr_depl(int num_lexico) {
+    deplacement+=taille_type(num_lexico);
 }
 
 void incr_param() {
