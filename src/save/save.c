@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <string.h>
+#include <errno.h>
 #include "save/save.h"
 
 /**
@@ -13,6 +16,11 @@
 void save_tab_lex() {
     int i;
     FILE* f_save_tab_lex;
+
+    if (mkdir(NOM_DOSSIER_SAVES, 0755) != 0 && errno != EEXIST) {
+        printf("Erreur création du dossier pour les sauvegardes\n");
+        return;
+    }
 
     if ((f_save_tab_lex = fopen(NOM_FIC_SAVE_TAB_LEX, "w+")) == NULL) {
         printf("Erreur ouverture/création du fichier de sauvegarde de la tab lexico\n");
