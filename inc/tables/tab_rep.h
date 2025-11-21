@@ -1,5 +1,5 @@
-#ifndef _TAB_DESC_H
-#define _TAB_DESC_H
+#ifndef _TAB_REP_H
+#define _TAB_REP_H
 
 // TODO: CORRIGER LES FONCTIONS (et/ou actions ?) SUR LES TYPES TAB
 
