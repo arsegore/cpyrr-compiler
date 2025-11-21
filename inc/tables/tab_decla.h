@@ -10,6 +10,7 @@
 #define N_FCT 6
 #define N_CH_STRUCT 7
 #define N_ARG 8
+#define TYPE 9
 
 #define HAUTEUR 5000
 #define LARGEUR 5
@@ -28,7 +29,8 @@
  * Auteurs:  Louis,  Paul,  Adam 
  */
 
-extern int table_decl[HAUTEUR][LARGEUR];
+extern int tab_decla[HAUTEUR][LARGEUR];
+extern int decla_courante;
 
 /**
  * Initialise la table des déclarations 
@@ -49,13 +51,19 @@ void afficher_ligne(int num, int entete);
 void afficher_tab_decla();
 
 /**
- * Insère un nouvel élement dans la table des déclarations
- *
- * @param num_lexico : Le numéro lexico du léxème correspondant
- * @param nature : La nature de la déclaration 
- * @param region : La région dans laquelle elle a été rencontrée 
- * ... pas terminé
+ * Détermine la ligne dans laquelle insérer la déclaration courante en 
+ * fonction de son num lexico
  */
-void inserer_declaration(int num_lexico, int nature, int region, int description);
+void determiner_ligne_decla(int num_lexico);
+
+void remplir_nature(int num_decla, int nature);
+
+void remplir_region(int num_decla, int region);
+
+void remplir_desc(int num_decla, int desc);
+
+void remplir_exec(int num_decla);
+
+int taille_type(int num_type);
 
 #endif

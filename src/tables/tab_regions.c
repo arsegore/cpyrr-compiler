@@ -3,6 +3,14 @@
 #include "tables/tab_regions.h"
 #include "tables/pile_regions.h"
 
+/**
+ * tab_regions.c
+ *
+ * Implantation de la table des régions et de ses fonctions
+ *
+ * Auteur :  Adam,  Damien,  Baptiste
+ */
+
 tab_region_t tab_region;
 
 int nb_regions_total = 0;
@@ -11,21 +19,20 @@ void init_tab_regions() {
     int i;
 
     for (i = 0; i < TAILLE_TAB_REGIONS; i++) {
-        tab_region[i].taille_exec = -1;
+        tab_region[i].taille = -1;
         tab_region[i].nis = -1;
         tab_region[i].arbre_region = NULL;
     }
-    inserer_region();
 }
 
 
-int inserer_region() {
+void inserer_region() {
     int num_region = nb_regions_total++;
+
     empiler_pile_regions(num_region);
 
+    modifier_taille(num_region, 8/*a changer parce que pour l'instant on peut pas savoir la taille*/);
     tab_region[num_region].nis = nb_regions_englobantes();
-
-    return num_region;
 }
 
 void afficher_tab_regions(int depart, int arrivee) {
@@ -44,18 +51,18 @@ void afficher_tab_regions(int depart, int arrivee) {
     }
 
     printf("------------Table des régions------------\n");
-    printf("| %-4s | %-8s | %-8s | %-8s |\n", "ID", "execution",
+    printf("| %-4s | %-8s | %-8s | %-8s |\n", "ID", "taille",
                "NIS", "arbre");
     printf("----------------------------------------\n");
     for (i = depart; i < j; i++) {
-        printf("| %-4d | %-8d | %-8d | %-8p |\n", i, tab_region[i].taille_exec,
+        printf("| %-4d | %-8d | %-8d | %-8p |\n", i, tab_region[i].taille,
                tab_region[i].nis, tab_region[i].arbre_region);
         printf("----------------------------------------\n");
     }
 }
 
-void modifier_taille_exec(int num_region, int exec) {
-    tab_region[num_region].taille_exec = exec;
+void modifier_taille(int num_region, int taille) {
+    tab_region[num_region].taille = taille;
 }
 
 void modifier_arbre_region(int num_region, arbre *a) {

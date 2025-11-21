@@ -2,7 +2,10 @@
  * YACC 
  * Auteurs :
  *      Grammaire - Tout le groupe
- *      Actions - Louis , Adam , Baptiste 
+ *      Actions :
+            - Représentations : Louis , Adam 
+            - Régions : Baptiste 
+            - Declarations : Adam 
  */ 
 
 %{
@@ -13,6 +16,7 @@
     #include "tables/tab_rep.h"
     #include "tables/tab_regions.h"
     #include "tables/pile_regions.h"
+    #include "association_noms/association_noms.h"
     int yylex();
     int yyerror(char *msg);
 %}
@@ -38,7 +42,8 @@
 %token <intval> ENTIER REEL BOOL CHAR  
 
 %%
-programme             : PROG AO corps AF
+programme             : PROG {inserer_region(); debut_depl();}
+                        AO corps AF {depiler_pile_regions();}
                       ;
 
 corps                 : liste_declarations liste_instructions
@@ -52,20 +57,21 @@ liste_instructions    : instruction
                       | liste_instructions instruction
                       ;
 
+// je note ici, il manque le remplissage du champ exec pour les déclas (!)
 declaration           : declaration_type PV
                       | declaration_variable PV
                       | declaration_procedure
                       | declaration_fonction
                       ;
 
-declaration_type      : TYPEDEF IDF DP
-                        suite_declaration_type
+declaration_type      : TYPEDEF IDF {determiner_ligne_decla($2);} DP
+                        suite_declaration_type {remplir_exec($2); debut_depl();}
                       ;
 
-suite_declaration_type : STRUCT {debut_struct();}
-                         AO liste_champs AF {inserer_tab_rep_nb_elem(nbchamps);}
-                       | TAB {debut_tab();}
-                         dimension DE nom_type {inserer_tab_rep_nb_elem(nbdimension); inserer_tab_rep_type($5);} 
+suite_declaration_type : STRUCT                     {debut_struct(); debut_depl();  remplir_nature(decla_courante, N_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);} 
+                         AO liste_champs AF         {inserer_tab_rep_nb_elem(nbchamps);}
+                       | TAB                        {debut_tab(); remplir_nature(decla_courante, N_TAB); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);}
+                         dimension DE nom_type      {inserer_tab_rep_nb_elem(nbdimension); inserer_tab_rep_type($5);} 
 
 dimension             : CO liste_dimensions CF
                       ;
@@ -81,21 +87,25 @@ liste_champs          : un_champ {incr_nb_champ();}
                       | liste_champs un_champ {incr_nb_champ();}
                       ;
 
-                      // la première insertion est pour le num lexico ??? ça marche ?? manque fct tailletype et associationtype/nom
-un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); incr_depl();}
+                      // déplacement à revoir
+un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); incr_depl($3); determiner_ligne_decla($1); remplir_nature(decla_courante, N_CH_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3);}
                       ;
 
-declaration_variable  : VAR IDF DP nom_type
+declaration_variable  : VAR IDF DP nom_type {determiner_ligne_decla($2); remplir_nature(decla_courante, N_VAR); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $4); remplir_exec($2); incr_depl($4);}
                       ;
 
-declaration_procedure : PROC IDF {debut_proc();}
-                        PO liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
-                        AO corps AF
+declaration_procedure : PROC {}
+IDF {debut_depl(); debut_proc(); determiner_ligne_decla($3); remplir_nature(decla_courante, N_PROC); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);remplir_exec($3);} 
+                        PO {inserer_region(); debut_depl();}
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
+                        AO corps AF {depiler_pile_regions();}
                       ;
-
-declaration_fonction  : nom_type FCT IDF {debut_fct($1);}
-                        PO liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
-                        AO corps AF
+ 
+declaration_fonction  : nom_type FCT {}
+                        IDF {debut_depl(); debut_fct($1); determiner_ligne_decla($4); remplir_nature(decla_courante, N_FCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante); remplir_exec($4);}
+                        PO {debut_depl(); inserer_region();}
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
+                        AO corps AF {depiler_pile_regions();}
                       ;
 
 liste_param           : // aucun parametre
@@ -103,17 +113,17 @@ liste_param           : // aucun parametre
                       | liste_param VIR un_param
                       ;
 
-un_param              : IDF DP nom_type {inserer_tab_rep($1); inserer_tab_rep($3); incr_param();}
+un_param              : IDF DP nom_type {determiner_ligne_decla($1); remplir_nature(decla_courante, N_PARAM); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3); remplir_exec($1); inserer_tab_rep($1); inserer_tab_rep($3); incr_param(); incr_depl($3);}
                       ;
 
 nom_type              : type_simple {$$ = $1;}
-                      | IDF
+                      | IDF {association_noms($1, TYPE);}
                       ;
 
-type_simple           : ENTIER {$$ = $1;}
-                      | REEL {$$ = $1;}
-                      | BOOL {$$ = $1;}
-                      | CHAR {$$ = $1;}
+type_simple           : ENTIER                                              {$$ = $1;}
+                      | REEL                                                {$$ = $1;}
+                      | BOOL                                                {$$ = $1;}
+                      | CHAR                                                {$$ = $1;}
                       | CHAR CO CSTE_ENTIERE CF
                       ;
 
@@ -220,14 +230,12 @@ int main(int argc, char **argv){
     init_tab_rep();
     init_tab_regions();
 
-    for (int i = 0; i < 5; i++) inserer_region();
-
     yyparse();
 
-    afficher_tab_lexico(0, 10);
+    afficher_tab_lexico(0, 20);
     afficher_tab_decla();
-    afficher_tab_rep(0, 20);
-   /* afficher_tab_regions(0, 10); */
+    afficher_tab_rep(0, 30);
+    /*afficher_tab_regions(0, 10);*/
 
     exit(EXIT_SUCCESS);
     
