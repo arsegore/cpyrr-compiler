@@ -47,8 +47,8 @@ int association_noms(int num_lex, int nature){
 
         // Cas Tab ou Struct (Appel avec TYPE)
         if (nature == TYPE
-            && (table_decla[i][NATURE] == N_STRUCT
-                || table_decla[i][NATURE] == N_TAB)){
+            && (tab_decla[i][NATURE] == N_STRUCT
+                || tab_decla[i][NATURE] == N_TAB)){
 
             asso_ok = 1;
         }

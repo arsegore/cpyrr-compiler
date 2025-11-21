@@ -3,7 +3,8 @@
 
 #include "tables/tab_lexico.h"
 #include "tables/tab_decla.h"
-
+#include "tables/tab_rep.h"
+#include "tables/pile_regions.h"
 
 /* a faire
    - chainage
@@ -12,24 +13,34 @@
 
 int premiere_ligne_libre_decla = DEBORDEMENT;
 int tab_decla[HAUTEUR][LARGEUR];
+int decla_courante = -1;
 
 void init_types_base() {
-    inserer_declaration(inserer_lexeme("int", 3),
-                        N_TYPE_B,
-                        0,
-                        -1);
-    inserer_declaration(inserer_lexeme("float", 5),
-                        N_TYPE_B,
-                        0,
-                        -1);
-    inserer_declaration(inserer_lexeme("bool", 4),
-                        N_TYPE_B,
-                        0,
-                        -1);
-    inserer_declaration(inserer_lexeme("char", 4),
-                        N_TYPE_B,
-                        0,
-                        -1);
+    determiner_ligne_decla(inserer_lexeme("int", 3));
+    remplir_nature(decla_courante, N_TYPE_B);
+    remplir_desc(decla_courante, -1);
+    remplir_region(decla_courante, 0);
+    
+
+    determiner_ligne_decla(inserer_lexeme("float", 3));
+    remplir_nature(decla_courante, N_TYPE_B);
+    remplir_desc(decla_courante, -1);
+    remplir_region(decla_courante, 0);
+
+    determiner_ligne_decla(inserer_lexeme("bool", 3));
+    remplir_nature(decla_courante, N_TYPE_B);
+    remplir_desc(decla_courante, -1);
+    remplir_region(decla_courante, 0);
+
+    determiner_ligne_decla(inserer_lexeme("char", 3));
+    remplir_nature(decla_courante, N_TYPE_B);
+    remplir_desc(decla_courante, -1);
+    remplir_region(decla_courante, 0);
+
+    for(int i = 0; i < 4; i++){
+        tab_decla[i][EXECUTION] = 1;
+    }
+    
 }
 
 void init_tab_decla() {
@@ -88,7 +99,7 @@ void afficher_tab_decla() {
            "suivant", "region", "description", "execution");
     printf(
         "------------------------------------------------------------------------\n");
-    while ((tab_decla[i][NATURE] != -1) && i < DEBORDEMENT) {
+    while (i < DEBORDEMENT && (tab_decla[i][NATURE] != -1)) {
         afficher_ligne(i++, 0);
     }
     printf(
@@ -101,8 +112,8 @@ void afficher_tab_decla() {
     printf("\n");
 }
 
-void inserer_declaration(int num_lexico, int nature, int region, int description) {
-    int i, indice, exec;
+void determiner_ligne_decla(int num_lexico){
+    int i, indice;
 
     if (tab_decla[num_lexico][NATURE] != -1) {
         i = num_lexico;
@@ -116,27 +127,77 @@ void inserer_declaration(int num_lexico, int nature, int region, int description
         indice = num_lexico;
     }
 
-    tab_decla[indice][NATURE] = nature;
-    tab_decla[indice][REGION] = region;
-    tab_decla[indice][DESCRIPTION] = description;
-    
-    switch (nature){
+    decla_courante = indice;
+}
 
-        // exec = taille à l'exécution d'une valeur de ce type (en tenant compte qu'il s'agit d'une machine C, cf ci-dessous).
-        // fonction taille_type?
-    case N_STRUCT : exec = -1; break;
-    case N_TAB    : exec = -1; break;
+void remplir_nature(int num_decla, int nature){
+    tab_decla[num_decla][NATURE] = nature;
+}
 
-        // exec = déplacement à l'exécution, de l'emplacement associé à la variable ou du paramètre dans la zone de données correspondante.
-        // variable deplacement?
-    case N_VAR    : exec = -1; break;
-    case N_PARAM  : exec = -1; break;
-        
-        // exec = num de region
-    case N_PROC   : exec = region; break;
-    case N_FCT    : exec = region; break;
+void remplir_region(int num_decla, int region){
+    tab_decla[num_decla][REGION] = region;
+}
+
+void remplir_desc(int num_decla, int desc){
+    tab_decla[num_decla][DESCRIPTION] = desc;
+}
+
+void remplir_exec(int num_decla){
+    int nature = tab_decla[num_decla][NATURE];
+    switch(nature){
+    case 1:
+    case 2:
+        tab_decla[num_decla][EXECUTION] = taille_type(num_decla);
+        break;
+    case 3:
+    case 4:
+        tab_decla[num_decla][EXECUTION] = deplacement;
+        break;
+    case 5:
+    case 6:
+        tab_decla[num_decla][EXECUTION] = num_region_courante;
+        break;
     }
-    
-    tab_decla[indice][EXECUTION] = exec;
-    // TODO : insérer le reste
+}
+
+int taille_type(int num_type){
+    int nature = tab_decla[num_type][NATURE];
+    int acc = 0, i,
+        commencement = tab_decla[num_type][DESCRIPTION],
+        nb_champs = tab_rep[commencement];
+    if(nature == N_TYPE_B){
+        return 1;
+    }
+
+    switch(nature){
+    case N_STRUCT:
+        for(i = commencement+2; i < commencement+(nb_champs * 3); i +=3){
+            printf("Le champ %s est de type %s (num decla = %d)\n",
+                   tab_lexico[tab_rep[i-1]].lexeme,
+                   tab_lexico[tab_rep[i]].lexeme,
+                   tab_rep[i]);
+            acc += tab_decla[tab_rep[i]][EXECUTION];
+        }
+        break;
+
+    case N_TAB:
+        nb_champs = tab_rep[commencement+1];
+        acc = tab_decla[tab_rep[commencement]][EXECUTION];
+        for(i = commencement+3; i <= commencement+3+(nb_champs); i+=2){
+            printf("on passe %d fois\n",i);
+            acc*= tab_rep[i];
+        }
+        break;
+
+    case N_VAR:
+        acc = tab_decla[tab_rep[commencement]][EXECUTION];
+        break;
+
+    case N_PARAM:
+         printf("on passe la ?4\n");
+        acc = tab_decla[tab_rep[commencement]][EXECUTION];
+        break;
+    }
+    return acc;
+
 }

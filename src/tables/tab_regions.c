@@ -29,7 +29,6 @@ void init_tab_regions() {
 void inserer_region() {
     int num_region = nb_regions_total++;
 
-    printf("APPEL NUMERO %d\n", num_region);
     empiler_pile_regions(num_region);
 
     modifier_taille(num_region, 8/*a changer parce que pour l'instant on peut pas savoir la taille*/);
