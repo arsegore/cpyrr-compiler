@@ -13,7 +13,8 @@
  * Auteur : Baptiste 
  */
 
-#define NOM_FIC_SAVE_TAB_LEX "fic_save_tab_lex.txt"
+#define NOM_DOSSIER_SAVES "saves"
+#define NOM_FIC_SAVE_TAB_LEX "saves/fic_save_tab_lex.txt"
 
 /**
  * Sauvegarde en mémoire la tab lexico, sous la forme :
