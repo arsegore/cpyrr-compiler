@@ -235,6 +235,7 @@ int main(int argc, char **argv){
     afficher_tab_regions(0, 10);
 
     save_tab_lex();
+    save_tab_decla();
 
     exit(EXIT_SUCCESS);
     
