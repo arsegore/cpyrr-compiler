@@ -75,3 +75,7 @@ rendu:
 clean:
 	@echo "$(RED)\n→Nettoyage...$(NC)"
 	@rm -rf build bin inc/y.tab.h
+
+clean_saves:
+	@echo "$(RED)\n→Nettoyage des saves...$(NC)"
+	@rm -rf saves

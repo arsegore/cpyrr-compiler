@@ -1,12 +1,12 @@
-#ifndef _TAB_REGIONS_H_
-#define _TAB_REGIONS_H_
+#ifndef _PILE_REGIONS_H_
+#define _PILE_REGIONS_H_
 
 #include "arbre/arbre.h"
 
 /**
- * tab_regions.h
+ * pile_regions.h
  *
- * Définition de la table des régions et de ses fonctions
+ * Définition de la pile des régions et de ses fonctions
  *
  * Auteur :  Adam,  Damien
  */
