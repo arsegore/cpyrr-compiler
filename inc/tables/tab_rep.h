@@ -1,5 +1,5 @@
-#ifndef _TAB_DESC_H
-#define _TAB_DESC_H
+#ifndef _TAB_REP_H
+#define _TAB_REP_H
 
 // TODO: CORRIGER LES FONCTIONS (et/ou actions ?) SUR LES TYPES TAB
 
@@ -23,6 +23,7 @@
 #define TAILLE_TAB_REP 1000
 
 extern int tab_rep[TAILLE_TAB_REP];
+extern int id_rep_courante;
 extern int idx_premier_libre;
 extern int idx_nb_element;
 extern int nbparam;
@@ -80,13 +81,15 @@ void debut_struct();
  */
 void debut_fct(int type);
 
+void debut_depl();
+
 void debut_tab();
 
 void incr_nb_dim();
 
 void incr_nb_champ();
 
-void incr_depl();
+void incr_depl(int num_lexico);
 
 void incr_param();
 
