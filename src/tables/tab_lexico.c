@@ -100,6 +100,3 @@ int inserer_lexeme(char *lexeme, int longueur) {
     
     return num_lexico;
 }
-
-
-
