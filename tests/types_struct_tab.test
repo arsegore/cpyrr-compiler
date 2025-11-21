@@ -7,6 +7,11 @@ programme {
   typedef TTabEntier: tab[1..10] de int;
 
   var p: TPersonne;
+  var p: TPersonne;
+  var p: TPersonne;
+  var p: TPersonne;
+
+
   var t: TTabEntier;
 
   p.age = 12;
