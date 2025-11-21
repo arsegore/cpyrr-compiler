@@ -1,0 +1,10 @@
+programme {
+  var x: int;
+  x = 3;
+
+  si (x < 5) alors {
+    x = x + 1;
+  } sinon {
+    x = x - 1;
+  }
+}

@@ -1,7 +1,9 @@
 %{
-    #include "../inc/y.tab.h"
+    #include "y.tab.h"
+    #include "tables/tab_lexico.h"
+    #include "tables/tab_rep.h"
 %}
-IDF [a-zA-Z][a-zA-Z0-9]*
+IDF [a-zA-Z][a-zA-Z0-9_]*
 INT [1-9][0-9]*|0
 %%
 programme            {return(PROG);}
@@ -18,10 +20,10 @@ programme            {return(PROG);}
 tab                  {return(TAB);}
 de                   {return(DE);}
 struct               {return(STRUCT);}
-int                  {return(ENTIER);}
-float                {return(REEL);}
-bool                 {return(BOOL);}
-char                 {return(CHAR);}
+int                  {yylval.intval = TYPE_INT; return(ENTIER);}
+float                {yylval.intval = TYPE_FLOAT; return(REEL);}
+bool                 {yylval.intval = TYPE_BOOL; return(BOOL);}
+char                 {yylval.intval = TYPE_CHAR; return(CHAR);}
 var                  {return(VAR);}
 typedef              {return(TYPEDEF);}
 proc                 {return(PROC);}
@@ -43,15 +45,19 @@ faire                {return(FAIRE);}
 \<                   {return(INF);}
 \>                   {return(SUP);}
 \%                   {return(MOD);}
-!                    {return(NON);}
 !=                   {return(DIFF);}
+!                    {return(NON);}
+\.                   {return(POINT);}
 et                   {return(ET);}
 ou                   {return(OU);}
 vrai                 {return(CSTE_BOOL);}
 faux                 {return(CSTE_BOOL);}
 rien                 {return(RIEN);}
-{IDF}                {return(IDF);}
-{INT}                {return(CSTE_ENTIERE);}
+{IDF}                {
+                        yylval.intval = inserer_lexeme(yytext, yyleng);
+                        return(IDF);
+                     }
+{INT}                {yylval.intval = atoi(yytext); return(CSTE_ENTIERE);}
 \'([^\'\\]|\\.)\'    {return(CSTE_CHAR);}
 \"([^\"\\]|\\.)*\"   {return(CSTE_CHAINE);}
 {INT}"."{INT}        {return(CSTE_REELLE);}

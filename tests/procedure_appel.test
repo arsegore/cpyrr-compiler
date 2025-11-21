@@ -1,0 +1,16 @@
+programme {
+  proc afficher(i: int) {
+    proc afficherrrr(ug: int) {
+      rien;
+    }
+    rien;
+  }
+
+  proc afficherr(ie: int) {
+    rien;
+  }
+
+  var x: int;
+  x = 10;
+  afficher(x);
+}
