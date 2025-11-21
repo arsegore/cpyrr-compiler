@@ -15,6 +15,7 @@
 
 #define NOM_DOSSIER_SAVES "saves"
 #define NOM_FIC_SAVE_TAB_LEX "saves/fic_save_tab_lex.txt"
+#define NOM_FIC_SAVE_TAB_DECLA "saves/fic_save_tab_decla.txt"
 
 /**
  * Sauvegarde en mémoire la tab lexico, sous la forme :
@@ -32,3 +33,5 @@
  *
  */
 void save_tab_lex();
+
+void save_tab_decla();
