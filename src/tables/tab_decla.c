@@ -113,7 +113,7 @@ void afficher_tab_decla() {
 }
 
 void determiner_ligne_decla(int num_lexico){
-    int i, indice, exec;
+    int i, indice;
 
     if (tab_decla[num_lexico][NATURE] != -1) {
         i = num_lexico;
@@ -182,7 +182,7 @@ int taille_type(int num_type){
 
     case N_TAB:
         nb_champs = tab_rep[commencement+1];
-        acc = tab_decla[tab_rep[commencement+1]][EXECUTION];
+        acc = tab_decla[tab_rep[commencement]][EXECUTION];
         for(i = commencement+3; i <= commencement+3+(nb_champs); i+=2){
             printf("on passe %d fois\n",i);
             acc*= tab_rep[i];
