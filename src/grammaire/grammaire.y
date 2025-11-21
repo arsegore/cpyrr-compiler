@@ -13,7 +13,8 @@
     #include "tables/tab_rep.h"
     #include "tables/tab_regions.h"
     #include "tables/pile_regions.h"
-    // #include "tables/association_noms.h"
+    #include "association_noms/association_noms.h"
+    #include "save/save.h"
     int yylex();
     int yyerror(char *msg);
 %}
@@ -232,6 +233,8 @@ int main(int argc, char **argv){
     afficher_tab_decla();
     afficher_tab_rep(0, 20);
     afficher_tab_regions(0, 10);
+
+    save_tab_lex();
 
     exit(EXIT_SUCCESS);
     
