@@ -113,7 +113,7 @@ void afficher_tab_decla() {
 }
 
 void determiner_ligne_decla(int num_lexico){
-    int i, indice;
+    int i, indice, exec;
 
     if (tab_decla[num_lexico][NATURE] != -1) {
         i = num_lexico;
