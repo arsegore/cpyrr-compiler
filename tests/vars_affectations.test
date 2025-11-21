@@ -1,6 +1,6 @@
 programme {
   var x: int;
-  var y: int;
+  var y: float;
   var z: bool;
 
   x = 1;

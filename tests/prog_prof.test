@@ -1,0 +1,32 @@
+
+programme {
+
+    typedef date :
+        struct {
+            jour : int ;
+            mois : int ;
+            annee : int ;
+        }
+    ;
+    
+    typedef personne :
+        struct {
+            numero : int ;
+            naissance : date ;
+            age : int ;
+        }
+    ;
+    typedef equipe :
+        tab [1..3, 1..2] de personne
+    ;
+
+    var p : personne ;
+    var te : equipe ;
+    var b : bool ;
+    var i : float ;
+    var j : int ;
+
+    rien;
+
+
+}
