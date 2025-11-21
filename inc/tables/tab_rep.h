@@ -81,6 +81,8 @@ void debut_struct();
  */
 void debut_fct(int type);
 
+void debut_depl();
+
 void debut_tab();
 
 void incr_nb_dim();
