@@ -39,12 +39,25 @@ void afficher_pile_exec() {
     int i;
     for (i = 0; i < TAILLE_PILE_EXEC; i++) {
         if (pile_exec[i].chainage != -1) {
-            printf("| %20d |", pile_exec[i].chainage);
+            printf("| %20d |\n", pile_exec[i].chainage);
         } else {
             printf("| %15s ", pile_exec[i].variable.lexeme);
             switch (pile_exec[i].variable.a_valeur) {
-                case 0: break;
-                default: break;
+                case 0:
+                    printf("%5d |\n", pile_exec[i].variable.valeur.entier);
+                    break;
+                case 1:
+                    printf("%5f |\n", pile_exec[i].variable.valeur.reel);
+                    break;
+                case 2:
+                    printf("%5d |\n", pile_exec[i].variable.valeur.booleen);
+                    break;
+                case 3:
+                    printf("%5c |\n", pile_exec[i].variable.valeur.caractere);
+                    break;
+                default:
+                    printf("     |\n");
+                    break;
             }
         }
     }
