@@ -26,13 +26,12 @@ void init_tab_regions() {
 }
 
 
-void inserer_region() {
+void inserer_region(int taille) {
     int num_region = nb_regions_total++;
 
     empiler_pile_regions(num_region);
-
-    modifier_taille(num_region, 8/*a changer parce que pour l'instant on peut pas savoir la taille*/);
     tab_region[num_region].nis = nb_regions_englobantes();
+    modifier_taille(num_region, taille+ tab_region[num_region].nis);
 }
 
 void afficher_tab_regions(int depart, int arrivee) {
