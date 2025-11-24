@@ -23,7 +23,7 @@ void save_tab_lex() {
     }
 
     if ((f_save_tab_lex = fopen(NOM_FIC_SAVE_TAB_LEX, "w+")) == NULL) {
-        printf("Erreur ouverture/création du fichier de sauvegarde de la tab lexico\n");
+        printf("Erreur ouverture/création du fichier de sauvegarde de la table lexicographique\n");
         return;
     }
     
@@ -57,7 +57,7 @@ void save_tab_decla() {
     }
 
     if ((f_save_tab_decla = fopen(NOM_FIC_SAVE_TAB_DECLA, "w+")) == NULL) {
-        printf("Erreur ouverture/création du fichier de sauvegarde de la tab des déclarations\n");
+        printf("Erreur ouverture/création du fichier de sauvegarde de la table des déclarations\n");
         return;
     }
 
@@ -89,7 +89,7 @@ void save_tab_regions() {
     }
 
     if ((f_save_tab_regions = fopen(NOM_FIC_SAVE_TAB_REGIONS, "w+")) == NULL) {
-        printf("Erreur ouverture/création du fichier de sauvegarde de la tab des régions\n");
+        printf("Erreur ouverture/création du fichier de sauvegarde de la table des régions\n");
         return;
     }
 
@@ -100,4 +100,27 @@ void save_tab_regions() {
     }
 
     fclose(f_save_tab_regions);
+}
+
+void save_tab_rep() {
+    int i;
+    FILE* f_save_tab_rep;
+
+    if (mkdir(NOM_DOSSIER_SAVES, 0755) != 0 && errno != EEXIST) {
+        printf("Erreur création du dossier pour les sauvegardes\n");
+        return;
+    }
+
+    if ((f_save_tab_rep = fopen(NOM_FIC_SAVE_TAB_REP, "w+")) == NULL) {
+        printf("Erreur ouverture/création du fichier de sauvegarde de la table de représentation des types et entêtes de sous programmes\n");
+        return;
+    }
+
+    for (i=0; i<TAILLE_TAB_REP; i++) {
+        if (tab_rep[i] != -1) {
+            fprintf(f_save_tab_rep, "%d ", tab_rep[i]);
+        }
+    }
+
+    fclose(f_save_tab_rep);
 }
