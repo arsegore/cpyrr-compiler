@@ -78,3 +78,26 @@ void save_tab_decla() {
 
     fclose(f_save_tab_decla);
 }
+
+void save_tab_regions() {
+    int i;
+    FILE* f_save_tab_regions;
+
+    if (mkdir(NOM_DOSSIER_SAVES, 0755) != 0 && errno != EEXIST) {
+        printf("Erreur création du dossier pour les sauvegardes\n");
+        return;
+    }
+
+    if ((f_save_tab_regions = fopen(NOM_FIC_SAVE_TAB_REGIONS, "w+")) == NULL) {
+        printf("Erreur ouverture/création du fichier de sauvegarde de la tab des régions\n");
+        return;
+    }
+
+    for (i=0; i<TAILLE_TAB_REGIONS; i++) {
+        if (tab_region[i].taille != -1) {
+            fprintf(f_save_tab_regions, "%d %d %p\n", tab_region[i].taille, tab_region[i].nis, tab_region[i].arbre_region);
+        }
+    }
+
+    fclose(f_save_tab_regions);
+}

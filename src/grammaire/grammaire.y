@@ -236,10 +236,11 @@ int main(int argc, char **argv){
     afficher_tab_lexico(0, 20);
     afficher_tab_decla();
     afficher_tab_rep(0, 30);
-    /*afficher_tab_regions(0, 10);*/
+    afficher_tab_regions(0, 10);
 
     save_tab_lex();
     save_tab_decla();
+    save_tab_regions();
 
     exit(EXIT_SUCCESS);
     
