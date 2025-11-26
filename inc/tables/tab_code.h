@@ -1,4 +1,4 @@
-#ifndef _TAB_CODE_H
+#ifndef _TAB_CODE_H_
 #define _TAB_CODE_H_
 
 #define NB_LIGNES_MAX_PROG 1000

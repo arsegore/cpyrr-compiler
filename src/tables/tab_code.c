@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "tab_code.h"
+#include "tables/tab_code.h"
 
 const char *tab_code[NB_LIGNES_MAX_PROG];
 int nb_lignes_code;
@@ -13,4 +13,6 @@ void init_tab_code(){
     nb_lignes_code = 0;
 }
 
-void ajouter_ligne_code(const char *ligne)
+void ajouter_ligne_code(const char *ligne) {
+    
+}

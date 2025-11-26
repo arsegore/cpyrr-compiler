@@ -15,9 +15,11 @@
     #include "tables/tab_decla.h"
     #include "tables/tab_rep.h"
     #include "tables/tab_regions.h"
+    #include "tables/tab_code.h"
     #include "tables/pile_regions.h"
     #include "association_noms/association_noms.h"
     #include "save/save.h"
+    #include "verif_sem/verif_sem.h"
     int yylex();
     int yyerror(char *msg);
 %}
@@ -226,20 +228,10 @@ int yyerror(char *msg) {
 }
 
 int main(int argc, char **argv){
-    init_tab_lexico();
-    init_tab_decla();
-    init_tab_rep();
-    init_tab_regions();
+    err_sem *e;
 
-    yyparse();
-
-    afficher_tab_lexico(0, 20);
-    afficher_tab_decla();
-    afficher_tab_rep(0, 30);
-    /*afficher_tab_regions(0, 10);*/
-
-    save_tab_lex();
-    save_tab_decla();
+    e = generer_erreur(18, 4, E_PROC_NON_DECLAREE, "test");
+    erreur_semantique(e);
 
     exit(EXIT_SUCCESS);
     

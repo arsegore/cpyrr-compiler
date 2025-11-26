@@ -42,19 +42,19 @@ extern const char *msg_err_tab[NB_TYPE_ERREURS];
 extern const char *msg_indice_tab[NB_TYPE_ERREURS];
 
 typedef struct {
-    int ligne;          
-    int colonne;
-    int type_erreur;        // cf macros
-    const char *msg;        // un msg simple expliquant l'erreur
-    const char *indice;     // un indice pour la résoudre
-    int ligne_decla;        // pour afficher la déclaration originale, si l'erreur s'y prête
-    int colonne_decla;      // idem colonne
-    int est_stoppante;      // 1 si erreur, 0 si warning
+    int         ligne;          
+    int         colonne;
+    int         type_erreur;            // cf macros
+    const char  *msg;                   // un msg simple expliquant l'erreur
+    const char  *indice;                // un indice pour la résoudre
+    int         ligne_decla_depart;     // pour afficher la déclaration originale, si l'erreur s'y prête
+    int         ligne_decla_fin;        // idem colonne
+    int         est_stoppante;          // 1 si erreur, 0 si warning
 }err_sem;
 
 /**
- * S'occupera de remplir la structure
- * variadique car les formats différent selon le 
+ * S'occupera de remplir la structure.
+ * Variadique car les formats différent selon le 
  * msg d'erreur, cf msg_err_tab et msg_indice_tab
  * 
  * ...
