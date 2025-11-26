@@ -1,7 +1,9 @@
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "tables/tab_decla.h"
+#include "tables/tab_code.h"
 #include "verif_sem/verif_sem.h"
 
 // gestion des couleurs pour l'affichage
@@ -11,6 +13,11 @@
 #define CYAN        "\033[1;36m"
 #define GRAS        "\033[1m"
 #define RESET       "\033[0m"
+
+#define TAILLE_MAX_MSG 512
+
+int nb_err_sem;
+int nb_av_sem;
 
 const char *msg_err_tab[NB_TYPE_ERREURS] = {
     "La variable '%s' n'a jamais été déclarée",                             // E_VAR_NON_DECLAREE
@@ -65,26 +72,63 @@ int doit_stopper_exec(int type_erreur){
 }
 
 err_sem *generer_erreur(int ligne, int colonne, int type_erreur, ...){
+    err_sem *e;
     va_list args;
+    char msg[TAILLE_MAX_MSG];
+
     va_start(args, type_erreur);
     
-    err_sem *e = (err_sem *) malloc(sizeof(err_sem));
-    char msg[512];
+    e = (err_sem *) malloc(sizeof(err_sem));
+    if (e == NULL) return NULL;     // cas d'erreur, sera testé à l'affichage
 
     e->ligne = ligne;
     e->colonne = colonne;
     e->type_erreur = type_erreur;
 
-    vsnprintf(msg, 512,msg_err_tab[type_erreur], args);
+    vsnprintf(msg, TAILLE_MAX_MSG, msg_err_tab[type_erreur], args);
     e->msg = strdup(msg);
-    vsnprintf(msg, 512,msg_indice_tab[type_erreur], args);
+    vsnprintf(msg, TAILLE_MAX_MSG, msg_indice_tab[type_erreur], args);
     e->indice = strdup(msg);
     e->est_stoppante = doit_stopper_exec(type_erreur);
+
+    va_end(args);
+    return e;
 }
 
 void erreur_semantique(err_sem *e){
-    if (e == NULL) return;
-    
-    err_sem e_val = *e;
+    err_sem e_val;
 
+    if (e == NULL) return;
+    e_val = *e;
+
+    // erreur ou warning ?
+    if (e_val.est_stoppante) {
+        printf(ROUGE GRAS "Erreur" RESET);
+        printf(GRAS " (E%03d)" RESET, e_val.type_erreur);
+        nb_err_sem++;
+    } else {
+        printf(JAUNE GRAS "Avertissement" RESET);
+        printf(GRAS " (W%03d)" RESET, e_val.type_erreur);
+        nb_av_sem++;
+    }
+
+    // affichage du message d'erreur
+    printf(": %s\n", e_val.msg);
+
+    // position 
+    printf("À la position" GRAS " %d:%d\n" RESET, 
+        e_val.ligne, 
+        e_val.colonne);
+    
+    // afficher_ligne_code(int ligne);
+    printf(CYAN "   |\n");
+    printf("   |\n");
+    printf(" 18|" RESET GRAS " Là y aura la ligne de code\n" RESET);
+    printf(CYAN "   |" ROUGE " ^^^^^^^^^^^^^^^^^^^^^^^^^^\n" RESET);
+    printf(CYAN "   |\n");
+
+    // affichage de l'indice
+    if (e_val.indice && strlen(e_val.indice) > 0){
+        printf(CYAN "   >" RESET " Indice : " GRAS "%s\n", e_val.indice);
+    }
 }
