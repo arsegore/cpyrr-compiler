@@ -1,8 +1,9 @@
 programme {
+  var x: int;
   int fct carre(i: int, b: char, t: bool) {
     ret i * i;
   }
 
-  var x: int;
+
   x = carre(4);
 }
