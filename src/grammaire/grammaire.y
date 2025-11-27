@@ -230,6 +230,14 @@ int yyerror(char *msg) {
 int main(int argc, char **argv){
     err_sem *e;
 
+    init_tab_code();
+    init_tab_lexico();
+    init_tab_decla();
+    init_tab_rep();
+    init_tab_regions();
+
+    yyparse();
+    
     e = generer_erreur(18, 4, E_PROC_NON_DECLAREE, "test");
     erreur_semantique(e);
 
