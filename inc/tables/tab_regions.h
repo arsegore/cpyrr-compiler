@@ -31,7 +31,7 @@ void init_tab_regions();
  * Insère une nouvelle région dans la table, remplit automatiquement son
  * champ NIS
  */
-void inserer_region();
+void inserer_region(int taille);
 
 /**
  * Affiche la table des régions de depart à arrivee, ou entierement si les
