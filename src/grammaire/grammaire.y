@@ -43,25 +43,32 @@
 %token <intval> ENTIER REEL BOOL CHAR  
 
 %%
-programme             : PROG {inserer_region(); debut_depl();}
+programme             : PROG {debut_depl();}
                         AO corps AF {depiler_pile_regions();}
                       ;
 
-corps                 : liste_declarations liste_instructions
+corps                 : liste_declarations_tv {inserer_region(deplacement); }liste_declarations_pf liste_instructions
                       ;
 
-liste_declarations    : // aucune decla
-                      | liste_declarations declaration 
+liste_declarations_tv : // aucune decla
+                      | liste_declarations_tv declaration_tv 
                       ;
+
+liste_declarations_pf : // aucune decla
+                      | liste_declarations_pf declaration_pf 
+                      ;
+
 
 liste_instructions    : instruction
                       | liste_instructions instruction
                       ;
 
 // je note ici, il manque le remplissage du champ exec pour les déclas (!)
-declaration           : declaration_type PV
-                      | declaration_variable PV
-                      | declaration_procedure
+declaration_tv        : declaration_type PV
+                      | declaration_variable PV 
+                      ;
+
+declaration_pf        : declaration_procedure
                       | declaration_fonction
                       ;
 
@@ -96,15 +103,15 @@ declaration_variable  : VAR IDF DP nom_type {determiner_ligne_decla($2); remplir
                       ;
 
 declaration_procedure : PROC {}
-IDF {debut_depl(); debut_proc(); determiner_ligne_decla($3); remplir_nature(decla_courante, N_PROC); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);remplir_exec($3);} 
-                        PO {inserer_region(); debut_depl();}
+IDF {debut_proc(); determiner_ligne_decla($3); remplir_nature(decla_courante, N_PROC); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);remplir_exec($3);} 
+                        PO {inserer_region(deplacement); debut_depl();}
                         liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF {depiler_pile_regions();}
                       ;
  
 declaration_fonction  : nom_type FCT {}
-                        IDF {debut_depl(); debut_fct($1); determiner_ligne_decla($4); remplir_nature(decla_courante, N_FCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante); remplir_exec($4);}
-                        PO {debut_depl(); inserer_region();}
+                        IDF {debut_fct($1); determiner_ligne_decla($4); remplir_nature(decla_courante, N_FCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante); remplir_exec($4);}
+                        PO {inserer_region(deplacement); debut_depl(); }
                         liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF {depiler_pile_regions();}
                       ;
@@ -236,7 +243,7 @@ int main(int argc, char **argv){
     afficher_tab_lexico(0, 20);
     afficher_tab_decla();
     afficher_tab_rep(0, 30);
-    /*afficher_tab_regions(0, 10);*/
+    afficher_tab_regions(0, 10);
 
     save_tab_lex();
     save_tab_decla();
