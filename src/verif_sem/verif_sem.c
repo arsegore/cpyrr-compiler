@@ -14,8 +14,6 @@
 #define GRAS        "\033[1m"
 #define RESET       "\033[0m"
 
-#define TAILLE_MAX_MSG 512
-
 int nb_err_sem;
 int nb_av_sem;
 
@@ -74,7 +72,7 @@ int doit_stopper_exec(int type_erreur){
 err_sem *generer_erreur(int ligne, int colonne, int type_erreur, ...){
     err_sem *e;
     va_list args;
-    char msg[TAILLE_MAX_MSG];
+    char msg[TAILLE_MAX_LIGNE];
 
     va_start(args, type_erreur);
     
@@ -85,14 +83,29 @@ err_sem *generer_erreur(int ligne, int colonne, int type_erreur, ...){
     e->colonne = colonne;
     e->type_erreur = type_erreur;
 
-    vsnprintf(msg, TAILLE_MAX_MSG, msg_err_tab[type_erreur], args);
+    vsnprintf(msg, TAILLE_MAX_LIGNE, msg_err_tab[type_erreur], args);
     e->msg = strdup(msg);
-    vsnprintf(msg, TAILLE_MAX_MSG, msg_indice_tab[type_erreur], args);
+    vsnprintf(msg, TAILLE_MAX_LIGNE, msg_indice_tab[type_erreur], args);
     e->indice = strdup(msg);
     e->est_stoppante = doit_stopper_exec(type_erreur);
 
     va_end(args);
     return e;
+}
+
+void afficher_ligne_source(int ligne){
+    printf(CYAN "   |\n");
+    printf("   |\n");
+    printf(" 18|" RESET GRAS " %s\n" RESET, tab_code[ligne - 1]);
+    printf(CYAN "   | " RESET);
+    for (int i = 0; i < strlen(tab_code[ligne - 1]); i++){
+        if (tab_code[ligne - 1][i] == ' ') {
+            printf(" ");
+        } else {
+            printf(ROUGE "^" RESET);
+        }
+    }
+    printf("\n");
 }
 
 void erreur_semantique(err_sem *e){
@@ -121,11 +134,7 @@ void erreur_semantique(err_sem *e){
         e_val.colonne);
     
     // afficher_ligne_code(int ligne);
-    printf(CYAN "   |\n");
-    printf("   |\n");
-    printf(" 18|" RESET GRAS " Là y aura la ligne de code\n" RESET);
-    printf(CYAN "   |" ROUGE " ^^^^^^^^^^^^^^^^^^^^^^^^^^\n" RESET);
-    printf(CYAN "   |\n");
+    afficher_ligne_source(2);
 
     // affichage de l'indice
     if (e_val.indice && strlen(e_val.indice) > 0){

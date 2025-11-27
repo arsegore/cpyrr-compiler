@@ -2,11 +2,14 @@
 #define _TAB_CODE_H_
 
 #define NB_LIGNES_MAX_PROG 1000
+#define TAILLE_MAX_LIGNE 512
 
 extern const char *tab_code[NB_LIGNES_MAX_PROG];
-extern int nb_lignes_code;
+extern int nb_lignes;
 
 void init_tab_code();
+
+void afficher_tab_code();
 
 void ajouter_ligne_code(const char *ligne);
 
