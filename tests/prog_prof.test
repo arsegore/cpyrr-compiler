@@ -1,32 +1,62 @@
+programme
+{
+    var x : int ;
 
-programme {
+    proc p1 ( x : float , y : float )
+    {
+        x = 3.5 ;
+     }
 
-    typedef date :
-        struct {
-            jour : int ;
-            mois : int ;
-            annee : int ;
+    proc p2 ( a : int , b : int )
+    {
+        typedef x : struct {
+            ch1 : int ;
+            ch2 : int ;
+        } ;
+
+        var s : x ;
+
+        proc p3 ( c : int )
+        {
+            int fct x ( c : float )
+            {
+                var a : float ;
+                c = a ;
+                ret 0 ;
+            }
+
+            proc g ( x : bool )
+            {
+                var c : int ;
+                x = vrai ;
+                a = 88 ;
+                rien ;
+            }
+
+            c = x(3.14) ;
         }
-    ;
-    
-    typedef personne :
-        struct {
-            numero : int ;
-            naissance : date ;
-            age : int ;
+
+        proc p4 ( )
+        {
+            var x : x ;
+            var c : char ;
+            c = 'a' ;
+            x.ch1 = 3 ;
+            x.ch2 = 1 ;
         }
-    ;
-    typedef equipe :
-        tab [1..3, 1..2] de personne
-    ;
 
-    var p : personne ;
-    var te : equipe ;
-    var b : bool ;
-    var i : float ;
-    var j : int ;
+        s.ch1 = 99 ;
+    }
 
-    rien;
+    proc p5 ( a : int , c : int )
+    {
+        var x : float ;
+        x = 2.718 ;
+        c = 77 ;
+    }
 
-
+    x = 42 ;
+    p2( x , x ) ;
 }
+
+
