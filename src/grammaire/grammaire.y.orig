@@ -22,8 +22,6 @@
     #include "verif_sem/verif_sem.h"
     int yylex();
     int yyerror(char *msg);
-
-    extern int ligne_courante;
 %}
 // pr les types, cf https://www.ibm.com/docs/en/zos/3.1.0?topic=yacc-types 
 %union {
@@ -76,8 +74,8 @@ declaration_pf        : declaration_procedure
                       | declaration_fonction
                       ;
 
-declaration_type      : TYPEDEF IDF {determiner_ligne_decla($2); remplir_debut_decla(decla_courante, ligne_courante);} DP
-                        suite_declaration_type {remplir_exec($2); debut_depl(); remplir_fin_decla(decla_courante, ligne_courante);}
+declaration_type      : TYPEDEF IDF {determiner_ligne_decla($2);} DP
+                        suite_declaration_type {remplir_exec($2); debut_depl();}
                       ;
 
 suite_declaration_type : STRUCT                     {debut_struct(); debut_depl();  remplir_nature(decla_courante, N_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);} 
@@ -103,20 +101,20 @@ liste_champs          : un_champ {incr_nb_champ();}
 un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); incr_depl($3); determiner_ligne_decla($1); remplir_nature(decla_courante, N_CH_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3);}
                       ;
 
-declaration_variable  : VAR IDF DP nom_type {determiner_ligne_decla($2); remplir_debut_decla(decla_courante, ligne_courante); remplir_nature(decla_courante, N_VAR); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $4); remplir_exec($2); incr_depl($4); remplir_fin_decla(decla_courante, ligne_courante);}
+declaration_variable  : VAR IDF DP nom_type {determiner_ligne_decla($2); remplir_nature(decla_courante, N_VAR); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $4); remplir_exec($2); incr_depl($4);}
                       ;
 
 declaration_procedure : PROC {}
-                        IDF {debut_proc(); determiner_ligne_decla($3); remplir_debut_decla(decla_courante, ligne_courante); remplir_nature(decla_courante, N_PROC); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);remplir_exec($3);} 
+IDF {debut_proc(); determiner_ligne_decla($3); remplir_nature(decla_courante, N_PROC); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);remplir_exec($3);} 
                         PO {inserer_region(deplacement); debut_depl();}
-                        liste_param PF {inserer_tab_rep_nb_elem(nbparam); remplir_fin_decla(decla_courante, ligne_courante);}
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF {depiler_pile_regions();}
                       ;
  
 declaration_fonction  : nom_type FCT {}
-                        IDF {debut_fct($1); determiner_ligne_decla($4); remplir_debut_decla(decla_courante, ligne_courante); remplir_nature(decla_courante, N_FCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante); remplir_exec($4);}
+                        IDF {debut_fct($1); determiner_ligne_decla($4); remplir_nature(decla_courante, N_FCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante); remplir_exec($4);}
                         PO {inserer_region(deplacement); debut_depl(); }
-                        liste_param PF {inserer_tab_rep_nb_elem(nbparam); remplir_fin_decla(decla_courante, ligne_courante);}
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF {depiler_pile_regions();}
                       ;
 
@@ -246,11 +244,20 @@ int main(int argc, char **argv){
     init_tab_regions();
 
     yyparse();
+<<<<<<< HEAD
     
     e = generer_erreur(18, 4, E_PROC_NON_DECLAREE, "test");
     erreur_semantique(e);
+=======
 
+    afficher_tab_lexico(0, 20);
     afficher_tab_decla();
+    afficher_tab_rep(0, 30);
+    afficher_tab_regions(0, 10);
+
+    save_tab_lex();
+    save_tab_decla();
+>>>>>>> dev
 
     exit(EXIT_SUCCESS);
     

@@ -13,12 +13,14 @@
 #define TYPE 9
 
 #define HAUTEUR 5000
-#define LARGEUR 5
+#define LARGEUR 7
 #define NATURE 0
 #define SUIVANT 1 
 #define REGION 2
 #define DESCRIPTION 3
 #define EXECUTION 4
+#define DEBUT_DECLA 5
+#define FIN_DECLA 6
 
 #define DEBORDEMENT 500
 
@@ -63,6 +65,10 @@ void remplir_region(int num_decla, int region);
 void remplir_desc(int num_decla, int desc);
 
 void remplir_exec(int num_decla);
+
+void remplir_debut_decla(int num_decla, int ligne);
+
+void remplir_fin_decla(int num_decla, int ligne);
 
 int taille_type(int num_type);
 

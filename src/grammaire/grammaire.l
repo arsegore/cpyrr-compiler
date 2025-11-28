@@ -14,6 +14,7 @@
 
     char ligne[TAILLE_MAX_LIGNE];
     int pos = 0;
+    int ligne_courante = 0;
 %}
 IDF [a-zA-Z][a-zA-Z0-9_]*
 INT [1-9][0-9]*|0
@@ -76,7 +77,7 @@ rien                 {BUFFER_LIGNE(); return(RIEN);}
 {INT}"."{INT}        {BUFFER_LIGNE(); return(CSTE_REELLE);}
 " "                  {BUFFER_LIGNE();}
 \t                   {BUFFER_LIGNE();}
-\n                   {ajouter_ligne_code(ligne); pos = 0; ligne[0] = '\0';}
+\n                   {ajouter_ligne_code(ligne); pos = 0; ligne[0] = '\0'; ligne_courante++;}
 .                    {printf("Mauvais caractère : %s\n", yytext);}
 
 %%

@@ -141,3 +141,7 @@ void erreur_semantique(err_sem *e){
         printf(CYAN "   >" RESET " Indice : " GRAS "%s\n", e_val.indice);
     }
 }
+
+/**
+ * Probleme remplissage debut et fin decla : decla courante se fait override je crois
+ */
