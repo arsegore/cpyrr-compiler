@@ -16,6 +16,7 @@
 int premiere_ligne_libre_decla = DEBORDEMENT;
 int tab_decla[HAUTEUR][LARGEUR];
 int decla_courante = -1;
+int decla_precedente = 0;
 
 void init_types_base() {
     determiner_ligne_decla(inserer_lexeme("int", 3));
@@ -132,6 +133,10 @@ void determiner_ligne_decla(int num_lexico){
     decla_courante = indice;
 }
 
+void memoriser_precedente_decla(int decla_actuelle){
+    decla_precedente = decla_courante;
+}
+
 void remplir_nature(int num_decla, int nature){
     tab_decla[num_decla][NATURE] = nature;
 }
@@ -153,7 +158,7 @@ void remplir_exec(int num_decla){
         break;
     case 3:
     case 4:
-        tab_decla[num_decla][EXECUTION] = deplacement /*+ tab_region->nis */;
+        tab_decla[num_decla][EXECUTION] = deplacement + tab_region[num_region_courante].nis;
         break;
     case 5:
     case 6:
@@ -195,7 +200,7 @@ int taille_type(int num_type){
         break;
 
     case N_PARAM:
-        acc = tab_decla[tab_rep[commencement]][EXECUTION] + tab_region->nis;
+        acc = tab_decla[tab_rep[commencement]][EXECUTION];
         break;
     }
     return acc;
