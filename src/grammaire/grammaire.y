@@ -43,11 +43,11 @@
 %token <intval> ENTIER REEL BOOL CHAR  
 
 %%
-programme             : PROG {debut_depl();}
+programme             : PROG {debut_depl(); inserer_region(deplacement);}
                         AO corps AF {depiler_pile_regions();}
                       ;
 
-corps                 : liste_declarations_tv {inserer_region(deplacement); }liste_declarations_pf liste_instructions
+corps                 : liste_declarations_tv liste_declarations_pf liste_instructions
                       ;
 
 liste_declarations_tv : // aucune decla
@@ -73,12 +73,12 @@ declaration_pf        : declaration_procedure
                       ;
 
 declaration_type      : TYPEDEF IDF {determiner_ligne_decla($2);} DP
-                        suite_declaration_type {remplir_exec($2); debut_depl();}
+                        suite_declaration_type { debut_depl();}
                       ;
 
-suite_declaration_type : STRUCT                     {debut_struct(); debut_depl();  remplir_nature(decla_courante, N_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);} 
-                         AO liste_champs AF         {inserer_tab_rep_nb_elem(nbchamps);}
-                       | TAB                        {debut_tab(); remplir_nature(decla_courante, N_TAB); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);}
+suite_declaration_type : STRUCT                     {debut_struct(); debut_depl(); remplir_nature(decla_courante, N_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante); memoriser_precedente_decla(decla_courante);} 
+                         AO liste_champs AF         {inserer_tab_rep_nb_elem(nbchamps);remplir_exec(decla_precedente);}
+                       | TAB                        {debut_tab(); remplir_nature(decla_courante, N_TAB); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);remplir_exec(decla_courante);}
                          dimension DE nom_type      {inserer_tab_rep_nb_elem(nbdimension); inserer_tab_rep_type($5);} 
 
 dimension             : CO liste_dimensions CF
@@ -96,23 +96,23 @@ liste_champs          : un_champ {incr_nb_champ();}
                       ;
 
                       // déplacement à revoir
-un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); incr_depl($3); determiner_ligne_decla($1); remplir_nature(decla_courante, N_CH_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3);}
+un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); incr_depl($3); determiner_ligne_decla($1); remplir_nature(decla_courante, N_CH_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3); remplir_exec(decla_courante);}
                       ;
 
-declaration_variable  : VAR IDF DP nom_type {determiner_ligne_decla($2); remplir_nature(decla_courante, N_VAR); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $4); remplir_exec($2); incr_depl($4);}
+declaration_variable  : VAR IDF DP nom_type {determiner_ligne_decla($2); remplir_nature(decla_courante, N_VAR); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $4); remplir_exec(decla_courante); incr_depl($4);}
                       ;
 
 declaration_procedure : PROC {}
-IDF {debut_proc(); determiner_ligne_decla($3); remplir_nature(decla_courante, N_PROC); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);remplir_exec($3);} 
-                        PO {inserer_region(deplacement); debut_depl();}
+                        IDF {debut_proc(); determiner_ligne_decla($3); remplir_nature(decla_courante, N_PROC); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);;} 
+                        PO {inserer_region(deplacement); remplir_exec(decla_courante); debut_depl();}
                         liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF {depiler_pile_regions();}
                       ;
  
 declaration_fonction  : nom_type FCT {}
-                        IDF {debut_fct($1); determiner_ligne_decla($4); remplir_nature(decla_courante, N_FCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante); remplir_exec($4);}
-                        PO {inserer_region(deplacement); debut_depl(); }
-                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
+                        IDF {debut_fct($1); determiner_ligne_decla($4); remplir_nature(decla_courante, N_FCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);}
+                        PO {inserer_region(deplacement); remplir_exec(decla_courante); debut_depl(); }
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam); }
                         AO corps AF {depiler_pile_regions();}
                       ;
 
@@ -121,11 +121,11 @@ liste_param           : // aucun parametre
                       | liste_param VIR un_param
                       ;
 
-un_param              : IDF DP nom_type {determiner_ligne_decla($1); remplir_nature(decla_courante, N_PARAM); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3); remplir_exec($1); inserer_tab_rep($1); inserer_tab_rep($3); incr_param(); incr_depl($3);}
+un_param              : IDF DP nom_type {determiner_ligne_decla($1); remplir_nature(decla_courante, N_PARAM); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3); remplir_exec(decla_courante); inserer_tab_rep($1); inserer_tab_rep($3); incr_param(); incr_depl($3);}
                       ;
 
 nom_type              : type_simple {$$ = $1;}
-                      | IDF {association_noms($1, TYPE);}
+                      | IDF {$$ = association_noms($1, TYPE);}
                       ;
 
 type_simple           : ENTIER                                              {$$ = $1;}

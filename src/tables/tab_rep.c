@@ -15,7 +15,7 @@ int idx_premier_libre = 0;
 int idx_nb_element = 0;
 int idx_type_element = 0;
 int nbparam = 0;
-int nbchamps = 0;
+int nbchamps;
 int deplacement;
 int nbdimension;
 
@@ -84,6 +84,7 @@ void debut_struct(){
     id_rep_courante = idx_premier_libre++;
     idx_nb_element = id_rep_courante;
     nbchamps = 0;
+    deplacement = 0;
 }
 
 void debut_fct(int type){
