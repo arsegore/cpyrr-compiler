@@ -43,11 +43,11 @@
 %token <intval> ENTIER REEL BOOL CHAR  
 
 %%
-programme             : PROG {debut_depl();}
+programme             : PROG {debut_depl(); inserer_region(deplacement);}
                         AO corps AF {depiler_pile_regions();}
                       ;
 
-corps                 : liste_declarations_tv {inserer_region(deplacement); }liste_declarations_pf liste_instructions
+corps                 : liste_declarations_tv liste_declarations_pf liste_instructions
                       ;
 
 liste_declarations_tv : // aucune decla
@@ -103,7 +103,7 @@ declaration_variable  : VAR IDF DP nom_type {determiner_ligne_decla($2); remplir
                       ;
 
 declaration_procedure : PROC {}
-IDF {debut_proc(); determiner_ligne_decla($3); remplir_nature(decla_courante, N_PROC); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);;} 
+                        IDF {debut_proc(); determiner_ligne_decla($3); remplir_nature(decla_courante, N_PROC); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);;} 
                         PO {inserer_region(deplacement); remplir_exec(decla_courante); debut_depl();}
                         liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF {depiler_pile_regions();}
@@ -112,7 +112,7 @@ IDF {debut_proc(); determiner_ligne_decla($3); remplir_nature(decla_courante, N_
 declaration_fonction  : nom_type FCT {}
                         IDF {debut_fct($1); determiner_ligne_decla($4); remplir_nature(decla_courante, N_FCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);}
                         PO {inserer_region(deplacement); remplir_exec(decla_courante); debut_depl(); }
-                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam); }
                         AO corps AF {depiler_pile_regions();}
                       ;
 
