@@ -31,11 +31,17 @@
 
 extern int tab_decla[HAUTEUR][LARGEUR];
 extern int decla_courante;
+extern int decla_precedente;
 
 /**
  * Initialise la table des déclarations 
  */
 void init_tab_decla();
+
+/**
+ *  Initialise la variable decla_precedente, permet  de remplir le champs exec 
+ */
+void memoriser_precedente_decla(int decla_actuelle);
 
 /**
  * Afficher une ligne donnée de la table des déclarations 

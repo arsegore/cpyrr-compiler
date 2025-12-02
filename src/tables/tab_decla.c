@@ -4,7 +4,9 @@
 #include "tables/tab_lexico.h"
 #include "tables/tab_decla.h"
 #include "tables/tab_rep.h"
+#include "tables/tab_regions.h"
 #include "tables/pile_regions.h"
+
 
 /* a faire
    - chainage
@@ -14,6 +16,7 @@
 int premiere_ligne_libre_decla = DEBORDEMENT;
 int tab_decla[HAUTEUR][LARGEUR];
 int decla_courante = -1;
+int decla_precedente = 0;
 
 void init_types_base() {
     determiner_ligne_decla(inserer_lexeme("int", 3));
@@ -130,6 +133,10 @@ void determiner_ligne_decla(int num_lexico){
     decla_courante = indice;
 }
 
+void memoriser_precedente_decla(int decla_actuelle){
+    decla_precedente = decla_courante;
+}
+
 void remplir_nature(int num_decla, int nature){
     tab_decla[num_decla][NATURE] = nature;
 }
@@ -151,7 +158,7 @@ void remplir_exec(int num_decla){
         break;
     case 3:
     case 4:
-        tab_decla[num_decla][EXECUTION] = deplacement;
+        tab_decla[num_decla][EXECUTION] = deplacement + tab_region[num_region_courante].nis;
         break;
     case 5:
     case 6:
@@ -184,7 +191,6 @@ int taille_type(int num_type){
         nb_champs = tab_rep[commencement+1];
         acc = tab_decla[tab_rep[commencement]][EXECUTION];
         for(i = commencement+3; i <= commencement+3+(nb_champs); i+=2){
-            printf("on passe %d fois\n",i);
             acc*= tab_rep[i];
         }
         break;
@@ -194,7 +200,6 @@ int taille_type(int num_type){
         break;
 
     case N_PARAM:
-         printf("on passe la ?4\n");
         acc = tab_decla[tab_rep[commencement]][EXECUTION];
         break;
     }
