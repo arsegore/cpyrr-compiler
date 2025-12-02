@@ -38,8 +38,8 @@ void maj_region_courante() {
     num_region_courante = sommet_pile_region();
 }
 
-void afficher_pile_regions() {
+void afficher_pile_regions(int n) {
     int i;
-    for (i = 0; i < TAILLE_PILE_REGIONS; i++) printf("| %3d ", pile_regions[i]);
+    for (i = 0; i < n; i++) printf("| %3d ", pile_regions[i]);
     printf("\n");
 }
