@@ -47,7 +47,7 @@ programme             : PROG {debut_depl(); inserer_region(deplacement);}
                         AO corps AF {depiler_pile_regions();}
                       ;
 
-corps                 : liste_declarations_tv liste_declarations_pf liste_instructions
+corps                 : liste_declarations_tv { inserer_taille_region(num_region_courante, deplacement); }liste_declarations_pf liste_instructions
                       ;
 
 liste_declarations_tv : // aucune decla

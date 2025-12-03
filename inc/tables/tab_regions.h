@@ -33,6 +33,7 @@ void init_tab_regions();
  */
 void inserer_region(int taille);
 
+void inserer_taille_region(int region_courante, int taille);
 /**
  * Affiche la table des régions de depart à arrivee, ou entierement si les
  * deux valeurs sont égales à -1
