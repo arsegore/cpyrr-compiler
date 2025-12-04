@@ -132,6 +132,9 @@ void afficher_nat_noeud(arbre a){
         case A_INFEGAL:         printf("A_INFEGAL"); break;
         case A_DIFF:            printf("A_DIFF"); break;
         case A_EGAL:            printf("A_EGAL"); break;
+        case A_SI_ALORS:        printf("A_SI_ALORS"); break;
+        case A_SI_ALORS_SINON:  printf("A_SI_ALORS_SINON"); break;
+        case A_LISTE_I:         printf("A_LISTE_I"); break;
         default:                printf("A_INCONNU"); break;
     }
     printf(RESET ")[" MAGENTA"%d" RESET "][" VERT"%d" RESET"]\n", a->valeur, a->decla);
@@ -435,6 +438,36 @@ arbre a_cr_ou(arbre gauche, arbre droit){
     return concat_pere_fils(creer_noeud(A_OU, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
+
+// CONDITIONNELLES
+arbre a_cr_si_alors(arbre si, arbre alors){
+    return concat_pere_fils(creer_noeud(A_SI_ALORS, -1, -1),
+                            concat_pere_frere(si, alors));  
+}
+
+arbre a_cr_si_alors_sinon(arbre si, arbre alors, arbre sinon){ // (cond)--(liste_i)--(liste_i)
+    return concat_pere_fils(creer_noeud(A_SI_ALORS_SINON, -1, -1),
+                            concat_pere_frere(si, concat_pere_frere(alors, sinon)));  
+}
+
+// LISTE INSTRUCTIONS
+arbre a_cr_liste_i(arbre instruction, arbre liste_inst_suivantes){
+    return concat_pere_fils(creer_noeud(A_LISTE_I, -1, -1),
+                            concat_pere_frere(instruction, liste_inst_suivantes));
+}
+
+arbre a_cr_inst(arbre instruction){
+    return concat_pere_fils(creer_noeud(A_LISTE_I, -1, -1),
+                            concat_pere_frere(instruction, creer_noeud(A_LISTE_I, -1, -1)));
+}
+
+// TANT QUE 
+arbre a_cr_tant_que(arbre condition, arbre liste_inst){
+    return concat_pere_fils(creer_noeud(A_TANT_QUE, -1, -1),
+                            concat_pere_frere(condition, liste_inst));
+}
+
+
 
 
 
