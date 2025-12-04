@@ -18,29 +18,38 @@
     #include "tables/pile_regions.h"
     #include "association_noms/association_noms.h"
     #include "save/save.h"
+    #include "arbre/arbre.h"
     int yylex();
     int yyerror(char *msg);
+    arbre test;
 %}
+
 // pr les types, cf https://www.ibm.com/docs/en/zos/3.1.0?topic=yacc-types 
 %union {
-    int intval;
+    int   intval;
+    float floatval;
+    arbre treeval;
 }
 
 %token PROG
 %token PV DP CO CF VIR PP PO PF AO AF POINT        // ; : [ ] , .. ( ) { } .
 %token TAB DE STRUCT
-%token CSTE_CHAR CSTE_CHAINE CSTE_BOOL CSTE_REELLE
+%token CSTE_CHAR CSTE_CHAINE 
 %token VAR TYPEDEF
 %token PROC FCT RET RIEN
 %token SI ALORS SINON 
 %token TQ FAIRE 
 %token OPAFF INF SUP PL MO MU DIV MOD NON ET OU EGAL INFEGAL SUPEGAL DIFF
 
-%type <intval> type_simple nom_type
-
-%token <intval> CSTE_ENTIERE
+%token <intval> CSTE_ENTIERE CSTE_BOOL
+%token <floatval> CSTE_REELLE
 %token <intval> IDF
 %token <intval> ENTIER REEL BOOL CHAR  
+
+%type <intval> type_simple nom_type
+%type <treeval> exp expa expa1 expa2
+%type <treeval> affectation variable
+%type <treeval> expb expb1 expb2 expb3
 
 %%
 programme             : PROG {debut_depl(); inserer_region(deplacement);}
@@ -57,7 +66,6 @@ liste_declarations_tv : // aucune decla
 liste_declarations_pf : // aucune decla
                       | liste_declarations_pf declaration_pf 
                       ;
-
 
 liste_instructions    : instruction
                       | liste_instructions instruction
@@ -153,16 +161,16 @@ tant_que              : TQ expb FAIRE AO liste_instructions AF
 resultat_retourne     : exp
                       ;
 
-affectation           : variable OPAFF CSTE_BOOL
-                      | variable OPAFF CSTE_CHAR
-                      | variable OPAFF CSTE_CHAINE
-                      | variable OPAFF exp
+affectation           : variable OPAFF CSTE_BOOL      {$$ = a_cr_affect($1, a_cr_bool($3));}
+                      | variable OPAFF CSTE_CHAR      {$$ = a_cr_affect($1, a_cr_char($3));}
+                      | variable OPAFF CSTE_CHAINE    {$$ = a_cr_affect($1, a_cr_chaine($3));}
+                      | variable OPAFF exp            {$$ = a_cr_affect($1, $3); afficher_arbre($$);}
                       ;
 
                       // description des formes possibles des variables 
-variable              : IDF
-                      | IDF CO CSTE_ENTIERE CF
-                      | IDF POINT variable
+variable              : IDF                     {$$ = a_cr_idf($1);}
+                      | IDF CO CSTE_ENTIERE CF  {$$ = a_cr_acces_tab($1, $3);}
+                      | IDF POINT variable      {$$ = a_cr_acces_struct($1, $3);}
                       ;
 
 appel                 : IDF liste_arguments
@@ -176,49 +184,49 @@ liste_args            : exp
                       | liste_args VIR exp
                       ;
 
-exp                   : expa
-                      | expb
+exp                   : expa  {$$ = $1;}
+                      | expb  {$$ = $1;}
                       ;
 
-expa                  : expa PL expa1
-                      | expa MO expa1
-                      | expa1
+expa                  : expa PL expa1 {$$ = a_cr_plus($1, $3);}
+                      | expa MO expa1 {$$ = a_cr_moins($1, $3);}
+                      | expa1         {$$ = $1;}
                       ;
 
-expa1                 : expa1 MU expa2
-                      | expa1 DIV expa2
-                      | expa1 MOD expa2 
-                      | expa2
+expa1                 : expa1 MU expa2  {$$ = a_cr_mult($1, $3);}
+                      | expa1 DIV expa2 {$$ = a_cr_div($1, $3);}
+                      | expa1 MOD expa2 {$$ = a_cr_mod($1, $3);}
+                      | expa2           {$$ = $1;}
                       ;
 
-expa2                 : PO expa PF 
-                      | variable
-                      | appel
-                      | CSTE_REELLE
-                      | CSTE_ENTIERE
+expa2                 : PO expa PF    {$$ = $2;} 
+                      | variable      
+                      | appel         
+                      | CSTE_REELLE   {$$ = a_cr_cste_reelle($1);}
+                      | CSTE_ENTIERE  {$$ = a_cr_cste_entiere($1);}
                       ;
 
-expb                  : expb OU expb1
-                      | expb1
+expb                  : expb OU expb1     {$$ = a_cr_ou($1, $3);}
+                      | expb1             {$$ = $1;}
                       ;
 
-expb1                 : expb1 ET expb2
-                      | expb2 
+expb1                 : expb1 ET expb2    {$$ = a_cr_et($1, $3);}
+                      | expb2             {$$ = $1;}
                       ;
 
-expb2                 : NON PO expb3 PF
-                      | PO expb3 PF
+expb2                 : NON PO expb3 PF   {$$ = a_cr_non($3);}
+                      | PO expb3 PF       {$$ = $2;}
                       ;
 
-expb3                 : expa SUPEGAL expa 
-                      | expa SUP expa
-                      | expa INFEGAL expa
-                      | expa INF expa
-                      | expa EGAL expa
-                      | expa DIFF expa
-                      | CSTE_BOOL EGAL variable
-                      | CSTE_BOOL DIFF variable
-                      | CSTE_BOOL
+expb3                 : expa SUPEGAL expa         {$$ = a_cr_supegal($1, $3);}
+                      | expa SUP expa             {$$ = a_cr_sup($1, $3);}
+                      | expa INFEGAL expa         {$$ = a_cr_infegal($1, $3);}
+                      | expa INF expa             {$$ = a_cr_inf($1, $3);}
+                      | expa EGAL expa            {$$ = a_cr_egal_arith($1, $3);}
+                      | expa DIFF expa            {$$ = a_cr_diff_arith($1, $3);}
+                      | CSTE_BOOL EGAL variable   {$$ = a_cr_egal_bool($1, $3);}
+                      | CSTE_BOOL DIFF variable   {$$ = a_cr_diff_bool($1, $3);}
+                      | CSTE_BOOL                 {$$ = a_cr_cste_bool($1);}
                       // | variable EGAL CSTE_BOOL
                       // | variable DIFF CSTE_BOOL
                       ;
@@ -240,13 +248,14 @@ int main(int argc, char **argv){
 
     yyparse();
 
+/* 
     afficher_tab_lexico(0, 20);
     afficher_tab_decla();
     afficher_tab_rep(0, 30);
-    afficher_tab_regions(0, 10);
+    afficher_tab_regions(0, 10); */
 
-    save_tab_lex();
-    save_tab_decla();
+    /* save_tab_lex();
+    save_tab_decla(); */
 
     exit(EXIT_SUCCESS);
     

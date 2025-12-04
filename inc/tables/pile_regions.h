@@ -53,6 +53,6 @@ void maj_region_courante();
 /**
  * Affiche la pile des régions
  */
-void afficher_pile_regions();
+void afficher_pile_regions(int n);
 
 #endif
