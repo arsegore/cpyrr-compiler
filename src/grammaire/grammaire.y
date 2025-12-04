@@ -34,7 +34,7 @@
 %token PROG
 %token PV DP CO CF VIR PP PO PF AO AF POINT        // ; : [ ] , .. ( ) { } .
 %token TAB DE STRUCT
-%token CSTE_CHAR CSTE_CHAINE 
+%token CSTE_CHAINE 
 %token VAR TYPEDEF
 %token PROC FCT RET RIEN
 %token SI ALORS SINON 
@@ -42,6 +42,7 @@
 %token OPAFF INF SUP PL MO MU DIV MOD NON ET OU EGAL INFEGAL SUPEGAL DIFF
 
 %token <intval> CSTE_ENTIERE CSTE_BOOL
+%token <intval> CSTE_CHAR // code ASCII ? ou stocker en charval ? A voir
 %token <floatval> CSTE_REELLE
 %token <intval> IDF
 %token <intval> ENTIER REEL BOOL CHAR  
@@ -50,13 +51,16 @@
 %type <treeval> exp expa expa1 expa2
 %type <treeval> affectation variable
 %type <treeval> expb expb1 expb2 expb3
+%type <treeval> liste_instructions instruction
+%type <treeval> condition tant_que
+%type <treeval> corps
 
 %%
 programme             : PROG {debut_depl(); inserer_region(deplacement);}
-                        AO corps AF {depiler_pile_regions();}
+                        AO corps AF {depiler_pile_regions(); afficher_arbre($4);}
                       ;
 
-corps                 : liste_declarations_tv liste_declarations_pf liste_instructions
+corps                 : liste_declarations_tv liste_declarations_pf liste_instructions {$$ = $3; /*ici on pourra associer la région à son arbre */}
                       ;
 
 liste_declarations_tv : // aucune decla
@@ -67,8 +71,8 @@ liste_declarations_pf : // aucune decla
                       | liste_declarations_pf declaration_pf 
                       ;
 
-liste_instructions    : instruction
-                      | liste_instructions instruction
+liste_instructions    : instruction                     {$$ = a_cr_inst($1);}
+                      | liste_instructions instruction  {$$ = a_cr_liste_i($1, $2);}
                       ;
 
 // je note ici, il manque le remplissage du champ exec pour les déclas (!)
@@ -144,27 +148,27 @@ type_simple           : ENTIER                                              {$$ 
                       ;
 
 instruction           : affectation PV
-                      | condition
+                      | condition       
                       | tant_que
                       | appel PV
                       | RIEN PV
                       | RET resultat_retourne PV
                       ;
 
-condition             : SI expb ALORS AO liste_instructions AF
-                      | SI expb ALORS AO liste_instructions AF SINON AO liste_instructions AF
+condition             : SI expb ALORS AO liste_instructions AF                                  {$$ = a_cr_si_alors($2, $5);}
+                      | SI expb ALORS AO liste_instructions AF SINON AO liste_instructions AF   {$$ = a_cr_si_alors_sinon($2, $5, $9);}
                       ;
 
-tant_que              : TQ expb FAIRE AO liste_instructions AF
+tant_que              : TQ expb FAIRE AO liste_instructions AF  {$$ = a_cr_tant_que($2, $5);}
                       ;
 
 resultat_retourne     : exp
                       ;
 
-affectation           : variable OPAFF CSTE_BOOL      {$$ = a_cr_affect($1, a_cr_bool($3));}
-                      | variable OPAFF CSTE_CHAR      {$$ = a_cr_affect($1, a_cr_char($3));}
-                      | variable OPAFF CSTE_CHAINE    {$$ = a_cr_affect($1, a_cr_chaine($3));}
-                      | variable OPAFF exp            {$$ = a_cr_affect($1, $3); afficher_arbre($$);}
+affectation           : variable OPAFF CSTE_BOOL      {$$ = a_cr_affect($1, a_cr_cste_bool($3));}
+                      | variable OPAFF CSTE_CHAR      {$$ = a_cr_affect($1, a_cr_cste_char($3));}
+                      | variable OPAFF CSTE_CHAINE    // {$$ = a_cr_affect($1, a_cr_cste_chaine($3));}
+                      | variable OPAFF exp            {$$ = a_cr_affect($1, $3);}
                       ;
 
                       // description des formes possibles des variables 

@@ -34,6 +34,7 @@
 
 #define A_TANT_QUE          18
 #define A_SI_ALORS_SINON    19
+#define A_SI_ALORS          31
 
 #define A_ET                20
 #define A_OU                21
@@ -144,5 +145,10 @@ arbre a_cr_diff_bool(int bool, arbre droit);
 arbre a_cr_non(arbre arbre);
 arbre a_cr_et(arbre gauche, arbre droit);
 arbre a_cr_ou(arbre gauche, arbre droit);
+arbre a_cr_si_alors(arbre si, arbre alors);
+arbre a_cr_si_alors_sinon(arbre si, arbre alors, arbre sinon);
+arbre a_cr_liste_i(arbre instruction, arbre liste_inst_suivantes);
+arbre a_cr_inst(arbre instruction);
+arbre a_cr_tant_que(arbre condition, arbre liste_inst);
 
 #endif
