@@ -1,4 +1,5 @@
 %{
+    #include "arbre/arbre.h"
     #include "y.tab.h"
     #include "tables/tab_lexico.h"
     #include "tables/tab_rep.h"
@@ -18,7 +19,7 @@ programme            {return(PROG);}
 \(                   {return(PO);}
 \)                   {return(PF);}
 tab                  {return(TAB);}
-de                   {return(DE);}
+of                   {return(DE);}
 struct               {return(STRUCT);}
 int                  {yylval.intval = TYPE_INT; return(ENTIER);}
 float                {yylval.intval = TYPE_FLOAT; return(REEL);}
@@ -29,11 +30,11 @@ typedef              {return(TYPEDEF);}
 proc                 {return(PROC);}
 fct                  {return(FCT);}
 ret                  {return(RET);}
-si                   {return(SI);}
-alors                {return(ALORS);}
-sinon                {return(SINON);}
-tq                   {return(TQ);}
-faire                {return(FAIRE);}
+if                   {return(SI);}
+then                 {return(ALORS);}
+else                 {return(SINON);}
+while                {return(TQ);}
+do                   {return(FAIRE);}
 ==                   {return(EGAL);}
 \<=                  {return(INFEGAL);}
 \>=                  {return(SUPEGAL);}
@@ -48,11 +49,11 @@ faire                {return(FAIRE);}
 !=                   {return(DIFF);}
 !                    {return(NON);}
 \.                   {return(POINT);}
-et                   {return(ET);}
-ou                   {return(OU);}
-vrai                 {return(CSTE_BOOL);}
-faux                 {return(CSTE_BOOL);}
-rien                 {return(RIEN);}
+"&&"                 {return(ET);}
+"||"                 {return(OU);}
+true                 {return(CSTE_BOOL);}
+false                {return(CSTE_BOOL);}
+nth;                 {return(RIEN);}
 {IDF}                {
                         yylval.intval = inserer_lexeme(yytext, yyleng);
                         return(IDF);

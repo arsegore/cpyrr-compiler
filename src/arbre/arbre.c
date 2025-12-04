@@ -1,9 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../inc/arbre/arbre.h"
+#include "arbre/arbre.h"
+#include "tables/tab_lexico.h"
+
+// Macros pour les couleurs de texte
+#define RESET   "\x1B[0m"
+#define ROUGE   "\x1B[31m"
+#define VERT    "\x1B[32m"
+#define JAUNE   "\x1B[33m"
+#define BLEU    "\x1B[34m"
+#define MAGENTA "\x1B[35m"
+#define CYAN    "\x1B[36m"
+#define BLANC   "\x1B[37m"
+
+// Macros pour mettre en gras
+#define GRAS    "\x1B[1m"
+
 
 /**
- * Auteur : GRANJON Damien
+ * Auteurs : TAD : Damien GRANJON
+ *           Génération : Adam HADDADI
  */
 
 arbre concat_pere_fils(arbre pere, arbre fils) {
@@ -16,7 +32,7 @@ arbre concat_pere_frere(arbre pere, arbre frere) {
     return pere;
 }
 
-arbre creer_noeud(int nature, int valeur) {
+arbre creer_noeud(int nature, int valeur, int decla) {
     arbre a = NULL;
     if ((a = (arbre) malloc(sizeof(noeud))) == NULL) {
         printf("Erreur d'allocation.\n");
@@ -24,70 +40,121 @@ arbre creer_noeud(int nature, int valeur) {
     }
     a->nature = nature;
     a->valeur = valeur;
+    a->decla = decla;
     a->fils_gauche = NULL;
     a->frere_droit = NULL;
     return a;
 }
 
-void afficher_arbre_rec(arbre a, const char *prefixe, int is_last) {
-    char nouveau_prefixe[1024];
-    arbre fils = a->fils_gauche;
+// void afficher_arbre_rec(arbre a, const char *prefixe, int is_last) {
+//     char nouveau_prefixe[1024];
+//     arbre fils = a->fils_gauche;
 
-    if (a == NULL) {
-        return;
-    }
+//     if (a == NULL) {
+//         return;
+//     }
 
-    // Affiche le préfixe et la branche
-    printf("%s", prefixe);
-    printf("%s", is_last ? "└── " : "├── ");
+//     // Affiche le préfixe et la branche
+//     printf("%s", prefixe);
+//     printf("%s", is_last ? "└── " : "├── ");
 
-    // Affiche le contenu du noeud
+//     // Affiche le contenu du noeud
+//     switch (a->nature) {
+//         case A_IDF:             printf("IDF (%d)\n", a->valeur); break;
+//         case A_CSTE_ENTIERE:    printf("CSTE_ENTIERE (%d)\n", a->valeur); break;
+//         case A_AFFECT:          printf("AFFECT\n"); break;
+//         case A_PLUS:            printf("PLUS\n"); break;
+//         case A_MOINS:           printf("MOINS\n"); break;
+//         case A_MULT:            printf("MULT\n"); break;
+//         case A_DIV:             printf("DIV\n"); break;
+//         case A_MOD:             printf("MOD\n"); break;
+//         default:                printf("INCONNU (%d)\n", a->valeur); break;
+//     }
+
+//     // Nouveau préfixe pour les fils
+//     snprintf(nouveau_prefixe, sizeof(nouveau_prefixe), "%s%s", prefixe, is_last ? "    " : "│   ");
+
+//     // Parcourt les fils
+//     while (fils) {
+//         afficher_arbre_rec(fils, nouveau_prefixe, fils->frere_droit == NULL);
+//         fils = fils->frere_droit;
+//     }
+// }
+
+// void afficher_arbre(arbre a) {
+//     arbre fils = a->fils_gauche;
+//     if (a == NULL) {
+//         printf("(arbre vide)\n");
+//         return;
+//     }
+
+//     // Racine de l'arbre
+//     printf("└── ");
+//     switch (a->nature) {
+//         case A_IDF:             printf("IDF (%d)\n", a->valeur); break;
+//         case A_CSTE_ENTIERE:    printf("CSTE_ENTIERE (%d)\n", a->valeur); break;
+//         case A_AFFECT:          printf("AFFECT\n"); break;
+//         case A_PLUS:            printf("PLUS\n"); break;
+//         case A_MOINS:           printf("MOINS\n"); break;
+//         case A_MULT:            printf("MULT\n"); break;
+//         case A_DIV:             printf("DIV\n"); break;
+//         case A_MOD:             printf("MOD\n"); break;
+//         default:                printf("INCONNU (%d)\n", a->valeur); break;
+//     }
+
+//     // On appelle la récursion pour tous les fils de la racine avec le bon préfixe
+//     while (fils) {
+//         afficher_arbre_rec(fils, "    ", fils->frere_droit == NULL);
+//         fils = fils->frere_droit;
+//     }
+// }
+
+void afficher_nat_noeud(arbre a){
+    printf("(" CYAN GRAS);
     switch (a->nature) {
-        case A_IDF: printf("IDF (%d)\n", a->valeur); break;
-        case A_CSTE_ENTIERE: printf("CSTE_ENTIERE (%d)\n", a->valeur); break;
-        case A_AFFECT: printf("AFFECT\n"); break;
-        case A_PLUS: printf("PLUS\n"); break;
-        case A_MOINS: printf("MOINS\n"); break;
-        case A_MULT: printf("MULT\n"); break;
-        case A_DIV: printf("DIV\n"); break;
-        default: printf("INCONNU (%d)\n", a->valeur); break;
+        case A_IDF:             printf("A_IDF"); break;
+        case A_CSTE_ENTIERE:    printf("A_CSTE_ENTIERE"); break;
+        case A_CSTE_REELLE:     printf("A_CSTE_REELLE"); break;
+        case A_CSTE_BOOL:       printf("A_CSTE_BOOL"); break;
+        case A_AFFECT:          printf("A_AFFECT"); break;
+        case A_ACCES_TAB:       printf("A_ACCES_TAB"); break;
+        case A_ACCES_STRUCT:    printf("A_ACCES_STRUCT"); break;
+        case A_PLUS:            printf("A_PLUS"); break;
+        case A_MOINS:           printf("A_MOINS"); break;
+        case A_MULT:            printf("A_MULT"); break;
+        case A_DIV:             printf("A_DIV"); break;
+        case A_MOD:             printf("A_MOD"); break;
+        case A_ET:              printf("A_ET"); break;
+        case A_OU:              printf("A_OU"); break;
+        case A_SUP:             printf("A_SUP"); break;
+        case A_SUPEGAL:         printf("A_SUPEGAL"); break;
+        case A_INF:             printf("A_INF"); break;
+        case A_INFEGAL:         printf("A_INFEGAL"); break;
+        case A_DIFF:            printf("A_DIFF"); break;
+        case A_EGAL:            printf("A_EGAL"); break;
+        default:                printf("A_INCONNU"); break;
     }
-
-    // Nouveau préfixe pour les fils
-    snprintf(nouveau_prefixe, sizeof(nouveau_prefixe), "%s%s", prefixe, is_last ? "    " : "│   ");
-
-    // Parcourt les fils
-    while (fils) {
-        afficher_arbre_rec(fils, nouveau_prefixe, fils->frere_droit == NULL);
-        fils = fils->frere_droit;
-    }
+    printf(RESET ")[" MAGENTA"%d" RESET "][" VERT"%d" RESET"]\n", a->valeur, a->decla);
 }
 
-void afficher_arbre(arbre a) {
-    arbre fils = a->fils_gauche;
-    if (a == NULL) {
-        printf("(arbre vide)\n");
+void afficher_arbre_aux(arbre a, int dec){
+    int i;
+    if (a == NULL){
         return;
     }
 
-    // Racine de l'arbre
-    printf("└── ");
-    switch (a->nature) {
-        case A_IDF: printf("IDF (%d)\n", a->valeur); break;
-        case A_CSTE_ENTIERE: printf("CSTE_ENTIERE (%d)\n", a->valeur); break;
-        case A_AFFECT: printf("AFFECT\n"); break;
-        case A_PLUS: printf("PLUS\n"); break;
-        case A_MOINS: printf("MOINS\n"); break;
-        case A_MULT: printf("MULT\n"); break;
-        case A_DIV: printf("DIV\n"); break;
-        default: printf("INCONNU (%d)\n", a->valeur); break;
+    for (i = 0; i < dec; i++){
+        printf(" |   ");
     }
+    
+    afficher_nat_noeud(a);
 
-    // On appelle la récursion pour tous les fils de la racine avec le bon préfixe
-    while (fils) {
-        afficher_arbre_rec(fils, "    ", fils->frere_droit == NULL);
-        fils = fils->frere_droit;
-    }
+    afficher_arbre_aux(a->fils_gauche, dec + 1);  // D'abord les fils
+    afficher_arbre_aux(a->frere_droit, dec);      // Puis les frères
+}
+
+void afficher_arbre(arbre a){
+    afficher_arbre_aux(a, 0);
 }
 
 void execute_arbre(arbre a) {
@@ -96,7 +163,6 @@ void execute_arbre(arbre a) {
         
         case A_IDF:
             break;
-
         case A_CSTE_ENTIERE:
             break;
         case A_CSTE_BOOL:
@@ -240,4 +306,138 @@ int evalue_arbre_int(arbre a) {
             return 0;
             break;
     }
+    return 0; // pr enlever un warning, à revoir
 }
+
+// CONSTANTES
+arbre a_cr_a_idf(int num_lex, int num_dec){
+    return creer_noeud(A_IDF, num_lex, num_dec);
+}
+
+arbre a_cr_cste_entiere(int valeur){
+    return creer_noeud(A_CSTE_ENTIERE, valeur, -1);
+}
+
+arbre a_cr_cste_bool(int valeur){
+    return creer_noeud(A_CSTE_BOOL, valeur, -1);
+}
+
+arbre a_cr_cste_chaine(int valeur){
+    return creer_noeud(A_CSTE_CHAINE, valeur, -1);
+}
+
+arbre a_cr_cste_char(int valeur){
+    return creer_noeud(A_CSTE_CHAR, valeur, -1);
+}
+
+arbre a_cr_cste_reelle(int valeur){
+    return creer_noeud(A_CSTE_REELLE, valeur, -1);
+}
+
+// EXPRESSIONS
+arbre a_cr_plus(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_PLUS, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+arbre a_cr_moins(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_MOINS, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+arbre a_cr_mult(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_MULT, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+arbre a_cr_div(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_DIV, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+arbre a_cr_mod(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_MOD, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+// AFFECTATIONS
+arbre a_cr_affect(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_AFFECT, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+// VARIABLES
+arbre a_cr_idf(int valeur){
+    return creer_noeud(A_IDF, valeur, -1);
+}
+
+arbre a_cr_acces_tab(int idf, int decalage){
+    return concat_pere_fils(creer_noeud(A_ACCES_TAB, -1, -1),
+                            concat_pere_frere(a_cr_idf(idf), a_cr_cste_entiere(decalage)));
+}
+
+arbre a_cr_acces_struct(int idf, arbre champ){
+    return concat_pere_fils(creer_noeud(A_ACCES_STRUCT, -1, -1),
+                            concat_pere_frere(a_cr_idf(idf), champ));
+}
+
+// EXPRESSIONS BOOLEENNES
+arbre a_cr_sup(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_SUP, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+arbre a_cr_inf(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_INF, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+arbre a_cr_supegal(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_SUPEGAL, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+arbre a_cr_infegal(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_INFEGAL, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+arbre a_cr_egal_arith(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_EGAL, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+arbre a_cr_diff_arith(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_DIFF, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+arbre a_cr_egal_bool(int bool, arbre droit){
+    return concat_pere_fils(creer_noeud(A_EGAL, -1, -1),
+                            concat_pere_frere(a_cr_cste_bool(bool), droit));
+}
+
+arbre a_cr_diff_bool(int bool, arbre droit){
+    return concat_pere_fils(creer_noeud(A_DIFF, -1, -1),
+                            concat_pere_frere(a_cr_cste_bool(bool), droit));
+}
+
+arbre a_cr_non(arbre arbre){
+    return concat_pere_fils(creer_noeud(A_NON, -1, -1), arbre);
+}
+
+arbre a_cr_et(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_ET, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+arbre a_cr_ou(arbre gauche, arbre droit){
+    return concat_pere_fils(creer_noeud(A_OU, -1, -1),
+                            concat_pere_frere(gauche, droit));
+}
+
+
+
+
+
+
