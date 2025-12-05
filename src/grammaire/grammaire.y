@@ -52,6 +52,7 @@
 %type <treeval> affectation variable
 %type <treeval> expb expb1 expb2 expb3
 %type <treeval> liste_instructions instruction
+%type <treeval> liste_acces_dim acces_dim
 %type <treeval> condition tant_que
 %type <treeval> corps
 
@@ -172,9 +173,16 @@ affectation           : variable OPAFF CSTE_BOOL      {$$ = a_cr_affect($1, a_cr
                       ;
 
                       // description des formes possibles des variables 
-variable              : IDF                     {$$ = a_cr_idf($1);}
-                      | IDF CO CSTE_ENTIERE CF  {$$ = a_cr_acces_tab($1, $3);}
-                      | IDF POINT variable      {$$ = a_cr_acces_struct($1, $3);}
+variable              : IDF                         {$$ = a_cr_idf($1);}
+                      | IDF CO liste_acces_dim CF   {$$ = a_cr_acces_tab($1, $3);}
+                      | IDF POINT variable          {$$ = a_cr_acces_struct($1, $3);}
+                      ;
+
+liste_acces_dim       : acces_dim                       {$$ = $1;}
+                      | acces_dim VIR liste_acces_dim   {$$ = a_cr_liste_a_dim($1, $3);}
+                      ;
+
+acces_dim             : CSTE_ENTIERE      {$$ = a_cr_a_dim($1);}
                       ;
 
 appel                 : IDF liste_arguments

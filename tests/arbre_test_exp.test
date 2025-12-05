@@ -1,11 +1,5 @@
 programme {
     var i: int;
 
-    if (i < 1) then {
-        i = i + 1;
-    } else {
-        i = i - 1;
-    }
-
-    i.ch2.ch5[6] = 1 + 2 / 3 - 4 % 4;
+    i = t[1, 2, 3];
 }
