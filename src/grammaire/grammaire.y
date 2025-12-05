@@ -5,7 +5,8 @@
  *      Actions :
             - Représentations : Louis PELOUX, Adam HADDADI
             - Régions : Baptiste MOULIN
-            - Declarations : Adam HADDADI
+            - Declarations : Adam HADDADI, Louis PELOUX
+            - Génération d'arbres ; Adam HADDADO
  */ 
 
 %{
