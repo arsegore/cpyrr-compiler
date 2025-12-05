@@ -73,11 +73,11 @@ declaration_pf        : declaration_procedure
                       ;
 
 declaration_type      : TYPEDEF IDF {determiner_ligne_decla($2);} DP
-                        suite_declaration_type { debut_depl();}
+                        suite_declaration_type 
                       ;
 
-suite_declaration_type : STRUCT                     {debut_struct(); debut_depl(); remplir_nature(decla_courante, N_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante); memoriser_precedente_decla(decla_courante);} 
-                         AO liste_champs AF         {inserer_tab_rep_nb_elem(nbchamps);remplir_exec(decla_precedente);}
+suite_declaration_type : STRUCT                     {printf("Struct deplacement %d\n", deplacement); debut_struct(); debut_depl_struct(); remplir_nature(decla_courante, N_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante); memoriser_precedente_decla(decla_courante);} 
+                         AO liste_champs AF         {inserer_tab_rep_nb_elem(nbchamps);remplir_exec(decla_precedente);printf("arpès Struct deplacement %d\n", deplacement);}
                        | TAB                        {debut_tab(); remplir_nature(decla_courante, N_TAB); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);remplir_exec(decla_courante);}
                          dimension DE nom_type      {inserer_tab_rep_nb_elem(nbdimension); inserer_tab_rep_type($5);} 
 
@@ -92,14 +92,14 @@ une_dimension         : CSTE_ENTIERE PP CSTE_ENTIERE {inserer_tab_rep($1); inser
                       ;
 
 liste_champs          : un_champ {incr_nb_champ();}
-                      | liste_champs un_champ {incr_nb_champ();}
+                      | liste_champs un_champ {printf("Struct ch deplacement %d\n", deplacement); incr_nb_champ();}
                       ;
 
                       // déplacement à revoir
-un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); incr_depl($3); determiner_ligne_decla($1); remplir_nature(decla_courante, N_CH_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3); remplir_exec(decla_courante);}
+un_champ              : IDF DP nom_type PV {inserer_tab_rep($1); inserer_tab_rep($3); inserer_tab_rep(deplacement); incr_depl_struct($3); incr_depl($3); determiner_ligne_decla($1); remplir_nature(decla_courante, N_CH_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3); remplir_exec(decla_courante);}
                       ;
 
-declaration_variable  : VAR IDF DP nom_type {determiner_ligne_decla($2); remplir_nature(decla_courante, N_VAR); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $4); remplir_exec(decla_courante); incr_depl($4);}
+declaration_variable  : VAR IDF DP nom_type {printf("var : lexeme = %s, déplacement = %d\n", recuperer_lexeme($2), deplacement); determiner_ligne_decla($2); remplir_nature(decla_courante, N_VAR); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $4); remplir_exec(decla_courante); incr_depl($4);}
                       ;
 
 declaration_procedure : PROC {}
@@ -121,7 +121,7 @@ liste_param           : // aucun parametre
                       | liste_param VIR un_param
                       ;
 
-un_param              : IDF DP nom_type {determiner_ligne_decla($1); remplir_nature(decla_courante, N_PARAM); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3); remplir_exec(decla_courante); inserer_tab_rep($1); inserer_tab_rep($3); incr_param(); incr_depl($3);}
+un_param              : IDF DP nom_type {printf("param : lexeme = %s, déplacement = %d\n", recuperer_lexeme($1), deplacement); determiner_ligne_decla($1); remplir_nature(decla_courante, N_PARAM); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3); remplir_exec(decla_courante); inserer_tab_rep($1); inserer_tab_rep($3); incr_param(); incr_depl($3);}
                       ;
 
 nom_type              : type_simple {$$ = $1;}
@@ -242,11 +242,6 @@ int main(int argc, char **argv){
 
     afficher_tab_lexico(0, 20);
     afficher_tab_decla();
-    afficher_tab_rep(0, 30);
-    afficher_tab_regions(0, 10);
-
-    save_tab_lex();
-    save_tab_decla();
 
     exit(EXIT_SUCCESS);
     

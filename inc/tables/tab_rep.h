@@ -30,6 +30,7 @@ extern int nbparam;
 extern int nbchamps;
 extern int nbdimension;
 extern int deplacement;
+extern int deplacement_struct;
 extern int idx_type_element;
 
 /**
@@ -83,6 +84,8 @@ void debut_fct(int type);
 
 void debut_depl();
 
+void debut_depl_struct();
+
 void debut_tab();
 
 void incr_nb_dim();
@@ -90,6 +93,8 @@ void incr_nb_dim();
 void incr_nb_champ();
 
 void incr_depl(int num_lexico);
+
+void incr_depl_struct(int num_lexico);
 
 void incr_param();
 

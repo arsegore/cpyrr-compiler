@@ -17,6 +17,7 @@ int idx_type_element = 0;
 int nbparam = 0;
 int nbchamps;
 int deplacement;
+int deplacement_struct;
 int nbdimension;
 
 
@@ -79,12 +80,15 @@ void debut_depl(){
     deplacement = 0;
 }
 
+void debut_depl_struct(){
+    deplacement_struct = 0;
+}
+
 /* exactement la même que proc, faut il vraiment refaire uen fct ? */
 void debut_struct(){
     id_rep_courante = idx_premier_libre++;
     idx_nb_element = id_rep_courante;
     nbchamps = 0;
-    deplacement = 0;
 }
 
 void debut_fct(int type){
@@ -107,6 +111,10 @@ void incr_nb_dim() {
 
 void incr_nb_champ() {
     nbchamps++;
+}
+
+void incr_depl_struct(int num_lexico) {
+    deplacement_struct+=taille_type(num_lexico);
 }
 
 void incr_depl(int num_lexico) {
