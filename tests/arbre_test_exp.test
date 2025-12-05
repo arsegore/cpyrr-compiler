@@ -1,5 +1,12 @@
 programme {
-    var i: int;
+    var x: int;
+    int fct carre(i: int, b: char, t: bool) {
+        var test: int;
 
-    i = t[1, 2, 3];
+        test = i + 1;
+        
+        ret i * i;
+    }
+
+    none;
 }

@@ -53,7 +53,7 @@ do                   {return(FAIRE);}
 "||"                 {return(OU);}
 true                 {return(CSTE_BOOL);}
 false                {return(CSTE_BOOL);}
-nth;                 {return(RIEN);}
+none                 {return(RIEN);}
 {IDF}                {
                         yylval.intval = inserer_lexeme(yytext, yyleng);
                         return(IDF);

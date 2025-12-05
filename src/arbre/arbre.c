@@ -135,7 +135,11 @@ void afficher_nat_noeud(arbre a){
         case A_SI_ALORS:        printf("A_SI_ALORS"); break;
         case A_SI_ALORS_SINON:  printf("A_SI_ALORS_SINON"); break;
         case A_LISTE_I:         printf("A_LISTE_I"); break;
-        case A_LISTE_ACC_DIM:   printf("A_LISTE_ACCES_DIM"); break;
+        case A_LISTE_DIM:       printf("A_LISTE_ACCES_DIM"); break;
+        case A_LISTE_ARG:       printf("A_LISTE_ARG"); break;
+        case A_APPEL_PROC:      printf("A_APPEL_PROC"); break;
+        case A_APPEL_FCT:       printf("A_APPEL_FCT"); break;
+        case A_RET:             printf("A_RET"); break;
         default:                printf("A_INCONNU"); break;
     }
     printf(RESET ")[" MAGENTA"%d" RESET "][" VERT"%d" RESET"]\n", a->valeur, a->decla);
@@ -153,8 +157,8 @@ void afficher_arbre_aux(arbre a, int dec){
     
     afficher_nat_noeud(a);
 
-    afficher_arbre_aux(a->fils_gauche, dec + 1);  // D'abord les fils
-    afficher_arbre_aux(a->frere_droit, dec);      // Puis les frères
+    afficher_arbre_aux(a->fils_gauche, dec + 1);
+    afficher_arbre_aux(a->frere_droit, dec);
 }
 
 void afficher_arbre(arbre a){
@@ -462,15 +466,26 @@ arbre a_cr_inst(arbre instruction){
                             instruction);
 }
 
-// LISTE PARAM 
-arbre a_cr_liste_p(arbre param, arbre liste_param_suivants){
-    return concat_pere_fils(creer_noeud(A_LISTE_PARAM, -1, -1),
-                            concat_pere_frere(param, liste_param_suivants));
+// LISTE PARAM ( A TRANSFORMER EN LISTE ARGUMENTS !!!! PARAM C POUR LES DECLA )
+arbre a_cr_liste_arg_fin(arbre un_arg){
+    return concat_pere_fils(creer_noeud(A_LISTE_ARG, -1, -1),
+                            un_arg);
 }
 
-arbre a_cr_param(arbre param){
-    return concat_pere_fils(creer_noeud(A_LISTE_PARAM, -1, -1),
-                            concat_pere_frere(param, creer_noeud(A_LISTE_PARAM, -1, -1)));
+arbre a_cr_liste_arg_suiv(arbre un_arg, arbre liste_suivants) {
+    return concat_pere_fils(creer_noeud(A_LISTE_ARG, -1, -1),
+                            concat_pere_frere(un_arg, liste_suivants));
+}
+
+// APPEL DE FCT/PROC
+arbre a_cr_appel(int idf, arbre liste_args){
+    return concat_pere_fils(creer_noeud(A_APPEL_PROC, -1, -1),
+                            concat_pere_frere(a_cr_a_idf(idf, -1), liste_args));
+}
+
+// RETOUR DE FCT
+arbre a_cr_ret(arbre valeur){
+    return concat_pere_fils(creer_noeud(A_RET, -1, -1), valeur);
 }
 
 // TANT QUE 
@@ -480,17 +495,19 @@ arbre a_cr_tant_que(arbre condition, arbre liste_inst){
 }
 
 // LISTE ACCES DIM 
-arbre a_cr_liste_a_dim(arbre une_dim, arbre liste_acces_dim_suivants){
-    return concat_pere_fils(creer_noeud(A_LISTE_ACC_DIM, -1, -1),
-                            concat_pere_frere(une_dim, liste_acces_dim_suivants));
-   
+arbre a_cr_feuille_dim(int val){
+    return a_cr_cste_entiere(val);
 }
 
-arbre a_cr_a_dim(int acces_dim){
-    return concat_pere_fils(creer_noeud(A_LISTE_ACC_DIM, -1, -1),
-                            (a_cr_cste_entiere(acces_dim)));
+arbre a_cr_liste_dim_fin(arbre une_dim){
+    return concat_pere_fils(creer_noeud(A_LISTE_DIM, -1, -1),
+                            une_dim);
 }
 
+arbre a_cr_liste_dim_suiv(arbre une_dim, arbre liste_suivante) {
+    return concat_pere_fils(creer_noeud(A_LISTE_DIM, -1, -1),
+                            concat_pere_frere(une_dim, liste_suivante));
+}
 
 
 
