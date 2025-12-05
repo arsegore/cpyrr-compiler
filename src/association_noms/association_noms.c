@@ -54,5 +54,6 @@ int association_noms(int num_lex, int nature){
         }
     }
 
-    return i;
+    if (asso_ok) return i;
+    return -1;
 }

@@ -45,11 +45,22 @@ void init_pile_exec();
  */
 cellule sommet_pile_exec();
 
-/**
+// Ancienne version en une seule fonction, à voir si c'était mieux au final
+/*
  * @param chainage : valeur du chainage, -1 si on veut empiler une variable
  * @param variable : valeur de la variable
  */
-void empiler_pile_exec();
+//void empiler_pile_exec(int chainage, var variable);
+
+/**
+ * @param chainage : valeur du chainage
+ */
+void empiler_pile_exec_chainage(int chainage);
+
+/**
+ * @param variable : valeur de la variable
+ */
+void empiler_pile_exec_variable(var variable);
 
 /**
  * Met à jour la variable globale base_courante
