@@ -3,6 +3,19 @@
     #include "y.tab.h"
     #include "tables/tab_lexico.h"
     #include "tables/tab_rep.h"
+    #include "tables/tab_code.h"
+
+    #define BUFFER_LIGNE() \
+        do { \
+            for (int i = 0; yytext[i] && pos < TAILLE_MAX_LIGNE - 1; i++) { \
+                ligne[pos++] = yytext[i]; \
+            } \
+            ligne[pos] = '\0'; \
+        } while(0)
+
+    char ligne[TAILLE_MAX_LIGNE];
+    int pos = 0;
+    int ligne_courante = 1;
 %}
 IDF [a-zA-Z][a-zA-Z0-9_]*
 INT [1-9][0-9]*|0
@@ -56,15 +69,16 @@ false                {return(CSTE_BOOL);}
 none                 {return(RIEN);}
 {IDF}                {
                         yylval.intval = inserer_lexeme(yytext, yyleng);
+                        BUFFER_LIGNE();
                         return(IDF);
                      }
-{INT}                {yylval.intval = atoi(yytext); return(CSTE_ENTIERE);}
-\'([^\'\\]|\\.)\'    {return(CSTE_CHAR);}
-\"([^\"\\]|\\.)*\"   {return(CSTE_CHAINE);}
-{INT}"."{INT}        {return(CSTE_REELLE);}
-" "                  ;
-\t                   ;
-\n                   ;
+{INT}                {yylval.intval = atoi(yytext); BUFFER_LIGNE(); return(CSTE_ENTIERE);}
+\'([^\'\\]|\\.)\'    {BUFFER_LIGNE(); return(CSTE_CHAR);}
+\"([^\"\\]|\\.)*\"   {BUFFER_LIGNE(); return(CSTE_CHAINE);}
+{INT}"."{INT}        {BUFFER_LIGNE(); return(CSTE_REELLE);}
+" "                  {BUFFER_LIGNE();}
+\t                   {BUFFER_LIGNE();}
+\n                   {ajouter_ligne_code(ligne); pos = 0; ligne[0] = '\0'; ligne_courante++;}
 .                    {printf("Mauvais caractère : %s\n", yytext);}
 
 %%
