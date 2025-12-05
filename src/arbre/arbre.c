@@ -135,6 +135,7 @@ void afficher_nat_noeud(arbre a){
         case A_SI_ALORS:        printf("A_SI_ALORS"); break;
         case A_SI_ALORS_SINON:  printf("A_SI_ALORS_SINON"); break;
         case A_LISTE_I:         printf("A_LISTE_I"); break;
+        case A_LISTE_ACC_DIM:   printf("A_LISTE_ACCES_DIM"); break;
         default:                printf("A_INCONNU"); break;
     }
     printf(RESET ")[" MAGENTA"%d" RESET "][" VERT"%d" RESET"]\n", a->valeur, a->decla);
@@ -374,9 +375,9 @@ arbre a_cr_idf(int valeur){
     return creer_noeud(A_IDF, valeur, -1);
 }
 
-arbre a_cr_acces_tab(int idf, int decalage){
-    return concat_pere_fils(creer_noeud(A_ACCES_TAB, -1, -1),
-                            concat_pere_frere(a_cr_idf(idf), a_cr_cste_entiere(decalage)));
+arbre a_cr_acces_tab(int idf, arbre liste_acces_dim){
+    return concat_pere_fils(creer_noeud(A_ACCES_TAB, -1, -1), 
+                            concat_pere_frere(a_cr_idf(idf), liste_acces_dim));
 }
 
 arbre a_cr_acces_struct(int idf, arbre champ){
@@ -458,7 +459,18 @@ arbre a_cr_liste_i(arbre instruction, arbre liste_inst_suivantes){
 
 arbre a_cr_inst(arbre instruction){
     return concat_pere_fils(creer_noeud(A_LISTE_I, -1, -1),
-                            concat_pere_frere(instruction, creer_noeud(A_LISTE_I, -1, -1)));
+                            instruction);
+}
+
+// LISTE PARAM 
+arbre a_cr_liste_p(arbre param, arbre liste_param_suivants){
+    return concat_pere_fils(creer_noeud(A_LISTE_PARAM, -1, -1),
+                            concat_pere_frere(param, liste_param_suivants));
+}
+
+arbre a_cr_param(arbre param){
+    return concat_pere_fils(creer_noeud(A_LISTE_PARAM, -1, -1),
+                            concat_pere_frere(param, creer_noeud(A_LISTE_PARAM, -1, -1)));
 }
 
 // TANT QUE 
@@ -466,6 +478,19 @@ arbre a_cr_tant_que(arbre condition, arbre liste_inst){
     return concat_pere_fils(creer_noeud(A_TANT_QUE, -1, -1),
                             concat_pere_frere(condition, liste_inst));
 }
+
+// LISTE ACCES DIM 
+arbre a_cr_liste_a_dim(arbre une_dim, arbre liste_acces_dim_suivants){
+    return concat_pere_fils(creer_noeud(A_LISTE_ACC_DIM, -1, -1),
+                            concat_pere_frere(une_dim, liste_acces_dim_suivants));
+   
+}
+
+arbre a_cr_a_dim(int acces_dim){
+    return concat_pere_fils(creer_noeud(A_LISTE_ACC_DIM, -1, -1),
+                            (a_cr_cste_entiere(acces_dim)));
+}
+
 
 
 

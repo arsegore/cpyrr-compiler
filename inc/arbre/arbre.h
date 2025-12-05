@@ -31,6 +31,9 @@
 #define A_RET               16
 
 #define A_LISTE_I           17 
+#define A_LISTE_PARAM       32
+
+#define A_LISTE_ACC_DIM     33
 
 #define A_TANT_QUE          18
 #define A_SI_ALORS_SINON    19
@@ -132,7 +135,7 @@ arbre a_cr_div(arbre gauche, arbre droit);
 arbre a_cr_mod(arbre gauche, arbre droit);
 arbre a_cr_affect(arbre gauche, arbre droit);
 arbre a_cr_idf(int idf);
-arbre a_cr_acces_tab(int idf, int decalage);
+arbre a_cr_acces_tab(int idf, arbre liste_acces_dim);
 arbre a_cr_acces_struct(int idf, arbre champ);
 arbre a_cr_sup(arbre gauche, arbre droit);
 arbre a_cr_inf(arbre gauche, arbre droit);
@@ -150,5 +153,7 @@ arbre a_cr_si_alors_sinon(arbre si, arbre alors, arbre sinon);
 arbre a_cr_liste_i(arbre instruction, arbre liste_inst_suivantes);
 arbre a_cr_inst(arbre instruction);
 arbre a_cr_tant_que(arbre condition, arbre liste_inst);
+arbre a_cr_liste_a_dim(arbre une_dim, arbre liste_acces_dim_suivants);
+arbre a_cr_a_dim(int acces_dim);
 
 #endif
