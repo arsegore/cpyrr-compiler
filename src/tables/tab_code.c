@@ -3,6 +3,10 @@
 #include <string.h>
 #include "tables/tab_code.h"
 
+/**
+ * Auteur : Adam 
+ */
+
 const char *tab_code[NB_LIGNES_MAX_PROG];
 int nb_lignes = 0;
 
