@@ -27,6 +27,8 @@ void init_pile_decla();
  */
 void empiler_pile_decla(int num_region);
 
+int sommet_pile_decla();
+
 /**
  * Depile la pile des declarations
  */
