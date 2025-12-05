@@ -5,7 +5,8 @@
  *      Actions :
             - Représentations : Louis , Adam 
             - Régions : Baptiste 
-            - Declarations : Adam 
+            - Declarations : Adam , Louis 
+            - Génération d'arbres ; Adam HADDADO
  */ 
 
 %{
