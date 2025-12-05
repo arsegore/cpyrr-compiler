@@ -17,6 +17,7 @@
     #include "tables/tab_regions.h"
     #include "tables/tab_code.h"
     #include "tables/pile_regions.h"
+    #include "tables/pile_decla.h"
     #include "association_noms/association_noms.h"
     #include "save/save.h"
     #include "verif_sem/verif_sem.h"
@@ -68,16 +69,16 @@ liste_instructions    : instruction
                       ;
 
 // je note ici, il manque le remplissage du champ exec pour les déclas (!)
-declaration_tv        : declaration_type PV
+declaration_tv        : declaration_type PV { remplir_fin_decla(sommet_pile_decla(), ligne_courante); depiler_pile_decla();}
                       | declaration_variable PV 
                       ;
 
-declaration_pf        : declaration_procedure
-                      | declaration_fonction
+declaration_pf        : declaration_procedure { remplir_fin_decla(sommet_pile_decla(), ligne_courante); depiler_pile_decla();}
+                      | declaration_fonction { remplir_fin_decla(sommet_pile_decla(), ligne_courante); depiler_pile_decla();}
                       ;
 
-declaration_type      : TYPEDEF IDF {determiner_ligne_decla($2); remplir_debut_decla(decla_courante, ligne_courante);} DP
-                        suite_declaration_type {remplir_exec($2); debut_depl(); remplir_fin_decla(decla_courante, ligne_courante);}
+declaration_type      : TYPEDEF IDF {determiner_ligne_decla($2); empiler_pile_decla(decla_courante); remplir_debut_decla(decla_courante, ligne_courante);} DP
+                        suite_declaration_type {remplir_exec($2); debut_depl();}
                       ;
 
 suite_declaration_type : STRUCT                     {debut_struct(); debut_depl();  remplir_nature(decla_courante, N_STRUCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);} 
@@ -107,16 +108,16 @@ declaration_variable  : VAR IDF DP nom_type {determiner_ligne_decla($2); remplir
                       ;
 
 declaration_procedure : PROC {}
-                        IDF {debut_proc(); determiner_ligne_decla($3); remplir_debut_decla(decla_courante, ligne_courante); remplir_nature(decla_courante, N_PROC); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);remplir_exec($3);} 
+                        IDF {debut_proc(); determiner_ligne_decla($3);  empiler_pile_decla(decla_courante); remplir_debut_decla(decla_courante, ligne_courante); remplir_nature(decla_courante, N_PROC); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante);remplir_exec($3);} 
                         PO {inserer_region(deplacement); debut_depl();}
-                        liste_param PF {inserer_tab_rep_nb_elem(nbparam); remplir_fin_decla(decla_courante, ligne_courante);}
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF {depiler_pile_regions();}
                       ;
  
 declaration_fonction  : nom_type FCT {}
-                        IDF {debut_fct($1); determiner_ligne_decla($4); remplir_debut_decla(decla_courante, ligne_courante); remplir_nature(decla_courante, N_FCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante); remplir_exec($4);}
+                        IDF {debut_fct($1); determiner_ligne_decla($4); empiler_pile_decla(decla_courante); remplir_debut_decla(decla_courante, ligne_courante); remplir_nature(decla_courante, N_FCT); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, id_rep_courante); remplir_exec($4);}
                         PO {inserer_region(deplacement); debut_depl(); }
-                        liste_param PF {inserer_tab_rep_nb_elem(nbparam); remplir_fin_decla(decla_courante, ligne_courante);}
+                        liste_param PF {inserer_tab_rep_nb_elem(nbparam);}
                         AO corps AF {depiler_pile_regions();}
                       ;
 
@@ -125,7 +126,7 @@ liste_param           : // aucun parametre
                       | liste_param VIR un_param
                       ;
 
-un_param              : IDF DP nom_type {determiner_ligne_decla($1); remplir_nature(decla_courante, N_PARAM); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3); remplir_exec($1); inserer_tab_rep($1); inserer_tab_rep($3); incr_param(); incr_depl($3);}
+un_param              : IDF DP nom_type {determiner_ligne_decla($1);  remplir_debut_decla(decla_courante, ligne_courante); remplir_nature(decla_courante, N_PARAM); remplir_region(decla_courante, num_region_courante); remplir_desc(decla_courante, $3); remplir_exec($1); inserer_tab_rep($1); inserer_tab_rep($3); incr_param(); incr_depl($3); remplir_fin_decla(decla_courante, ligne_courante); }
                       ;
 
 nom_type              : type_simple {$$ = $1;}
@@ -243,6 +244,7 @@ int main(int argc, char **argv){
     init_tab_lexico();
     init_tab_decla();
     init_tab_rep();
+    init_pile_decla();
     init_tab_regions();
 
     yyparse();
@@ -251,7 +253,7 @@ int main(int argc, char **argv){
     erreur_semantique(e);
 
     afficher_tab_decla();
-
+    afficher_tab_code();
     exit(EXIT_SUCCESS);
     
 }

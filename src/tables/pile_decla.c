@@ -15,7 +15,7 @@ void init_pile_decla() {
 }
 
 int sommet_pile_decla(){
-    return pile_decla[nb_decla_pile];
+    return pile_decla[nb_decla_pile-1];
 }
 
 void empiler_pile_decla(int num_region) {
