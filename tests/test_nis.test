@@ -2,13 +2,11 @@ programme
 {
     var x : int ;
 
-    proc p1 ( x : float , y : float )
-    {
+    proc p1 ( x : float , y : float ){
         x = 3.5 ;
-     }
+    }
 
-    proc p2 ( a : int , b : int )
-    {
+    proc p2 ( a : int , b : int ){
         typedef x : struct {
             ch1 : int ;
             ch2 : int ;
@@ -16,17 +14,14 @@ programme
 
         var s : x ;
 
-        proc p3 ( c : int )
-        {
-            int fct x ( c : float )
-            {
+        proc p3 ( c : int ){
+            int fct x ( c : float ){
                 var a : float ;
                 c = a ;
                 ret 0 ;
             }
 
-            proc g ( x : bool )
-            {
+            proc g ( x : bool ){
                 var c : int ;
                 x = vrai ;
                 a = 88 ;
@@ -36,8 +31,7 @@ programme
             c = x(3.14) ;
         }
 
-        proc p4 ( )
-        {
+        proc p4 ( ){
             var x : x ;
             var c : char ;
             c = 'a' ;
@@ -48,8 +42,7 @@ programme
         s.ch1 = 99 ;
     }
 
-    proc p5 ( a : int , c : int )
-    {
+    proc p5 ( a : int , c : int ){
         var x : float ;
         x = 2.718 ;
         c = 77 ;
@@ -58,5 +51,3 @@ programme
     x = 42 ;
     p2( x , x ) ;
 }
-
-
