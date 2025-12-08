@@ -327,13 +327,13 @@ affectation           : variable OPAFF CSTE_BOOL  {
 
                       // description des formes possibles des variables 
 variable              : IDF {
-                          $$ = a_cr_idf($1, association_nom($1, IDF));
+                          $$ = a_cr_idf($1, association_noms($1, IDF));
                         }
                       | IDF CO liste_acces_dim CF {
-                          $$ = a_cr_acces_tab($1, $3, association_nom($1, IDF));
+                          $$ = a_cr_acces_tab($1, $3, association_noms($1, IDF));
                         }
                       | IDF POINT variable  {
-                          $$ = a_cr_acces_struct($1, $3, association_nom($1, IDF));
+                          $$ = a_cr_acces_struct($1, $3, association_noms($1, IDF));
                         }
                       ;
 
@@ -351,7 +351,7 @@ acces_dim             : CSTE_ENTIERE  {
                       ;
 
 appel                 : IDF PO liste_args PF {
-                          $$ = a_cr_appel($1, $3);
+                          $$ = a_cr_appel($1, $3, association_noms($1, IDF));
                         }
                       ;
 liste_args            : exp {
