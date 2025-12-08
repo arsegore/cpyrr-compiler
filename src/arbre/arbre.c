@@ -375,18 +375,18 @@ arbre a_cr_affect(arbre gauche, arbre droit){
 }
 
 // VARIABLES
-arbre a_cr_idf(int valeur){
-    return creer_noeud(A_IDF, valeur, -1);
+arbre a_cr_idf(int valeur, int num_dec){
+    return creer_noeud(A_IDF, valeur, num_dec);
 }
 
-arbre a_cr_acces_tab(int idf, arbre liste_acces_dim){
+arbre a_cr_acces_tab(int idf, arbre liste_acces_dim, int num_dec){
     return concat_pere_fils(creer_noeud(A_ACCES_TAB, -1, -1), 
-                            concat_pere_frere(a_cr_idf(idf), liste_acces_dim));
+                            concat_pere_frere(a_cr_idf(idf, num_dec), liste_acces_dim));
 }
 
-arbre a_cr_acces_struct(int idf, arbre champ){
+arbre a_cr_acces_struct(int idf, arbre champ, int num_dec){
     return concat_pere_fils(creer_noeud(A_ACCES_STRUCT, -1, -1),
-                            concat_pere_frere(a_cr_idf(idf), champ));
+                            concat_pere_frere(a_cr_idf(idf, num_dec), champ));
 }
 
 // EXPRESSIONS BOOLEENNES
