@@ -8,7 +8,7 @@
  *
  * Définition de la pile des decla et de ses fonctions
  *
- * Auteur :  louis
+ * Auteur :  louis 
  */
 
 #define TAILLE_PILE_DECLA 256

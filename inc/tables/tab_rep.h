@@ -50,6 +50,7 @@ void afficher_tab_rep(int depart, int arrivee);
  * Insère val dans la première case libre de la table rep
  * 
  * @param val La valeur à insérer
+ * Auteur :  Louis
  */
 void inserer_tab_rep(int val);
 
@@ -58,6 +59,7 @@ void inserer_tab_rep(int val);
  * à l'indice préparé par la fonction "début" correspondante
  * 
  * @param val Le nb d'éléments à insérer
+ * Auteur :  Louis
  */
 void inserer_tab_rep_nb_elem(int val);
 
@@ -66,18 +68,27 @@ void inserer_tab_rep_nb_elem(int val);
  * à l'indice préparé par la fonction debut_tab
  * 
  * @param val Le type des élements du tableau
+ * Auteur :  Louis
  */
 void inserer_tab_rep_type(int type);
 
 /*------------------------------------------------------*/
 /* Fonctions appelées pour préparer les indices globaux */
 /*------------------------------------------------------*/
+
+/**
+ * Auteur :  Louis
+ */
 void debut_proc();
 
+/**
+ * Auteur :  Louis
+ */
 void debut_struct();
 
 /**
  * @param type Le type de retour de la fonction
+ * Auteur  :  Louis
  */
 void debut_fct(int type);
 

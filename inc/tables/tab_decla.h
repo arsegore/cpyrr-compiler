@@ -37,11 +37,13 @@ extern int decla_precedente;
 
 /**
  * Initialise la table des déclarations 
+ * Auteur :  Louis(premiere version) ...
  */
 void init_tab_decla();
 
 /**
- *  Initialise la variable decla_precedente, permet  de remplir le champs exec 
+ * Initialise la variable decla_precedente, permet  de remplir le champs exec 
+ * Auteur :  Louis
  */
 void memoriser_precedente_decla(int decla_actuelle);
 
@@ -50,17 +52,20 @@ void memoriser_precedente_decla(int decla_actuelle);
  *
  * @param num : Le numéro de la ligne à afficher 
  * @param entete : 1 si on veut afficher l'entete, 0 sinon
+ * Auteur :  Louis(premiere version) ...
  */
 void afficher_ligne(int num, int entete);
 
 /**
  * Affiche la table des déclarations
+ * Auteur :  Louis
  */
 void afficher_tab_decla();
 
 /**
  * Détermine la ligne dans laquelle insérer la déclaration courante en 
  * fonction de son num lexico
+ * 
  */
 void determiner_ligne_decla(int num_lexico);
 
@@ -70,11 +75,35 @@ void remplir_region(int num_decla, int region);
 
 void remplir_desc(int num_decla, int desc);
 
+/**
+ * permet de remplir le champs exec des déclarations
+ * @param num_decla : déclaration où l'on fait l'insertion
+ * Auteur :  Louis
+ */
 void remplir_exec(int num_decla);
 
+/**
+ * permet de remplir le champs debut des déclarations
+ * @param num_decla : déclaration où l'on fait l'insertion
+ * @param ligne : ligne où la declaration commence
+ * Auteur :  Louis
+ */
 void remplir_debut_decla(int num_decla, int ligne);
 
+/**
+ * permet de remplir le champs fin des déclarations
+ * @param num_decla : déclaration où l'on fait l'insertion
+ * @param ligne : ligne où la declaration fini
+ * Auteur :  Louis
+ */
 void remplir_fin_decla(int num_decla, int ligne);
+
+/**
+ * Calcule la taille en fonction de son type
+ * @param num_type : Le numéro de déclaration du type
+ * Auteur :  louis 
+ */
+
 
 int taille_type(int num_type);
 

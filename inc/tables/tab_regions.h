@@ -29,7 +29,8 @@ void init_tab_regions();
 
 /**
  * Insère une nouvelle région dans la table, remplit automatiquement son
- * champ NIS
+ * champ NIS, et insertion de la taille
+ * Auteurs :  Louis(insertion de la taille) ..
  */
 void inserer_region(int taille);
 
