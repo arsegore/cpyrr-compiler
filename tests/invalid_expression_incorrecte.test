@@ -1,4 +1,4 @@
-programme {
+main {
   var x: int;
   x = 3 + ;
 }

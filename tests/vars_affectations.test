@@ -1,9 +1,9 @@
-programme {
+main {
   var x: int;
   var y: float;
   var z: bool;
 
   x = 1;
   y = x + 2 * 3;
-  z = vrai;
+  z = true;
 }
