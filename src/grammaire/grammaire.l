@@ -21,7 +21,7 @@ int ligne_courante = 1;
 IDF [a-zA-Z][a-zA-Z0-9_]*
 INT [1-9][0-9]*|0
 %%
-programme            {BUFFER_LIGNE(); return(PROG);}
+main                 {BUFFER_LIGNE(); return(PROG);}
 \{                   {BUFFER_LIGNE(); return(AO);}
 \}                   {BUFFER_LIGNE(); return(AF);}
 \;                   {BUFFER_LIGNE(); return(PV);}
