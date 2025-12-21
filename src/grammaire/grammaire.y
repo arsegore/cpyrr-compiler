@@ -6,7 +6,7 @@
             - Représentations : Louis PELOUX, Adam HADDADI
             - Régions : Baptiste MOULIN
             - Declarations : Adam HADDADI, Louis PELOUX
-            - Génération d'arbres ; Adam HADDADO
+            - Génération d'arbres ; Adam HADDADI
  */ 
 
 %{
@@ -62,7 +62,7 @@
 %type <treeval> liste_args
 %type <treeval> condition tant_que
 %type <treeval> corps
-%type <treeval> appel
+%type <treeval> appel_fct appel_proc
 %type <treeval> resultat_retourne
 
 %%
@@ -327,13 +327,13 @@ affectation           : variable OPAFF CSTE_BOOL  {
 
                       // description des formes possibles des variables 
 variable              : IDF {
-                          $$ = a_cr_idf($1, association_noms($1, IDF));
+                          $$ = a_cr_idf($1, association_noms($1, N_VAR));
                         }
                       | IDF CO liste_acces_dim CF {
-                          $$ = a_cr_acces_tab($1, $3, association_noms($1, IDF));
+                          $$ = a_cr_acces_tab($1, $3, association_noms($1, N_VAR));
                         }
                       | IDF POINT variable  {
-                          $$ = a_cr_acces_struct($1, $3, association_noms($1, IDF));
+                          $$ = a_cr_acces_struct($1, $3, association_noms($1, N_VAR));
                         }
                       ;
 
@@ -350,10 +350,20 @@ acces_dim             : CSTE_ENTIERE  {
                         }
                       ;
 
-appel                 : IDF PO liste_args PF {
-                          $$ = a_cr_appel($1, $3, association_noms($1, IDF));
+appel                 : appel_fct
+                      | appel_proc
+                      ;
+
+appel_fct             : IDF PO liste_args PF {
+                          $$ = a_cr_appel_fct($1, $3, association_noms($1, N_FCT));
                         }
                       ;
+
+appel_proc            : IDF PO liste_args PF {
+                          $$ = a_cr_appel_proc($1, $3, association_noms($1, N_PROC));
+                        }
+                      ;
+
 liste_args            : exp {
                           $$ = a_cr_liste_arg_fin($1);                         
                         }
@@ -399,7 +409,7 @@ expa2                 : PO expa PF    {
                           $$ = $2;
                         } 
                       | variable      
-                      | appel         
+                      | appel_fct         
                       | CSTE_REELLE   {
                           $$ = a_cr_cste_reelle($1);
                         }

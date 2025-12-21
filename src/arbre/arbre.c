@@ -478,8 +478,13 @@ arbre a_cr_liste_arg_suiv(arbre un_arg, arbre liste_suivants) {
 }
 
 // APPEL DE FCT/PROC
-arbre a_cr_appel(int idf, arbre liste_args, int num_dec){
+arbre a_cr_appel_fct(int idf, arbre liste_args, int num_dec){
     return concat_pere_fils(creer_noeud(A_APPEL_PROC, -1, -1),
+                            concat_pere_frere(a_cr_a_idf(idf, num_dec), liste_args));
+}
+
+arbre a_cr_appel_proc(int idf, arbre liste_args, int num_dec){
+    return concat_pere_fils(creer_noeud(A_APPEL_FCT, -1, -1),
                             concat_pere_frere(a_cr_a_idf(idf, num_dec), liste_args));
 }
 
