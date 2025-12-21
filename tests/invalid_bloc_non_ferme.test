@@ -1,4 +1,4 @@
-programme {
+main {
   var x: int;
   si (x < 3) alors {
     x = 2;

@@ -1,8 +1,8 @@
-programme {
+main {
   var i: int;
   i = 0;
 
-  tq (i < 10) faire {
+  while (i < 10) do {
     i = i + 1;
   }
 }

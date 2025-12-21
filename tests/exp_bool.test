@@ -1,10 +1,10 @@
-programme {
+main {
   var a: bool;
   var b: bool;
 
   a = vrai;
 
-  si (vrai) et (faux) alors {
-    rien;
+  if (vrai) && (faux) then {
+    none;
   }
 }

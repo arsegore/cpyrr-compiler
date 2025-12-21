@@ -1,13 +1,13 @@
-programme {
+main {
   proc afficher(i: int) {
     proc afficherrrr(ug: int) {
-      rien;
+      none;
     }
-    rien;
+    none;
   }
 
   proc afficherr(ie: int) {
-    rien;
+    none;
   }
 
   var x: int;
