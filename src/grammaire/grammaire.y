@@ -62,7 +62,7 @@
 %type <treeval> liste_args
 %type <treeval> condition tant_que
 %type <treeval> corps
-%type <treeval> appel_fct appel_proc
+%type <treeval> appel
 %type <treeval> resultat_retourne
 
 %%
@@ -350,17 +350,8 @@ acces_dim             : CSTE_ENTIERE  {
                         }
                       ;
 
-appel                 : appel_fct
-                      | appel_proc
-                      ;
-
-appel_fct             : IDF PO liste_args PF {
-                          $$ = a_cr_appel_fct($1, $3, association_noms($1, N_FCT));
-                        }
-                      ;
-
-appel_proc            : IDF PO liste_args PF {
-                          $$ = a_cr_appel_proc($1, $3, association_noms($1, N_PROC));
+appel                 : IDF PO liste_args PF {
+                          $$ = a_cr_appel($1, $3);
                         }
                       ;
 
@@ -409,7 +400,7 @@ expa2                 : PO expa PF    {
                           $$ = $2;
                         } 
                       | variable      
-                      | appel_fct         
+                      | appel         
                       | CSTE_REELLE   {
                           $$ = a_cr_cste_reelle($1);
                         }
@@ -494,8 +485,8 @@ int main(int argc, char **argv){
 
     yyparse();
     
-    e = generer_erreur(18, 4, E_PROC_NON_DECLAREE, "test");
-    erreur_semantique(e);
+    //e = generer_erreur(18, 4, E_PROC_NON_DECLAREE, "test");
+    //erreur_semantique(e);
 
     afficher_tab_decla();
     afficher_tab_code();
