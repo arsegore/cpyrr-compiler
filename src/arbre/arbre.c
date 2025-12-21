@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "arbre/arbre.h"
 #include "tables/tab_lexico.h"
+#include "tables/tab_decla.h"
+#include "association_noms/association_noms.h"
 
 // Macros pour les couleurs de texte
 #define RESET   "\x1B[0m"
@@ -478,13 +480,28 @@ arbre a_cr_liste_arg_suiv(arbre un_arg, arbre liste_suivants) {
 }
 
 // APPEL DE FCT/PROC
+arbre a_cr_appel(int idf, arbre liste_args) {
+    int num_dec;
+    if ((num_dec = association_noms(idf, N_FCT)) != -1) {
+        printf("bonjour je suis le num_dec (dans fct) %d\n", num_dec);
+        return a_cr_appel_fct(idf, liste_args, num_dec);
+
+    } else if ((num_dec = association_noms(idf, N_PROC)) != -1) {
+        printf("bonjour je suis le num_dec (dans proc) %d\n", num_dec);
+        return a_cr_appel_proc(idf, liste_args, num_dec);
+
+    } else {
+        // erreur ?????????
+    }
+}
+
 arbre a_cr_appel_fct(int idf, arbre liste_args, int num_dec){
-    return concat_pere_fils(creer_noeud(A_APPEL_PROC, -1, -1),
+    return concat_pere_fils(creer_noeud(A_APPEL_FCT, -1, -1),
                             concat_pere_frere(a_cr_a_idf(idf, num_dec), liste_args));
 }
 
 arbre a_cr_appel_proc(int idf, arbre liste_args, int num_dec){
-    return concat_pere_fils(creer_noeud(A_APPEL_FCT, -1, -1),
+    return concat_pere_fils(creer_noeud(A_APPEL_PROC, -1, -1),
                             concat_pere_frere(a_cr_a_idf(idf, num_dec), liste_args));
 }
 
