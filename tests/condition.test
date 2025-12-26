@@ -1,10 +1,10 @@
-programme {
+main {
   var x: int;
   x = 3;
 
-  si (x < 5) alors {
+  if (x < 5) then {
     x = x + 1;
-  } sinon {
+  } else {
     x = x - 1;
   }
 }

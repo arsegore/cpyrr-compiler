@@ -1,4 +1,4 @@
-programme
+main
 {
     var x : int ;
 
@@ -25,7 +25,7 @@ programme
                 var c : int ;
                 x = vrai ;
                 a = 88 ;
-                rien ;
+                none ;
             }
 
             c = x(3.14) ;

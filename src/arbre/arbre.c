@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "arbre/arbre.h"
 #include "tables/tab_lexico.h"
+#include "tables/tab_decla.h"
+#include "association_noms/association_noms.h"
 
 // Macros pour les couleurs de texte
 #define RESET   "\x1B[0m"
@@ -375,18 +377,18 @@ arbre a_cr_affect(arbre gauche, arbre droit){
 }
 
 // VARIABLES
-arbre a_cr_idf(int valeur){
-    return creer_noeud(A_IDF, valeur, -1);
+arbre a_cr_idf(int valeur, int num_dec){
+    return creer_noeud(A_IDF, valeur, num_dec);
 }
 
-arbre a_cr_acces_tab(int idf, arbre liste_acces_dim){
+arbre a_cr_acces_tab(int idf, arbre liste_acces_dim, int num_dec){
     return concat_pere_fils(creer_noeud(A_ACCES_TAB, -1, -1), 
-                            concat_pere_frere(a_cr_idf(idf), liste_acces_dim));
+                            concat_pere_frere(a_cr_idf(idf, num_dec), liste_acces_dim));
 }
 
-arbre a_cr_acces_struct(int idf, arbre champ){
+arbre a_cr_acces_struct(int idf, arbre champ, int num_dec){
     return concat_pere_fils(creer_noeud(A_ACCES_STRUCT, -1, -1),
-                            concat_pere_frere(a_cr_idf(idf), champ));
+                            concat_pere_frere(a_cr_idf(idf, num_dec), champ));
 }
 
 // EXPRESSIONS BOOLEENNES
@@ -478,9 +480,29 @@ arbre a_cr_liste_arg_suiv(arbre un_arg, arbre liste_suivants) {
 }
 
 // APPEL DE FCT/PROC
-arbre a_cr_appel(int idf, arbre liste_args){
+arbre a_cr_appel(int idf, arbre liste_args) {
+    int num_dec;
+    if ((num_dec = association_noms(idf, N_FCT)) != -1) {
+        printf("bonjour je suis le num_dec (dans fct) %d\n", num_dec);
+        return a_cr_appel_fct(idf, liste_args, num_dec);
+
+    } else if ((num_dec = association_noms(idf, N_PROC)) != -1) {
+        printf("bonjour je suis le num_dec (dans proc) %d\n", num_dec);
+        return a_cr_appel_proc(idf, liste_args, num_dec);
+
+    } else {
+        // erreur ?????????
+    }
+}
+
+arbre a_cr_appel_fct(int idf, arbre liste_args, int num_dec){
+    return concat_pere_fils(creer_noeud(A_APPEL_FCT, -1, -1),
+                            concat_pere_frere(a_cr_a_idf(idf, num_dec), liste_args));
+}
+
+arbre a_cr_appel_proc(int idf, arbre liste_args, int num_dec){
     return concat_pere_fils(creer_noeud(A_APPEL_PROC, -1, -1),
-                            concat_pere_frere(a_cr_a_idf(idf, -1), liste_args));
+                            concat_pere_frere(a_cr_a_idf(idf, num_dec), liste_args));
 }
 
 // RETOUR DE FCT
