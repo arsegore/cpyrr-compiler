@@ -1,4 +1,4 @@
-programme {
+main {
   int fct inc(x: int) {
     ret x + 1;
   }
@@ -6,7 +6,7 @@ programme {
   var y: int;
   y = 5;
 
-  si (inc(y) == 6) alors {
-    rien;
+  if (inc(y) == 6) then {
+    none;
   }
 }

@@ -1,4 +1,4 @@
-programme {
+main {
   proc test(i: int) {
     rien;
   }

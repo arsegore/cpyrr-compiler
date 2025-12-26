@@ -6,7 +6,7 @@
             - Représentations : Louis , Adam 
             - Régions : Baptiste 
             - Declarations : Adam , Louis 
-            - Génération d'arbres ; Adam HADDADO
+            - Génération d'arbres ; Adam 
  */ 
 
 %{
@@ -327,13 +327,13 @@ affectation           : variable OPAFF CSTE_BOOL  {
 
                       // description des formes possibles des variables 
 variable              : IDF {
-                          $$ = a_cr_idf($1);
+                          $$ = a_cr_idf($1, association_noms($1, N_VAR));
                         }
                       | IDF CO liste_acces_dim CF {
-                          $$ = a_cr_acces_tab($1, $3);
+                          $$ = a_cr_acces_tab($1, $3, association_noms($1, N_VAR));
                         }
                       | IDF POINT variable  {
-                          $$ = a_cr_acces_struct($1, $3);
+                          $$ = a_cr_acces_struct($1, $3, association_noms($1, N_VAR));
                         }
                       ;
 
@@ -354,6 +354,7 @@ appel                 : IDF PO liste_args PF {
                           $$ = a_cr_appel($1, $3);
                         }
                       ;
+
 liste_args            : exp {
                           $$ = a_cr_liste_arg_fin($1);                         
                         }
@@ -484,8 +485,8 @@ int main(int argc, char **argv){
 
     yyparse();
     
-    e = generer_erreur(18, 4, E_PROC_NON_DECLAREE, "test");
-    erreur_semantique(e);
+    //e = generer_erreur(18, 4, E_PROC_NON_DECLAREE, "test");
+    //erreur_semantique(e);
 
     afficher_tab_decla();
     afficher_tab_code();
