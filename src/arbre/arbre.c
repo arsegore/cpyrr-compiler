@@ -582,14 +582,34 @@ arbre a_cr_ou(arbre gauche, arbre droit){
 
 // CONDITIONNELLES
 arbre a_cr_si_alors(arbre si, arbre alors){
+    if (si->nature != A_CSTE_BOOL) {
+        erreur_semantique(generer_erreur(tab_decla[si->decla][DEBUT_DECLA],
+                                         tab_decla[si->decla][FIN_DECLA],
+                                         E_TYPE_CONDITION));
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_SI_ALORS, -1, -1),
                             concat_pere_frere(si, alors));  
 }
 
 arbre a_cr_si_alors_sinon(arbre si, arbre alors, arbre sinon){ // (cond)--(liste_i)--(liste_i)
+    if (si->nature != A_CSTE_BOOL) {
+        erreur_semantique(generer_erreur(tab_decla[si->decla][DEBUT_DECLA],
+                                         tab_decla[si->decla][FIN_DECLA],
+                                         E_TYPE_CONDITION));
+        return NULL;
+    }
+    if (sinon->nature != A_CSTE_BOOL) {
+        erreur_semantique(generer_erreur(tab_decla[sinon->decla][DEBUT_DECLA],
+                                         tab_decla[sinon->decla][FIN_DECLA],
+                                         E_TYPE_CONDITION));
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_SI_ALORS_SINON, -1, -1),
                             concat_pere_frere(si, concat_pere_frere(alors, sinon)));  
 }
+
+
 
 // LISTE INSTRUCTIONS
 arbre a_cr_liste_i(arbre instruction, arbre liste_inst_suivantes){
@@ -602,6 +622,8 @@ arbre a_cr_inst(arbre instruction){
                             instruction);
 }
 
+
+
 // LISTE PARAM ( A TRANSFORMER EN LISTE ARGUMENTS !!!! PARAM C POUR LES DECLA )
 arbre a_cr_liste_arg_fin(arbre un_arg){
     return concat_pere_fils(creer_noeud(A_LISTE_ARG, -1, -1),
@@ -612,6 +634,8 @@ arbre a_cr_liste_arg_suiv(arbre un_arg, arbre liste_suivants) {
     return concat_pere_fils(creer_noeud(A_LISTE_ARG, -1, -1),
                             concat_pere_frere(un_arg, liste_suivants));
 }
+
+
 
 // APPEL DE FCT/PROC
 arbre a_cr_appel(int idf, arbre liste_args) {
@@ -645,16 +669,28 @@ arbre a_cr_appel_proc(int idf, arbre liste_args, int num_dec){
                             concat_pere_frere(a_cr_a_idf(idf, num_dec), liste_args));
 }
 
+
+
 // RETOUR DE FCT
 arbre a_cr_ret(arbre valeur){
     return concat_pere_fils(creer_noeud(A_RET, -1, -1), valeur);
 }
 
+
+
 // TANT QUE 
 arbre a_cr_tant_que(arbre condition, arbre liste_inst){
+    if (condition->nature != A_CSTE_BOOL) {
+        erreur_semantique(generer_erreur(tab_decla[condition->decla][DEBUT_DECLA],
+                                         tab_decla[condition->decla][FIN_DECLA],
+                                         E_TYPE_CONDITION));
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_TANT_QUE, -1, -1),
                             concat_pere_frere(condition, liste_inst));
 }
+
+
 
 // LISTE ACCES DIM 
 arbre a_cr_feuille_dim(int val){
