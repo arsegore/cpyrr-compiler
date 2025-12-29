@@ -13,6 +13,7 @@
 #define E_CHAMP_NON_DECLARE 6
 
 // erreurs de types non compatibles
+//#define E_TYPE_INCOMP 7
 #define E_TYPE_AFF 8
 #define E_TYPE_CALCUL 9
 #define E_TYPE_CONDITION 10

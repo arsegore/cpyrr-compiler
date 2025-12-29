@@ -4,6 +4,7 @@
 #include "tables/tab_lexico.h"
 #include "tables/tab_decla.h"
 #include "association_noms/association_noms.h"
+#include "verif_sem/verif_sem.h"
 
 // Macros pour les couleurs de texte
 #define RESET   "\x1B[0m"
@@ -344,37 +345,101 @@ arbre a_cr_cste_reelle(int valeur){
     return creer_noeud(A_CSTE_REELLE, valeur, -1);
 }
 
+
+
 // EXPRESSIONS
+int verif_calcul(arbre gauche, arbre droit) {
+    if (gauche->nature != A_CSTE_REELLE && gauche->nature != A_CSTE_ENTIERE) {
+        // faire erreur qui dit pas bon type
+        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
+                                        tab_decla[gauche->decla][FIN_DECLA],
+                                        E_TYPE_CALCUL));
+        return 1;
+    } else {
+        if (gauche->nature != droit->nature) {
+            erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
+                                             tab_decla[gauche->decla][FIN_DECLA],
+                                             E_TYPE_CALCUL));
+            return 1;
+        }
+    }
+    return 0;
+}
+
 arbre a_cr_plus(arbre gauche, arbre droit){
+    if (verif_calcul(gauche, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_PLUS, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_moins(arbre gauche, arbre droit){
+    if (verif_calcul(gauche, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_MOINS, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_mult(arbre gauche, arbre droit){
+    if (verif_calcul(gauche, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_MULT, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_div(arbre gauche, arbre droit){
+    if (verif_calcul(gauche, droit) == 1) {
+        return NULL;
+    }
+    if (droit->valeur == 0) {
+        // faire erreur qui dit pas diviser par 0
+        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
+                                         tab_decla[gauche->decla][FIN_DECLA],
+                                         E_TYPE_CALCUL));
+    }
     return concat_pere_fils(creer_noeud(A_DIV, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_mod(arbre gauche, arbre droit){
+    if (verif_calcul(gauche, droit) == 1) {
+        return NULL;
+    }
+    if (droit->valeur == 0) {
+        // faire erreur qui dit pas diviser par 0
+        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
+                                         tab_decla[gauche->decla][FIN_DECLA],
+                                         E_TYPE_CALCUL));
+    }
     return concat_pere_fils(creer_noeud(A_MOD, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
+
+
 // AFFECTATIONS
+int verif_affectation(arbre gauche, arbre droit) {
+    if (gauche->nature != droit->nature) {
+        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
+                                         tab_decla[gauche->decla][FIN_DECLA],
+                                         E_TYPE_AFF));
+        return 1;
+    }
+    return 0;
+}
+
 arbre a_cr_affect(arbre gauche, arbre droit){
+    if (verif_affect(gauche, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_AFFECT, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
+
+
 
 // VARIABLES
 arbre a_cr_idf(int valeur, int num_dec){
@@ -392,32 +457,60 @@ arbre a_cr_acces_struct(int idf, arbre champ, int num_dec){
 }
 
 // EXPRESSIONS BOOLEENNES
+int verif_comparaison(arbre gauche, arbre droit) {
+    if (gauche->nature != droit->nature) {
+        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
+                                         tab_decla[gauche->decla][FIN_DECLA],
+                                         E_TYPE_AFF));
+        return 1;
+    }
+    return 0;
+}
+
 arbre a_cr_sup(arbre gauche, arbre droit){
+    if (verif_comparaison(gauche, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_SUP, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_inf(arbre gauche, arbre droit){
+    if (verif_comparaison(gauche, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_INF, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_supegal(arbre gauche, arbre droit){
+    if (verif_comparaison(gauche, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_SUPEGAL, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_infegal(arbre gauche, arbre droit){
+    if (verif_comparaison(gauche, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_INFEGAL, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_egal_arith(arbre gauche, arbre droit){
+    if (verif_comparaison(gauche, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_EGAL, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_diff_arith(arbre gauche, arbre droit){
+    if (verif_comparaison(gauche, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_DIFF, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
@@ -495,8 +588,9 @@ arbre a_cr_appel(int idf, arbre liste_args) {
         printf("euuuuuh erreur dans a_cr_appel\n");
         // je le mets ici mais un appel de proc crée un nouveau champ dans table lexico, pas cool
         // donc ça fait un segfault, pour enlever erreur décommenter en-dessous (mais c'est pas juste)
-        return a_cr_appel_proc(idf, liste_args, num_dec);
+        //return a_cr_appel_proc(idf, liste_args, num_dec);
         // erreur ?????????
+        return NULL;
     }
 }
 
