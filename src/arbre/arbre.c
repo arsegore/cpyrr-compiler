@@ -456,16 +456,30 @@ arbre a_cr_acces_struct(int idf, arbre champ, int num_dec){
                             concat_pere_frere(a_cr_idf(idf, num_dec), champ));
 }
 
+
+
 // EXPRESSIONS BOOLEENNES
 int verif_comparaison(arbre gauche, arbre droit) {
     if (gauche->nature != droit->nature) {
         erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
                                          tab_decla[gauche->decla][FIN_DECLA],
-                                         E_TYPE_AFF));
+                                         E_TYPE_CONDITION));
         return 1;
     }
     return 0;
 }
+
+int verif_bool(int bool, arbre droit) {
+    if (bool != 0 && bool != 1 && droit->nature != A_CSTE_BOOL) {
+        // faire erreur qui dit pas bon type
+        erreur_semantique(generer_erreur(tab_decla[droit->decla][DEBUT_DECLA],
+                                        tab_decla[droit->decla][FIN_DECLA],
+                                        E_TYPE_CONDITION));
+        return 1;
+    }
+    return 0;
+}
+
 
 arbre a_cr_sup(arbre gauche, arbre droit){
     if (verif_comparaison(gauche, droit) == 1) {
@@ -516,28 +530,55 @@ arbre a_cr_diff_arith(arbre gauche, arbre droit){
 }
 
 arbre a_cr_egal_bool(int bool, arbre droit){
+    if (verif_bool(bool, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_EGAL, -1, -1),
                             concat_pere_frere(a_cr_cste_bool(bool), droit));
 }
 
 arbre a_cr_diff_bool(int bool, arbre droit){
+    if (verif_bool(bool, droit) == 1) {
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_DIFF, -1, -1),
                             concat_pere_frere(a_cr_cste_bool(bool), droit));
 }
 
 arbre a_cr_non(arbre arbre){
+    if (arbre->nature != A_CSTE_BOOL) {
+        // erreur pour le '!'
+        erreur_semantique(generer_erreur(tab_decla[arbre->decla][DEBUT_DECLA],
+                                        tab_decla[arbre->decla][FIN_DECLA],
+                                        E_TYPE_CONDITION));
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_NON, -1, -1), arbre);
 }
 
 arbre a_cr_et(arbre gauche, arbre droit){
+    if (gauche->nature != A_CSTE_BOOL || droit->nature != A_CSTE_BOOL) {
+        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
+                                        tab_decla[droit->decla][FIN_DECLA],
+                                        E_TYPE_CONDITION));
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_ET, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_ou(arbre gauche, arbre droit){
+    if (gauche->nature != A_CSTE_BOOL || droit->nature != A_CSTE_BOOL) {
+        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
+                                        tab_decla[droit->decla][FIN_DECLA],
+                                        E_TYPE_CONDITION));
+        return NULL;
+    }
     return concat_pere_fils(creer_noeud(A_OU, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
+
+
 
 // CONDITIONNELLES
 arbre a_cr_si_alors(arbre si, arbre alors){
