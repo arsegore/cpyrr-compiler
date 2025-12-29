@@ -482,6 +482,7 @@ arbre a_cr_liste_arg_suiv(arbre un_arg, arbre liste_suivants) {
 // APPEL DE FCT/PROC
 arbre a_cr_appel(int idf, arbre liste_args) {
     int num_dec;
+    printf("Je passe dans a_cr_appel, idf %d\n", idf);
     if ((num_dec = association_noms(idf, N_FCT)) != -1) {
         printf("bonjour je suis le num_dec (dans fct) %d\n", num_dec);
         return a_cr_appel_fct(idf, liste_args, num_dec);
@@ -491,6 +492,10 @@ arbre a_cr_appel(int idf, arbre liste_args) {
         return a_cr_appel_proc(idf, liste_args, num_dec);
 
     } else {
+        printf("euuuuuh erreur dans a_cr_appel\n");
+        // je le mets ici mais un appel de proc crée un nouveau champ dans table lexico, pas cool
+        // donc ça fait un segfault, pour enlever erreur décommenter en-dessous (mais c'est pas juste)
+        return a_cr_appel_proc(idf, liste_args, num_dec);
         // erreur ?????????
     }
 }
