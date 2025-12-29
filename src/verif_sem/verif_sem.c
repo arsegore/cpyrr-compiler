@@ -25,6 +25,7 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     "Le tableau '%s' n'a jamais été déclarée",                              // E_TAB_NON_DECLAREE
     "Le paramètre '%s' n'a jamais été déclarée",                            // E_PARAM_NON_DECLARE
     "Le champ '%s' de %s n'a jamais été déclaré",                           // E_CHAMP_NON_DECLARE
+    //"Tentative de calcul avec un type incompatible : %s"                    // E_TYPE_INCOMP
     "Tentative d'affectation entre %s et %s",                               // E_TYPE_AFF
     "Tentative de calcul entre deux types différents : %s et %s",           // E_TYPE_CALCUL
     "Le type donné n'est pas celui attendu dans une condition",             // E_TYPE_CONDITION
@@ -49,6 +50,7 @@ const char *msg_indice_tab[NB_TYPE_ERREURS] = {
     "Déclarez le tableau '%s' avant de l'utiliser",                                                 // E_TAB_NON_DECLAREE
     "Déclarez le paramètre '%s' de '%s' avant de l'utiliser",                                       // E_PARAM_NON_DECLARE
     "Déclarez le champ '%s' dans '%s' avant de l'utiliser",                                         // E_CHAMP_NON_DECLARE
+    //"Une opération prend un entier ou un réel"                                                      // E_TYPE_INCOMP
     "Vous tentez d'affecter %s à '%s':%s, vérifiez vos déclarations",                               // E_TYPE_AFF
     "Vous tentez d'effectuer une opération entre %s et %s, vérifiez vos types",                     // E_TYPE_CALCUL
     "Une condition attend forcément une expression booléenne (type bool)",                          // E_TYPE_CONDITION
