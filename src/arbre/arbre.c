@@ -3,6 +3,7 @@
 #include "arbre/arbre.h"
 #include "tables/tab_lexico.h"
 #include "tables/tab_decla.h"
+#include "tables/tab_rep.h"
 #include "association_noms/association_noms.h"
 #include "verif_sem/verif_sem.h"
 
@@ -49,69 +50,6 @@ arbre creer_noeud(int nature, int valeur, int decla) {
     return a;
 }
 
-// void afficher_arbre_rec(arbre a, const char *prefixe, int is_last) {
-//     char nouveau_prefixe[1024];
-//     arbre fils = a->fils_gauche;
-
-//     if (a == NULL) {
-//         return;
-//     }
-
-//     // Affiche le préfixe et la branche
-//     printf("%s", prefixe);
-//     printf("%s", is_last ? "└── " : "├── ");
-
-//     // Affiche le contenu du noeud
-//     switch (a->nature) {
-//         case A_IDF:             printf("IDF (%d)\n", a->valeur); break;
-//         case A_CSTE_ENTIERE:    printf("CSTE_ENTIERE (%d)\n", a->valeur); break;
-//         case A_AFFECT:          printf("AFFECT\n"); break;
-//         case A_PLUS:            printf("PLUS\n"); break;
-//         case A_MOINS:           printf("MOINS\n"); break;
-//         case A_MULT:            printf("MULT\n"); break;
-//         case A_DIV:             printf("DIV\n"); break;
-//         case A_MOD:             printf("MOD\n"); break;
-//         default:                printf("INCONNU (%d)\n", a->valeur); break;
-//     }
-
-//     // Nouveau préfixe pour les fils
-//     snprintf(nouveau_prefixe, sizeof(nouveau_prefixe), "%s%s", prefixe, is_last ? "    " : "│   ");
-
-//     // Parcourt les fils
-//     while (fils) {
-//         afficher_arbre_rec(fils, nouveau_prefixe, fils->frere_droit == NULL);
-//         fils = fils->frere_droit;
-//     }
-// }
-
-// void afficher_arbre(arbre a) {
-//     arbre fils = a->fils_gauche;
-//     if (a == NULL) {
-//         printf("(arbre vide)\n");
-//         return;
-//     }
-
-//     // Racine de l'arbre
-//     printf("└── ");
-//     switch (a->nature) {
-//         case A_IDF:             printf("IDF (%d)\n", a->valeur); break;
-//         case A_CSTE_ENTIERE:    printf("CSTE_ENTIERE (%d)\n", a->valeur); break;
-//         case A_AFFECT:          printf("AFFECT\n"); break;
-//         case A_PLUS:            printf("PLUS\n"); break;
-//         case A_MOINS:           printf("MOINS\n"); break;
-//         case A_MULT:            printf("MULT\n"); break;
-//         case A_DIV:             printf("DIV\n"); break;
-//         case A_MOD:             printf("MOD\n"); break;
-//         default:                printf("INCONNU (%d)\n", a->valeur); break;
-//     }
-
-//     // On appelle la récursion pour tous les fils de la racine avec le bon préfixe
-//     while (fils) {
-//         afficher_arbre_rec(fils, "    ", fils->frere_droit == NULL);
-//         fils = fils->frere_droit;
-//     }
-// }
-
 void afficher_nat_noeud(arbre a){
     printf("(" CYAN GRAS);
     switch (a->nature) {
@@ -119,6 +57,8 @@ void afficher_nat_noeud(arbre a){
         case A_CSTE_ENTIERE:    printf("A_CSTE_ENTIERE"); break;
         case A_CSTE_REELLE:     printf("A_CSTE_REELLE"); break;
         case A_CSTE_BOOL:       printf("A_CSTE_BOOL"); break;
+        case A_CSTE_CHAINE:     printf("A_CSTE_CHAINE"); break;
+        case A_CSTE_CHAR:       printf("A_CSTE_CHAR"); break;
         case A_AFFECT:          printf("A_AFFECT"); break;
         case A_ACCES_TAB:       printf("A_ACCES_TAB"); break;
         case A_ACCES_STRUCT:    printf("A_ACCES_STRUCT"); break;
@@ -129,23 +69,34 @@ void afficher_nat_noeud(arbre a){
         case A_MOD:             printf("A_MOD"); break;
         case A_ET:              printf("A_ET"); break;
         case A_OU:              printf("A_OU"); break;
+        case A_NON:             printf("A_NON"); break;
         case A_SUP:             printf("A_SUP"); break;
         case A_SUPEGAL:         printf("A_SUPEGAL"); break;
         case A_INF:             printf("A_INF"); break;
         case A_INFEGAL:         printf("A_INFEGAL"); break;
         case A_DIFF:            printf("A_DIFF"); break;
         case A_EGAL:            printf("A_EGAL"); break;
+        case A_RIEN:            printf("A_RIEN"); break;
         case A_SI_ALORS:        printf("A_SI_ALORS"); break;
         case A_SI_ALORS_SINON:  printf("A_SI_ALORS_SINON"); break;
+        case A_TANT_QUE:        printf("A_TANT_QUE"); break;
         case A_LISTE_I:         printf("A_LISTE_I"); break;
-        case A_LISTE_DIM:       printf("A_LISTE_ACCES_DIM"); break;
+        case A_LISTE_DIM:       printf("A_LISTE_DIM"); break;
+        case A_DIM:             printf("A_DIM"); break;
+        case A_LISTE_CHAMPS:    printf("A_LISTE_CHAMPS"); break;
+        case A_CHAMP:           printf("A_CHAMP"); break;
         case A_LISTE_ARG:       printf("A_LISTE_ARG"); break;
         case A_APPEL_PROC:      printf("A_APPEL_PROC"); break;
         case A_APPEL_FCT:       printf("A_APPEL_FCT"); break;
         case A_RET:             printf("A_RET"); break;
         default:                printf("A_INCONNU"); break;
     }
-    printf(RESET ")[" MAGENTA"%d" RESET "][" VERT"%d" RESET"]\n", a->valeur, a->decla);
+
+    if (a->nature == A_IDF || a->nature == A_CHAMP) {
+        printf(RESET ")[" MAGENTA "%s" RESET "][" VERT "%d" RESET "]\n", recuperer_lexeme(a->valeur), a->decla);
+    } else {
+        printf(RESET ")[" MAGENTA "%d" RESET "][" VERT "%d" RESET "]\n", a->valeur, a->decla);
+    }
 }
 
 void afficher_arbre_aux(arbre a, int dec){
@@ -348,263 +299,104 @@ arbre a_cr_cste_reelle(int valeur){
 
 
 // EXPRESSIONS
-int verif_calcul(arbre gauche, arbre droit) {
-    if (gauche->nature != A_CSTE_REELLE && gauche->nature != A_CSTE_ENTIERE) {
-        // faire erreur qui dit pas bon type
-        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
-                                        tab_decla[gauche->decla][FIN_DECLA],
-                                        E_TYPE_CALCUL));
-        return 1;
-    } else {
-        if (gauche->nature != droit->nature) {
-            erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
-                                             tab_decla[gauche->decla][FIN_DECLA],
-                                             E_TYPE_CALCUL));
-            return 1;
-        }
-    }
-    return 0;
-}
-
 arbre a_cr_plus(arbre gauche, arbre droit){
-    if (verif_calcul(gauche, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_PLUS, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_moins(arbre gauche, arbre droit){
-    if (verif_calcul(gauche, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_MOINS, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_mult(arbre gauche, arbre droit){
-    if (verif_calcul(gauche, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_MULT, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_div(arbre gauche, arbre droit){
-    if (verif_calcul(gauche, droit) == 1) {
-        return NULL;
-    }
-    if (droit->valeur == 0) {
-        // faire erreur qui dit pas diviser par 0
-        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
-                                         tab_decla[gauche->decla][FIN_DECLA],
-                                         E_TYPE_CALCUL));
-    }
     return concat_pere_fils(creer_noeud(A_DIV, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_mod(arbre gauche, arbre droit){
-    if (verif_calcul(gauche, droit) == 1) {
-        return NULL;
-    }
-    if (droit->valeur == 0) {
-        // faire erreur qui dit pas diviser par 0
-        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
-                                         tab_decla[gauche->decla][FIN_DECLA],
-                                         E_TYPE_CALCUL));
-    }
     return concat_pere_fils(creer_noeud(A_MOD, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
-
-
 // AFFECTATIONS
-int verif_affectation(arbre gauche, arbre droit) {
-    if (gauche->nature != droit->nature) {
-        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
-                                         tab_decla[gauche->decla][FIN_DECLA],
-                                         E_TYPE_AFF));
-        return 1;
-    }
-    return 0;
-}
-
 arbre a_cr_affect(arbre gauche, arbre droit){
-    if (verif_affect(gauche, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_AFFECT, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
-
-
 
 // VARIABLES
 arbre a_cr_idf(int valeur, int num_dec){
     return creer_noeud(A_IDF, valeur, num_dec);
 }
 
-arbre a_cr_acces_tab(int idf, arbre liste_acces_dim, int num_dec){
-    return concat_pere_fils(creer_noeud(A_ACCES_TAB, -1, -1), 
-                            concat_pere_frere(a_cr_idf(idf, num_dec), liste_acces_dim));
-}
-
-arbre a_cr_acces_struct(int idf, arbre champ, int num_dec){
-    return concat_pere_fils(creer_noeud(A_ACCES_STRUCT, -1, -1),
-                            concat_pere_frere(a_cr_idf(idf, num_dec), champ));
-}
-
-
-
 // EXPRESSIONS BOOLEENNES
-int verif_comparaison(arbre gauche, arbre droit) {
-    if (gauche->nature != droit->nature) {
-        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
-                                         tab_decla[gauche->decla][FIN_DECLA],
-                                         E_TYPE_CONDITION));
-        return 1;
-    }
-    return 0;
-}
-
-int verif_bool(int bool, arbre droit) {
-    if (bool != 0 && bool != 1 && droit->nature != A_CSTE_BOOL) {
-        // faire erreur qui dit pas bon type
-        erreur_semantique(generer_erreur(tab_decla[droit->decla][DEBUT_DECLA],
-                                        tab_decla[droit->decla][FIN_DECLA],
-                                        E_TYPE_CONDITION));
-        return 1;
-    }
-    return 0;
-}
-
-
 arbre a_cr_sup(arbre gauche, arbre droit){
-    if (verif_comparaison(gauche, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_SUP, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_inf(arbre gauche, arbre droit){
-    if (verif_comparaison(gauche, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_INF, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_supegal(arbre gauche, arbre droit){
-    if (verif_comparaison(gauche, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_SUPEGAL, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_infegal(arbre gauche, arbre droit){
-    if (verif_comparaison(gauche, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_INFEGAL, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_egal_arith(arbre gauche, arbre droit){
-    if (verif_comparaison(gauche, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_EGAL, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_diff_arith(arbre gauche, arbre droit){
-    if (verif_comparaison(gauche, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_DIFF, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_egal_bool(int bool, arbre droit){
-    if (verif_bool(bool, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_EGAL, -1, -1),
                             concat_pere_frere(a_cr_cste_bool(bool), droit));
 }
 
 arbre a_cr_diff_bool(int bool, arbre droit){
-    if (verif_bool(bool, droit) == 1) {
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_DIFF, -1, -1),
                             concat_pere_frere(a_cr_cste_bool(bool), droit));
 }
 
 arbre a_cr_non(arbre arbre){
-    if (arbre->nature != A_CSTE_BOOL) {
-        // erreur pour le '!'
-        erreur_semantique(generer_erreur(tab_decla[arbre->decla][DEBUT_DECLA],
-                                        tab_decla[arbre->decla][FIN_DECLA],
-                                        E_TYPE_CONDITION));
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_NON, -1, -1), arbre);
 }
 
 arbre a_cr_et(arbre gauche, arbre droit){
-    if (gauche->nature != A_CSTE_BOOL || droit->nature != A_CSTE_BOOL) {
-        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
-                                        tab_decla[droit->decla][FIN_DECLA],
-                                        E_TYPE_CONDITION));
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_ET, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
 arbre a_cr_ou(arbre gauche, arbre droit){
-    if (gauche->nature != A_CSTE_BOOL || droit->nature != A_CSTE_BOOL) {
-        erreur_semantique(generer_erreur(tab_decla[gauche->decla][DEBUT_DECLA],
-                                        tab_decla[droit->decla][FIN_DECLA],
-                                        E_TYPE_CONDITION));
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_OU, -1, -1),
                             concat_pere_frere(gauche, droit));
 }
 
-
-
 // CONDITIONNELLES
 arbre a_cr_si_alors(arbre si, arbre alors){
-    if (si->nature != A_CSTE_BOOL) {
-        erreur_semantique(generer_erreur(tab_decla[si->decla][DEBUT_DECLA],
-                                         tab_decla[si->decla][FIN_DECLA],
-                                         E_TYPE_CONDITION));
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_SI_ALORS, -1, -1),
                             concat_pere_frere(si, alors));  
 }
 
 arbre a_cr_si_alors_sinon(arbre si, arbre alors, arbre sinon){ // (cond)--(liste_i)--(liste_i)
-    if (si->nature != A_CSTE_BOOL) {
-        erreur_semantique(generer_erreur(tab_decla[si->decla][DEBUT_DECLA],
-                                         tab_decla[si->decla][FIN_DECLA],
-                                         E_TYPE_CONDITION));
-        return NULL;
-    }
-    if (sinon->nature != A_CSTE_BOOL) {
-        erreur_semantique(generer_erreur(tab_decla[sinon->decla][DEBUT_DECLA],
-                                         tab_decla[sinon->decla][FIN_DECLA],
-                                         E_TYPE_CONDITION));
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_SI_ALORS_SINON, -1, -1),
                             concat_pere_frere(si, concat_pere_frere(alors, sinon)));  
 }
@@ -638,25 +430,11 @@ arbre a_cr_liste_arg_suiv(arbre un_arg, arbre liste_suivants) {
 
 
 // APPEL DE FCT/PROC
-arbre a_cr_appel(int idf, arbre liste_args) {
-    int num_dec;
-    printf("Je passe dans a_cr_appel, idf %d\n", idf);
-    if ((num_dec = association_noms(idf, N_FCT)) != -1) {
-        printf("bonjour je suis le num_dec (dans fct) %d\n", num_dec);
-        return a_cr_appel_fct(idf, liste_args, num_dec);
-
-    } else if ((num_dec = association_noms(idf, N_PROC)) != -1) {
-        printf("bonjour je suis le num_dec (dans proc) %d\n", num_dec);
-        return a_cr_appel_proc(idf, liste_args, num_dec);
-
-    } else {
-        printf("euuuuuh erreur dans a_cr_appel\n");
-        // je le mets ici mais un appel de proc crée un nouveau champ dans table lexico, pas cool
-        // donc ça fait un segfault, pour enlever erreur décommenter en-dessous (mais c'est pas juste)
-        //return a_cr_appel_proc(idf, liste_args, num_dec);
-        // erreur ?????????
-        return NULL;
+arbre a_cr_appel(int idf, arbre liste_args, int decla) {
+    if (decla != -1 && tab_decla[decla][NATURE] == N_PROC) {
+        return a_cr_appel_proc(idf, liste_args, decla);
     }
+    return a_cr_appel_fct(idf, liste_args, decla);
 }
 
 arbre a_cr_appel_fct(int idf, arbre liste_args, int num_dec){
@@ -669,42 +447,112 @@ arbre a_cr_appel_proc(int idf, arbre liste_args, int num_dec){
                             concat_pere_frere(a_cr_a_idf(idf, num_dec), liste_args));
 }
 
-
-
 // RETOUR DE FCT
 arbre a_cr_ret(arbre valeur){
     return concat_pere_fils(creer_noeud(A_RET, -1, -1), valeur);
 }
 
-
-
 // TANT QUE 
 arbre a_cr_tant_que(arbre condition, arbre liste_inst){
-    if (condition->nature != A_CSTE_BOOL) {
-        erreur_semantique(generer_erreur(tab_decla[condition->decla][DEBUT_DECLA],
-                                         tab_decla[condition->decla][FIN_DECLA],
-                                         E_TYPE_CONDITION));
-        return NULL;
-    }
     return concat_pere_fils(creer_noeud(A_TANT_QUE, -1, -1),
                             concat_pere_frere(condition, liste_inst));
 }
 
-
-
-// LISTE ACCES DIM 
-arbre a_cr_feuille_dim(int val){
-    return a_cr_cste_entiere(val);
+// ACCES TAB
+arbre a_cr_dim(int val) {
+    return creer_noeud(A_DIM, val, -1);
 }
 
-arbre a_cr_liste_dim_fin(arbre une_dim){
-    return concat_pere_fils(creer_noeud(A_LISTE_DIM, -1, -1),
-                            une_dim);
+arbre a_cr_liste_dim_fin(arbre une_dim) {
+    return concat_pere_fils(creer_noeud(A_LISTE_DIM, -1, -1), une_dim);
 }
 
-arbre a_cr_liste_dim_suiv(arbre une_dim, arbre liste_suivante) {
+arbre a_cr_liste_dim_suiv(arbre une_dim, arbre suite) {
     return concat_pere_fils(creer_noeud(A_LISTE_DIM, -1, -1),
-                            concat_pere_frere(une_dim, liste_suivante));
+                            concat_pere_frere(une_dim, suite));
+}
+
+
+arbre a_cr_acces_tab(int idf, arbre liste, int num_dec) {
+    return concat_pere_fils(a_cr_idf(idf, num_dec), liste);
+}
+
+arbre a_cr_champ(int num_lex, arbre liste_dim) {
+    arbre c = creer_noeud(A_CHAMP, num_lex, -1);
+    if (liste_dim != NULL) {
+        concat_pere_fils(c, liste_dim);
+    }
+    return c;
+}
+
+arbre a_cr_liste_champs_fin(arbre noeud_champ) {
+    return concat_pere_fils(creer_noeud(A_LISTE_CHAMPS, -1, -1),
+                            noeud_champ);
+}
+
+arbre a_cr_liste_champs_suiv(arbre noeud_champ, arbre suite_liste) {
+    return concat_pere_fils(creer_noeud(A_LISTE_CHAMPS, -1, -1),
+                            concat_pere_frere(noeud_champ, suite_liste));
+}
+
+arbre a_cr_acces_struct(int idf, arbre liste, int num_dec) {
+    return concat_pere_fils(a_cr_idf(idf, num_dec), liste);
+}
+
+int trouver_type_champ(int id_type_struct, int num_lex_champ) {
+    int base_champ;
+    int id_rep = tab_decla[id_type_struct][DESCRIPTION];
+    int nb_champs = tab_rep[id_rep];
+
+    if (id_type_struct == -1 || tab_decla[id_type_struct][NATURE] != N_STRUCT) {
+        return -1; 
+    }
+    
+    for (int i = 0; i < nb_champs; i++) {
+        base_champ = id_rep + 1 + (i * 3);
+        if (tab_rep[base_champ] == num_lex_champ) {
+            return tab_rep[base_champ + 1];
+        }
+    }
+    return -1;
+}
+
+int trouver_type_tab(int id_decla_tab) {
+    int id_rep = tab_decla[id_decla_tab][DESCRIPTION];
+    return tab_rep[id_rep];
+}
+
+int recuperer_type_noeud(arbre a) {
+    if (a == NULL) return -1;
+
+    switch (a->nature) {
+        case A_CSTE_ENTIERE: return 0; // TREETYPE_ENTIER
+        case A_CSTE_REELLE:  return 1; // TREETYPE_REEL
+        case A_CSTE_BOOL:    return 2; // TREETYPE_BOOL
+        case A_CSTE_CHAR:    return 3; // TREETYPE_CHAR
+
+        case A_IDF:
+            if (a->decla != -1) return tab_decla[a->decla][DESCRIPTION];
+            break;
+
+        case A_PLUS: case A_MOINS: case A_MULT: case A_DIV: case A_MOD:
+            return recuperer_type_noeud(a->fils_gauche);
+
+        case A_ET: case A_OU: case A_NON:
+        case A_EGAL: case A_DIFF: case A_INF: case A_SUP: case A_INFEGAL: case A_SUPEGAL:
+            return 2; // TREETYPE_BOOL
+
+        case A_APPEL_FCT:
+            if (a->decla != -1) return tab_rep[tab_decla[a->decla][DESCRIPTION]];
+            break;
+            
+        case A_ACCES_STRUCT:
+            return evaluer_type_acces_champ(a->decla, a->fils_gauche);
+
+        default:
+            break;
+    }
+    return -1;
 }
 
 
