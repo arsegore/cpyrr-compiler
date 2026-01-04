@@ -18,39 +18,36 @@ Solution? : parem en + pour différencier?
 Est-ce vraiment un probleme?
 */
 
-int association_noms(int num_lex, int nature){
-    int i = num_lex,    /* pour parcourir la table des decla */
-        j = 1,          /* servira a simuler le depilement */
-        asso_ok = 0,    /* pour savoir si j'ai bien trouve l'association */
-        s;              /* le sommet de pile */
+int association_noms(int num_lex, int nature) {
+    int i,              /* pour parcourir la table des decla */
+        j = 1,          /* pour simuler le depilement */
+        asso_ok = 0,    /* indicateur de succès */
+        s;              /* le sommet de pile courant */
 
+    while (asso_ok == 0 && j <= nb_regions_pile) {
+        
+        s = pile_regions[nb_regions_pile - j];
+        i = num_lex;
 
-    while (asso_ok == 0 && j <= nb_regions_pile){
+        while (i != -1) {
+            if (tab_decla[i][REGION] == s) {
+                
+                if (tab_decla[i][NATURE] == nature) {
+                    asso_ok = 1;
+                    break; 
+                }
 
-        /* je regarde le sommet de pile, j permet de simuler le depilement */
-        s = pile_regions[nb_regions_pile - j++];
-        printf("Sommet de pile = %d\n", s);
-
-        /* une fois le sommet identifie je parcours la table des declarations en utilisant le num lexico jusqu'a trouver la bonne declaration */
-        while (tab_decla[i][REGION] != s && tab_decla[i][SUIVANT] != -1){
-            printf("   val region pour i = %d : %d\n", i, tab_decla[i][REGION]);
+                if (nature == TYPE && (tab_decla[i][NATURE] == N_STRUCT || tab_decla[i][NATURE] == N_TAB)) {
+                    asso_ok = 1;
+                    break;
+                }
+            }
+            
             i = tab_decla[i][SUIVANT];
-            printf("   suivant =  %d\n", tab_decla[i][SUIVANT]);
         }
 
-        /* je verifie que la nature de la decla correspond a la nature recherchee */
-
-        // Cas geneal
-        if (tab_decla[i][NATURE] == nature){
-            asso_ok = 1;
-        }
-
-        // Cas Tab ou Struct (Appel avec TYPE)
-        if (nature == TYPE
-            && (tab_decla[i][NATURE] == N_STRUCT
-                || tab_decla[i][NATURE] == N_TAB)){
-
-            asso_ok = 1;
+        if (!asso_ok) {
+            j++;
         }
     }
 
