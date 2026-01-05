@@ -25,31 +25,34 @@ char ligne[TAILLE_MAX_LIGNE];
 extern int ligne_courante;
 
 const char *msg_err_tab[NB_TYPE_ERREURS] = {
-    [E_VAR_NON_DECLAREE]   = "La variable '%1$s' n'est pas déclarée",
-    [E_FCT_NON_DECLAREE]   = "La fonction '%1$s' n'est pas déclarée",
-    [E_PROC_NON_DECLAREE]  = "La procédure '%1$s' n'est pas déclarée",
-    [E_TYPE_AFF]           = "Affectation impossible pour '%1$s' : %2$s attendu, %3$s reçu",
-    [E_TYPE_CONDITION]     = "La condition doit être de type bool (reçu: %1$s)",
-    [E_NB_ARGS]            = "Appel de '%1$s' incorrect : %2$d argument.s attendu.s, %3$d reçu.s",
-    [E_RET_MAUVAIS_TYPE]   = "Retour de fonction incorrect : attendu %1$s, reçu %2$s",
-    [E_PROC_RET]           = "Une procédure ('%1$s') ne peut pas retourner de valeur",
-    [E_ARG_MAUVAIS_TYPE]   = "Argument %1$d de '%2$s' incorrect : %3$s attendu, %4$s reçu",
-    [E_DOUBLE_DECLA]       = "L'identificateur '%1$s' est déjà utilisé pour une %2$s dans cette portée",
-    [E_ACCES_TAB_HORS_BORNES] = "Accès hors bornes au tableau '%1$s' : indice %2$d hors de [%3$d..%4$d]",
+    [E_VAR_NON_DECLAREE]          = "La variable '%1$s' n'est pas déclarée",
+    [E_FCT_NON_DECLAREE]          = "La fonction '%1$s' n'est pas déclarée",
+    [E_PROC_NON_DECLAREE]         = "La procédure '%1$s' n'est pas déclarée",
+    [E_TYPE_AFF]                  = "Affectation impossible pour '%1$s' : %2$s attendu, %3$s reçu",
+    [E_TYPE_CONDITION]            = "La condition doit être de type bool (reçu: %1$s)",
+    [E_NB_ARGS]                   = "Appel de '%1$s' incorrect : %2$d argument.s attendu.s, %3$d reçu.s",
+    [E_RET_MAUVAIS_TYPE]          = "Retour de fonction incorrect : attendu %1$s, reçu %2$s",
+    [E_PROC_RET]                  = "Une procédure ('%1$s') ne peut pas retourner de valeur",
+    [E_ARG_MAUVAIS_TYPE]          = "Argument %1$d de '%2$s' incorrect : %3$s attendu, %4$s reçu",
+    [E_DOUBLE_DECLA]              = "L'identificateur '%1$s' est déjà utilisé pour une %2$s dans cette portée",
+    [E_ACCES_TAB_HORS_BORNES]     = "Accès hors bornes au tableau '%1$s' : indice %2$d hors de [%3$d..%4$d]",
+    [E_ACCES_TAB_DIM_INCORRECTES] = "Accès au tableau '%1$s' incorrect : %2$d dimension(s) attendue(s), %3$d fournie(s)",
+
 };
 
 const char *msg_indice_tab[NB_TYPE_ERREURS] = {
-    [E_VAR_NON_DECLAREE]   = "Ajoutez 'var %1$s : [type]' dans vos déclarations",
-    [E_FCT_NON_DECLAREE]   = "Vérifiez l'orthographe ou déclarez la fonction %1$s",
-    [E_PROC_NON_DECLAREE]  = "Vérifiez l'orthographe ou déclarez la procédure %1$s",
-    [E_TYPE_AFF]           = "Modifiez la valeur affectée pour qu'elle soit de type %2$s",
-    [E_TYPE_CONDITION]     = "Une condition est forcément une expression booléenne",
-    [E_NB_ARGS]            = "Selon sa signature, '%1$s' ne nécessite que %2$d argument.s",
-    [E_RET_MAUVAIS_TYPE]   = "Changez l'expression après 'ret' pour renvoyer un %1$s",
-    [E_PROC_RET]           = "Supprimez l'expression après 'ret' ou transformez '%1$s' en fonction",
-    [E_ARG_MAUVAIS_TYPE]   = "L'argument n°%1$d doit être converti en %3$s",
-    [E_DOUBLE_DECLA]       = "Modifiez le nom ou assurez-vous que la %2$s '%1$s' n'est pas redéfinie (cf. ligne %3$d)",
-    [E_ACCES_TAB_HORS_BORNES] = "Utilisez un indice compris entre %3$d et %4$d",
+    [E_VAR_NON_DECLAREE]          = "Ajoutez 'var %1$s : [type]' dans vos déclarations",
+    [E_FCT_NON_DECLAREE]          = "Vérifiez l'orthographe ou déclarez la fonction %1$s",
+    [E_PROC_NON_DECLAREE]         = "Vérifiez l'orthographe ou déclarez la procédure %1$s",
+    [E_TYPE_AFF]                  = "Modifiez la valeur affectée pour qu'elle soit de type %2$s",
+    [E_TYPE_CONDITION]            = "Une condition est forcément une expression booléenne",
+    [E_NB_ARGS]                   = "Selon sa signature, '%1$s' ne nécessite que %2$d argument.s",
+    [E_RET_MAUVAIS_TYPE]          = "Changez l'expression après 'ret' pour renvoyer un %1$s",
+    [E_PROC_RET]                  = "Supprimez l'expression après 'ret' ou transformez '%1$s' en fonction",
+    [E_ARG_MAUVAIS_TYPE]          = "L'argument n°%1$d doit être converti en %3$s",
+    [E_DOUBLE_DECLA]              = "Modifiez le nom ou assurez-vous que la %2$s '%1$s' n'est pas redéfinie (cf. ligne %3$d)",
+    [E_ACCES_TAB_HORS_BORNES]     = "Utilisez un indice compris entre %3$d et %4$d",
+    [E_ACCES_TAB_DIM_INCORRECTES] = "Ajoutez ou supprimez des indices pour accéder à '%1$s'",
 };
 
 int doit_stopper_exec(int type_erreur){
@@ -348,11 +351,9 @@ void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
 
     while(tmp != NULL && i < nb_dim){
         indice = tmp->fils_gauche->valeur;
-        printf("voici la valeur de dim recherché %d\n", indice);
+
         borne_inf = tab_rep[tab_decla[desc][DESCRIPTION]+2*i];
         borne_sup = tab_rep[tab_decla[desc][DESCRIPTION]+(2*i)+1];
-
-        printf("voici la borne inf : %d et la borne sup : %d\n", borne_inf, borne_sup);
 
         if(indice < borne_inf || indice > borne_sup){
             erreur_semantique(generer_erreur(ligne, 0, E_ACCES_TAB_HORS_BORNES, decla, 
@@ -361,6 +362,31 @@ void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
         tmp = tmp->fils_gauche->frere_droit;
         i++;
     }
+}
+
+int compter_dims(arbre liste_dim){
+    int n = 0;
+    arbre tmp = liste_dim;
+    while(tmp != NULL){
+        n++;
+        tmp = tmp->fils_gauche->frere_droit;
+    }
+    return n;
+}
+
+void verif_nb_dim_taille(int num_lex, int decla, arbre liste_dim, int ligne){
+    int desc, nb_dim_decl, nb_dim_util; 
+    
+    if (decla == -1) return;
+
+    desc = tab_decla[decla][DESCRIPTION];
+    nb_dim_decl = tab_rep[tab_decla[desc][DESCRIPTION]+1];
+    nb_dim_util = compter_dims(liste_dim);
+
+    if (nb_dim_decl != nb_dim_util) {
+        erreur_semantique(generer_erreur(ligne, 0, E_ACCES_TAB_DIM_INCORRECTES, decla, recuperer_lexeme(num_lex), nb_dim_decl, nb_dim_util));
+    }
+
 }
 
 
