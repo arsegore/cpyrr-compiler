@@ -3,7 +3,7 @@
 
 #include "arbre/arbre.h"
 
-#define NB_TYPE_ERREURS 24
+#define NB_TYPE_ERREURS 26
 
 // erreurs de déclaration
 #define E_VAR_NON_DECLAREE 0
@@ -33,6 +33,7 @@
 #define E_NON_TAB 16
 #define E_NON_STRUCT 17
 #define E_ID_NON_ENTIER 18
+#define E_ACCES_TAB_HORS_BORNES 25
 
 // erreurs de retours de fonction 
 #define E_NE_RET_PAS 19
@@ -119,6 +120,9 @@ int compter_nombre_args(arbre a);
 void verif_types_args(int num_lex, int decla, arbre liste_args, int ligne);
 
 void verif_double_decla(int num_lex, int region, int nature, int ligne);
+
+// verifie si l'acces a un tableau est bien dasn les bornes
+void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne);
 
 
 
