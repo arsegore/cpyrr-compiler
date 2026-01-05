@@ -31,10 +31,12 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     [E_TYPE_AFF]           = "Affectation impossible pour '%1$s' : %2$s attendu, %3$s reçu",
     [E_TYPE_CONDITION]     = "La condition doit être de type bool (reçu: %1$s)",
     [E_NB_ARGS]            = "Appel de '%1$s' incorrect : %2$d argument.s attendu.s, %3$d reçu.s",
-    [E_RET_MAUVAIS_TYPE]   = "Retour de fonction incorrect : attendu %1$s, reçu %2$s",
-    [E_PROC_RET]           = "Une procédure ('%1$s') ne peut pas retourner de valeur",
     [E_ARG_MAUVAIS_TYPE]   = "Argument %1$d de '%2$s' incorrect : %3$s attendu, %4$s reçu",
     [E_DOUBLE_DECLA]       = "L'identificateur '%1$s' est déjà utilisé pour une %2$s dans cette portée",
+    [E_RET_MAUVAIS_TYPE]   = "Type de retour incorrect pour '%1$s' : attendu %2$s, reçu %3$s",
+    [E_PROC_RET]           = "La procédure '%1$s' ne peut pas retourner de valeur",
+    [E_RET_MANQUANT]       = "La fonction '%1$s' doit retourner une valeur de type %2$s",
+    [E_RET_INCOHERENT]    = "Types de retour contradictoires dans '%1$s' : mélange de %2$s et %3$s",
 };
 
 const char *msg_indice_tab[NB_TYPE_ERREURS] = {
@@ -44,10 +46,12 @@ const char *msg_indice_tab[NB_TYPE_ERREURS] = {
     [E_TYPE_AFF]           = "Modifiez la valeur affectée pour qu'elle soit de type %2$s",
     [E_TYPE_CONDITION]     = "Une condition est forcément une expression booléenne",
     [E_NB_ARGS]            = "Selon sa signature, '%1$s' ne nécessite que %2$d argument.s",
-    [E_RET_MAUVAIS_TYPE]   = "Changez l'expression après 'ret' pour renvoyer un %1$s",
-    [E_PROC_RET]           = "Supprimez l'expression après 'ret' ou transformez '%1$s' en fonction",
     [E_ARG_MAUVAIS_TYPE]   = "L'argument n°%1$d doit être converti en %3$s",
     [E_DOUBLE_DECLA]       = "Modifiez le nom ou assurez-vous que la %2$s '%1$s' n'est pas redéfinie (cf. ligne %3$d)",
+    [E_RET_MAUVAIS_TYPE]   = "Modifiez l'expression après 'ret' pour renvoyer un %2$s",
+    [E_PROC_RET]           = "Supprimez l'expression après 'ret' ou transformez '%1$s' en fonction",
+    [E_RET_MANQUANT]       = "Ajoutez 'ret [expression];' en fin de bloc pour '%1$s'",
+    [E_RET_INCOHERENT]     = "Les ret d'un même corps doivent tous renvoyer le même type.",
 };
 
 int doit_stopper_exec(int type_erreur){
@@ -219,9 +223,10 @@ int verif_decla_idf(int num_lex, int nature, int ligne) {
 
 void verif_compatibilite_affect(int num_lex, int t_dest, int t_src, int ligne) {
     const char *nom;
+    int decla;
     if (t_dest != t_src) {
         nom = recuperer_lexeme(num_lex);
-        int decla = association_noms(num_lex, N_VAR);
+        decla = association_noms(num_lex, N_VAR);
         erreur_semantique(generer_erreur(ligne, 0, E_TYPE_AFF, 
                           decla, nom, recup_nom_type(t_dest), recup_nom_type(t_src)));
     }
@@ -234,8 +239,9 @@ void verif_condition_bool(int t_recu, int ligne) {
 }
 
 void verif_nombre_args(int num_lex, int nb_attendu, int nb_recu, int ligne) {
+    int decla;
     if (nb_attendu != nb_recu) {
-        int decla = association_noms(num_lex, N_FCT);
+        decla = association_noms(num_lex, N_FCT);
         if (decla == -1) decla = association_noms(num_lex, N_PROC);
         erreur_semantique(generer_erreur(ligne, 0, E_NB_ARGS, 
                           decla, recuperer_lexeme(num_lex), nb_attendu, nb_recu));
@@ -289,7 +295,6 @@ void verif_types_args(int num_lex, int decla, arbre liste_args, int ligne) {
         if (curr_liste == NULL || curr_liste->fils_gauche == NULL) break;
 
         type_recu = recuperer_type_noeud(curr_liste->fils_gauche);
-        printf("Type reçu : %d  VS Type attendu : %d\n", type_recu, type_attendu);
 
         if (type_attendu != type_recu) {
             erreur_semantique(generer_erreur(ligne, 0, E_ARG_MAUVAIS_TYPE, 
@@ -330,6 +335,18 @@ void verif_double_decla(int num_lex, int region, int nature, int ligne) {
             return;
         }
         id_courant = tab_decla[id_courant][SUIVANT];
+    }
+}
+
+void verif_type_retour(int num_lex, int t_attendu, int t_recu, int decla, int ligne) {
+    const char *nom_fct, *nom_att, *nom_rec;
+    if (t_attendu != t_recu) {
+        nom_fct = recuperer_lexeme(num_lex);
+        nom_att = recup_nom_type(t_attendu);
+        nom_rec = (t_recu == -1) ? "rien" : recup_nom_type(t_recu);
+
+        erreur_semantique(generer_erreur(ligne, 0, E_RET_MAUVAIS_TYPE, decla, 
+                          nom_fct, nom_att, nom_rec));
     }
 }
 

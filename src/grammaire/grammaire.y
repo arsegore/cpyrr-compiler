@@ -215,11 +215,11 @@ declaration_variable  : VAR IDF {
                         }
                       ;
 
-declaration_procedure : PROC {}
+declaration_procedure : PROC
                         IDF {
-                          verif_double_decla($3, num_region_courante, N_PROC, ligne_courante);
+                          verif_double_decla($2, num_region_courante, N_PROC, ligne_courante);
                           debut_proc();
-                          determiner_ligne_decla($3); 
+                          determiner_ligne_decla($2); 
                           empiler_pile_decla(decla_courante);
                           remplir_debut_decla(decla_courante, ligne_courante);
                           remplir_nature(decla_courante, N_PROC); 
@@ -236,13 +236,19 @@ declaration_procedure : PROC {}
                         }
                         AO corps AF {
                           depiler_pile_regions();
+                          $10.treetype = -1;
+                          evaluer_type_corps($10.treeptr, $2, &$10.treetype, decla_courante, ligne_courante);
+                          
+                          if ($10.treetype != -1) {
+                              erreur_semantique(generer_erreur(ligne_courante, 0, E_PROC_RET, decla_courante, recuperer_lexeme($2)));
+                          }
                         }
                       ;
 
-declaration_fonction  : nom_type FCT {} IDF {
-                          verif_double_decla($4, num_region_courante, N_FCT, ligne_courante);
+declaration_fonction  : nom_type FCT IDF {
+                          verif_double_decla($3, num_region_courante, N_FCT, ligne_courante);
                           debut_fct($1);
-                          determiner_ligne_decla($4); 
+                          determiner_ligne_decla($3); 
                           empiler_pile_decla(decla_courante);
                           remplir_debut_decla(decla_courante, ligne_courante);
                           remplir_nature(decla_courante, N_FCT); 
@@ -256,6 +262,9 @@ declaration_fonction  : nom_type FCT {} IDF {
                             inserer_tab_rep_nb_elem(nbparam);
                         } AO corps AF {
                             depiler_pile_regions();
+                            $11.treetype = -1;
+                            evaluer_type_corps($11.treeptr, $3, &$11.treetype, decla_courante, ligne_courante);
+                            verif_type_retour($3, $1, $11.treetype, decla_courante, ligne_courante);
                         }
                       ;
 
@@ -682,8 +691,8 @@ int main(int argc, char **argv){
         printf("\n[OK] Analyse réussie.\n");
     }
 
-    afficher_tab_lexico(0, 15);
     afficher_tab_decla();
+    afficher_tab_rep(0, 15);
 
     exit(EXIT_SUCCESS);
 }
