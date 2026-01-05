@@ -431,10 +431,26 @@ arbre a_cr_liste_arg_suiv(arbre un_arg, arbre liste_suivants) {
 
 // APPEL DE FCT/PROC
 arbre a_cr_appel(int idf, arbre liste_args, int decla) {
-    if (decla != -1 && tab_decla[decla][NATURE] == N_PROC) {
+    if (decla == -1){
+        return creer_noeud(A_ERREUR, -1, -1);
+    }
+        
+    switch (tab_decla[decla][NATURE]) {
+        case N_PROC:
+            return a_cr_appel_proc(idf, liste_args, decla);
+
+        case N_FCT:
+            return a_cr_appel_fct(idf, liste_args, decla);
+
+        default:
+            printf("Erreur sémantique : %d n'est ni une fonction ni une procédure\n", tab_rep[idf]);
+    }
+   
+     /*      iftab_decla[decla][NATURE] == N_PROC) {
         return a_cr_appel_proc(idf, liste_args, decla);
     }
     return a_cr_appel_fct(idf, liste_args, decla);
+    */
 }
 
 arbre a_cr_appel_fct(int idf, arbre liste_args, int num_dec){
@@ -474,6 +490,17 @@ arbre a_cr_liste_dim_suiv(arbre une_dim, arbre suite) {
 
 
 arbre a_cr_acces_tab(int idf, arbre liste, int num_dec) {
+    arbre tmp = liste;
+    int i = 1;
+        while(tmp != NULL){
+            if(tmp->valeur < tab_rep[tab_decla[num_dec][DESCRIPTION]+(2*i)+1] ||
+               tmp->valeur > tab_rep[tab_decla[num_dec][DESCRIPTION]+(2*i)+1]){
+                printf("erreur lors de l'acces au dim\n");
+            }
+            tmp = tmp->frere_droit;
+            i++;
+        }
+
     return concat_pere_fils(a_cr_idf(idf, num_dec), liste);
 }
 

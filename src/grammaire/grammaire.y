@@ -684,6 +684,7 @@ int main(int argc, char **argv){
 
     afficher_tab_lexico(0, 15);
     afficher_tab_decla();
+    afficher_tab_rep(0, 20);
 
     exit(EXIT_SUCCESS);
 }

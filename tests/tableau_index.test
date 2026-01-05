@@ -1,5 +1,5 @@
 main {
-  typedef Tab10: tab [1..10] of float;
+  typedef Tab10: tab [1..10] of int;
   var t: Tab10;
   t[3] = 42;
 }

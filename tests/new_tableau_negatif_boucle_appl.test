@@ -1,0 +1,24 @@
+main{
+    typedef tablea : tab[-5..-1] of int;
+    typedef tab10; tab[0..10] of int;
+    var t2 : tablea;
+
+    int fct incr(i: int){
+
+        ret (i+1);
+    }
+
+    int fct fact(taille: int, tab: tab){
+        while(i != 0) do{
+            tab[i] = tab[i]*i;
+        }
+    }
+    var i = -5;
+    while( i < 0) do {
+        var retour = incr(t2[i]);
+        retour = t2[i];
+        i = i + 1;
+    }
+
+    fact(10, tab10);
+}

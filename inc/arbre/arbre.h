@@ -68,6 +68,7 @@
 #define A_ACCES_TAB         29  // ok gen
 #define A_ACCES_STRUCT      30  // ok gen
 
+#define A_ERREUR            99  // err
 /**
  * Chaque noeud connait sa nature et sa valeur, ainsi qu'évidemment
  * qui sont ses fils (sous forme d'un pointeur sur le fils gauche

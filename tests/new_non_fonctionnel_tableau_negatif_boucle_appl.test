@@ -1,0 +1,16 @@
+main{
+    typedef tablea : tab[-5..-1] of int;
+
+    var t2 : tablea;
+
+    int fct incr(i: int){
+
+        ret (i+1);
+    }
+    var i = 1;
+    while( i > 0) do {
+        var retour = incr(t2[i]);
+        i = i + 1;
+    }
+
+}
