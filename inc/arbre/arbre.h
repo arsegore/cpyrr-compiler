@@ -200,7 +200,21 @@ int trouver_type_champ(int id_decla_struct, int num_lex_champ);
  */
 int trouver_type_tab(int id_decla_tab);
 
+/**
+ * Renvoie le type d'un noeud (au sens des types du YACC, TREETYPE_TRUC)
+ * @param a : Le noeud dont on cherche le type
+ */
 int recuperer_type_noeud(arbre a);
 
+/**
+ * Evalue le type d'un corps, déterminé par ce qu'il retourne. Le type est placé dans le pointeur
+ * donné en param, et la fonction renvoie 0 si tout va bien, 1 en cas d'erreur (un corps qui renvoie
+ * deux types différents)
+ * @param a : L'arbre représentant les instructions à parcourir
+ * @param num_lex : Le num lex de la fct/proc
+ * @param type_corps : Un pointeur vers là ou sera stocké le résultat (le type du corps)
+ * @param ligne : La ligne courante
+ */
+int evaluer_type_corps(arbre a, int num_lex, int *type_corps, int decla, int ligne);
 
 #endif

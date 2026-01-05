@@ -31,6 +31,16 @@ int association_noms(int num_lex, int nature) {
 
         while (i != -1) {
             if (tab_decla[i][REGION] == s) {
+
+                if (nature == N_VAR) {
+                    if (tab_decla[i][NATURE] == N_VAR || tab_decla[i][NATURE] == N_PARAM) {
+                        asso_ok = 1;
+                        break;
+                    }
+                } else if (tab_decla[i][NATURE] == nature) {
+                    asso_ok = 1;
+                    break;
+                }
                 
                 if (tab_decla[i][NATURE] == nature) {
                     asso_ok = 1;

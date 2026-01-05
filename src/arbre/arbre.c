@@ -518,8 +518,8 @@ int trouver_type_champ(int id_type_struct, int num_lex_champ) {
 }
 
 int trouver_type_tab(int id_decla_tab) {
-    int id_rep = tab_decla[id_decla_tab][DESCRIPTION];
-    return tab_rep[id_rep];
+    int id_type = tab_decla[id_decla_tab][DESCRIPTION];
+    return tab_rep[tab_decla[id_type][DESCRIPTION]];
 }
 
 int recuperer_type_noeud(arbre a) {
@@ -553,6 +553,33 @@ int recuperer_type_noeud(arbre a) {
             break;
     }
     return -1;
+}
+
+int evaluer_type_corps(arbre a, int num_lex, int *type_corps, int decla, int ligne) {
+    const char *lexeme = recuperer_lexeme(num_lex);
+    arbre courant = a;
+    int type_courant;
+
+    if (a == NULL) return 0;
+
+    if (a->nature == A_RET) {
+        type_courant = recuperer_type_noeud(a->fils_gauche); // type de retour
+
+        if (*type_corps == -1) {
+            *type_corps = type_courant;
+        } else if (*type_corps != type_courant) {
+            erreur_semantique(generer_erreur(ligne, 0, E_RET_INCOHERENT, decla,
+                              lexeme,
+                              recup_nom_type(*type_corps), 
+                              recup_nom_type(type_courant)));
+            return 1;
+        }
+    }
+
+    if (evaluer_type_corps(a->fils_gauche, num_lex, type_corps, decla, ligne)) return 1;
+    if (evaluer_type_corps(a->frere_droit, num_lex, type_corps, decla, ligne)) return 1;
+
+    return 0;
 }
 
 
