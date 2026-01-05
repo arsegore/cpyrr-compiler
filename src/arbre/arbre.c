@@ -518,8 +518,8 @@ int trouver_type_champ(int id_type_struct, int num_lex_champ) {
 }
 
 int trouver_type_tab(int id_decla_tab) {
-    int id_rep = tab_decla[id_decla_tab][DESCRIPTION];
-    return tab_rep[id_rep];
+    int id_type = tab_decla[id_decla_tab][DESCRIPTION];
+    return tab_rep[tab_decla[id_type][DESCRIPTION]];
 }
 
 int recuperer_type_noeud(arbre a) {

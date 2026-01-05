@@ -35,6 +35,7 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     [E_PROC_RET]           = "Une procédure ('%1$s') ne peut pas retourner de valeur",
     [E_ARG_MAUVAIS_TYPE]   = "Argument %1$d de '%2$s' incorrect : %3$s attendu, %4$s reçu",
     [E_DOUBLE_DECLA]       = "L'identificateur '%1$s' est déjà utilisé pour une %2$s dans cette portée",
+    [E_ACCES_TAB_HORS_BORNES] = "Accès hors bornes au tableau '%1$s' : indice %2$d hors de [%3$d..%4$d]",
 };
 
 const char *msg_indice_tab[NB_TYPE_ERREURS] = {
@@ -48,6 +49,7 @@ const char *msg_indice_tab[NB_TYPE_ERREURS] = {
     [E_PROC_RET]           = "Supprimez l'expression après 'ret' ou transformez '%1$s' en fonction",
     [E_ARG_MAUVAIS_TYPE]   = "L'argument n°%1$d doit être converti en %3$s",
     [E_DOUBLE_DECLA]       = "Modifiez le nom ou assurez-vous que la %2$s '%1$s' n'est pas redéfinie (cf. ligne %3$d)",
+    [E_ACCES_TAB_HORS_BORNES] = "Utilisez un indice compris entre %3$d et %4$d",
 };
 
 int doit_stopper_exec(int type_erreur){
@@ -330,6 +332,34 @@ void verif_double_decla(int num_lex, int region, int nature, int ligne) {
             return;
         }
         id_courant = tab_decla[id_courant][SUIVANT];
+    }
+}
+
+void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
+    int indice, borne_inf, borne_sup, desc, nb_dim, i = 1;
+    arbre tmp = liste_dim;
+
+    if (decla == -1 || liste_dim == NULL){
+        return;
+    } 
+
+    desc = tab_decla[decla][DESCRIPTION];
+    nb_dim = tab_rep[desc+1];
+
+    while(tmp != NULL && i < nb_dim){
+        indice = tmp->fils_gauche->valeur;
+        printf("voici la valeur de dim recherché %d\n", indice);
+        borne_inf = tab_rep[tab_decla[desc][DESCRIPTION]+2*i];
+        borne_sup = tab_rep[tab_decla[desc][DESCRIPTION]+(2*i)+1];
+
+        printf("voici la borne inf : %d et la borne sup : %d\n", borne_inf, borne_sup);
+
+        if(indice < borne_inf || indice > borne_sup){
+            erreur_semantique(generer_erreur(ligne, 0, E_ACCES_TAB_HORS_BORNES, decla, 
+                                recuperer_lexeme(num_lex), indice, borne_inf, borne_sup));
+        }
+        tmp = tmp->fils_gauche->frere_droit;
+        i++;
     }
 }
 
