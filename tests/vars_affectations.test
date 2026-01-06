@@ -1,6 +1,6 @@
 main {
   var x: int;
-  var y: float;
+  var y: int;
   var z: bool;
 
   x = 1;
