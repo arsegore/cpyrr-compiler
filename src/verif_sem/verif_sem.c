@@ -37,6 +37,9 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     [E_PROC_RET]           = "La procédure '%1$s' ne peut pas retourner de valeur",
     [E_RET_MANQUANT]       = "La fonction '%1$s' doit retourner une valeur de type %2$s",
     [E_RET_INCOHERENT]    = "Types de retour contradictoires dans '%1$s' : mélange de %2$s et %3$s",
+    [E_ACCES_TAB_HORS_BORNES]     = "Accès hors bornes au tableau '%1$s' : indice %2$d hors de [%3$d..%4$d]",
+    [E_ACCES_TAB_DIM_INCORRECTES] = "Accès au tableau '%1$s' incorrect : %2$d dimension(s) attendue(s), %3$d fournie(s)",
+
 };
 
 const char *msg_indice_tab[NB_TYPE_ERREURS] = {
@@ -52,6 +55,9 @@ const char *msg_indice_tab[NB_TYPE_ERREURS] = {
     [E_PROC_RET]           = "Supprimez l'expression après 'ret' ou transformez '%1$s' en fonction",
     [E_RET_MANQUANT]       = "Ajoutez 'ret [expression];' en fin de bloc pour '%1$s'",
     [E_RET_INCOHERENT]     = "Les ret d'un même corps doivent tous renvoyer le même type.",
+     [E_ACCES_TAB_HORS_BORNES]     = "Utilisez un indice compris entre %3$d et %4$d",
+    [E_ACCES_TAB_DIM_INCORRECTES] = "Ajoutez ou supprimez des indices pour accéder à '%1$s'",
+
 };
 
 int doit_stopper_exec(int type_erreur){
@@ -348,6 +354,57 @@ void verif_type_retour(int num_lex, int t_attendu, int t_recu, int decla, int li
         erreur_semantique(generer_erreur(ligne, 0, E_RET_MAUVAIS_TYPE, decla, 
                           nom_fct, nom_att, nom_rec));
     }
+}
+
+void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
+    int indice, borne_inf, borne_sup, desc, nb_dim, i = 1;
+    arbre tmp = liste_dim;
+
+    if (decla == -1 || liste_dim == NULL){
+        return;
+    } 
+
+    desc = tab_decla[decla][DESCRIPTION];
+    nb_dim = tab_rep[desc+1];
+
+    while(tmp != NULL && i < nb_dim){
+        indice = tmp->fils_gauche->valeur;
+
+        borne_inf = tab_rep[tab_decla[desc][DESCRIPTION]+2*i];
+        borne_sup = tab_rep[tab_decla[desc][DESCRIPTION]+(2*i)+1];
+
+        if(indice < borne_inf || indice > borne_sup){
+            erreur_semantique(generer_erreur(ligne, 0, E_ACCES_TAB_HORS_BORNES, decla, 
+                                recuperer_lexeme(num_lex), indice, borne_inf, borne_sup));
+        }
+        tmp = tmp->fils_gauche->frere_droit;
+        i++;
+    }
+}
+
+int compter_dims(arbre liste_dim){
+    int n = 0;
+    arbre tmp = liste_dim;
+    while(tmp != NULL){
+        n++;
+        tmp = tmp->fils_gauche->frere_droit;
+    }
+    return n;
+}
+
+void verif_nb_dim_taille(int num_lex, int decla, arbre liste_dim, int ligne){
+    int desc, nb_dim_decl, nb_dim_util; 
+    
+    if (decla == -1) return;
+
+    desc = tab_decla[decla][DESCRIPTION];
+    nb_dim_decl = tab_rep[tab_decla[desc][DESCRIPTION]+1];
+    nb_dim_util = compter_dims(liste_dim);
+
+    if (nb_dim_decl != nb_dim_util) {
+        erreur_semantique(generer_erreur(ligne, 0, E_ACCES_TAB_DIM_INCORRECTES, decla, recuperer_lexeme(num_lex), nb_dim_decl, nb_dim_util));
+    }
+
 }
 
 
