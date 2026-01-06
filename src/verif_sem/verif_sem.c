@@ -28,6 +28,7 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     [E_VAR_NON_DECLAREE]   = "La variable '%1$s' n'est pas déclarée",
     [E_FCT_NON_DECLAREE]   = "La fonction '%1$s' n'est pas déclarée",
     [E_PROC_NON_DECLAREE]  = "La procédure '%1$s' n'est pas déclarée",
+    [E_TYPE_NON_DECLARE]   = "Le type '%1$s' n'est pas déclarée",
     [E_TYPE_AFF]           = "Affectation impossible pour '%1$s' : %2$s attendu, %3$s reçu",
     [E_TYPE_CONDITION]     = "La condition doit être de type bool (reçu: %1$s)",
     [E_NB_ARGS]            = "Appel de '%1$s' incorrect : %2$d argument.s attendu.s, %3$d reçu.s",
@@ -46,6 +47,7 @@ const char *msg_indice_tab[NB_TYPE_ERREURS] = {
     [E_VAR_NON_DECLAREE]   = "Ajoutez 'var %1$s : [type]' dans vos déclarations",
     [E_FCT_NON_DECLAREE]   = "Vérifiez l'orthographe ou déclarez la fonction %1$s",
     [E_PROC_NON_DECLAREE]  = "Vérifiez l'orthographe ou déclarez la procédure %1$s",
+    [E_TYPE_NON_DECLARE]   = "Vérifiez l'orthographe ou déclarez le type %1$s",
     [E_TYPE_AFF]           = "Modifiez la valeur affectée pour qu'elle soit de type %2$s",
     [E_TYPE_CONDITION]     = "Une condition est forcément une expression booléenne",
     [E_NB_ARGS]            = "Selon sa signature, '%1$s' ne nécessite que %2$d argument.s",
@@ -181,14 +183,22 @@ int evaluer_type_acces_champ(int id_decla_parent, arbre liste_acces) {
 
     if (liste_acces == NULL || id_decla_parent == -1) return id_decla_parent;
 
+    // si le "parent" est un tableau 
+    if (tab_decla[type_actuel][NATURE] == N_TAB) {
+        type_actuel = tab_rep[tab_decla[type_actuel][DESCRIPTION]];
+    }
+
     while (courant != NULL && type_actuel != -1) {
         if (courant->nature == A_LISTE_CHAMPS) {
             noeud_champ = courant->fils_gauche;
             
             type_actuel = trouver_type_champ(type_actuel, noeud_champ->valeur);
             
-            if (noeud_champ->fils_gauche != NULL && type_actuel != -1 && noeud_champ->fils_gauche->nature == A_LISTE_DIM) {
-                type_actuel = trouver_type_tab(type_actuel);
+            // si le champ lui meme est un tableau
+            if (noeud_champ->fils_gauche != NULL && type_actuel != -1) {
+                if (tab_decla[type_actuel][NATURE] == N_TAB) {
+                    type_actuel = tab_rep[tab_decla[type_actuel][DESCRIPTION]];
+                }
             }
         }
         courant = courant->frere_droit;
@@ -212,10 +222,13 @@ const char *recup_nom_type(int type) {
 int verif_decla_idf(int num_lex, int nature, int ligne) {
     int decla = association_noms(num_lex, nature);
     int code;
+    printf("decla = %d, nature = %d\n", decla, nature);
     if (decla == -1) {
         switch (nature) {
             case N_VAR:
                 code = E_VAR_NON_DECLAREE; break;
+            case TYPE:
+                code = E_TYPE_NON_DECLARE; break;
             // case N_FCT:
             //     code = E_FCT_NON_DECLAREE; break;
             // case N_PROC:
@@ -391,9 +404,12 @@ void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
     } 
 
     desc = tab_decla[decla][DESCRIPTION];
-    nb_dim = tab_rep[desc+1];
+    nb_dim = tab_rep[tab_decla[desc][DESCRIPTION] + 1];
 
-    while(tmp != NULL && i < nb_dim){
+    printf("desc = %d\n", desc);
+
+    printf("nbdim = %d\n", nb_dim);
+    while(tmp != NULL && i <= nb_dim){
         indice = tmp->fils_gauche->valeur;
 
         borne_inf = tab_rep[tab_decla[desc][DESCRIPTION]+2*i];

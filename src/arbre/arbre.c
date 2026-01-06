@@ -504,6 +504,8 @@ int trouver_type_champ(int id_type_struct, int num_lex_champ) {
     int id_rep = tab_decla[id_type_struct][DESCRIPTION];
     int nb_champs = tab_rep[id_rep];
 
+    printf("id type struct = %d\n", id_type_struct);
+
     if (id_type_struct == -1 || tab_decla[id_type_struct][NATURE] != N_STRUCT) {
         return -1; 
     }
