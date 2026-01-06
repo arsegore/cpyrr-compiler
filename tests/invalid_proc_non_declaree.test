@@ -1,0 +1,7 @@
+main {
+    var a: float;
+    proc afficher(f: float) {
+        none;
+    }
+    print(a);
+}

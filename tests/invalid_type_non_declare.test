@@ -1,0 +1,5 @@
+main {
+    typedef bigint: tab [1..10] of int;
+    var x: smallint;
+    x = 3;
+}

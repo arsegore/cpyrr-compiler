@@ -1,0 +1,5 @@
+main {
+    typedef Tab5: tab [5..10] of int;
+    var t: Tab5;
+    t[2] = 0;
+}

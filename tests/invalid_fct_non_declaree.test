@@ -1,0 +1,8 @@
+main {
+    var x: int;
+    int fct incremente(n: int) {
+        ret x + 1;
+    }
+    x = 1;
+    x = inc(x);
+}
