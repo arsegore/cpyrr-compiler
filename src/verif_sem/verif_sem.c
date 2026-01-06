@@ -37,6 +37,9 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     [E_PROC_RET]           = "La procédure '%1$s' ne peut pas retourner de valeur",
     [E_RET_MANQUANT]       = "La fonction '%1$s' doit retourner une valeur de type %2$s",
     [E_RET_INCOHERENT]    = "Types de retour contradictoires dans '%1$s' : mélange de %2$s et %3$s",
+    [E_ACCES_TAB_HORS_BORNES]     = "Accès hors bornes au tableau '%1$s' : indice %2$d hors de [%3$d..%4$d]",
+    [E_ACCES_TAB_DIM_INCORRECTES] = "Accès au tableau '%1$s' incorrect : %2$d dimension(s) attendue(s), %3$d fournie(s)",
+    [E_TYPE_INEXISTANT]           = "Type '%1$s' inconnu",
 };
 
 const char *msg_indice_tab[NB_TYPE_ERREURS] = {
@@ -52,6 +55,10 @@ const char *msg_indice_tab[NB_TYPE_ERREURS] = {
     [E_PROC_RET]           = "Supprimez l'expression après 'ret' ou transformez '%1$s' en fonction",
     [E_RET_MANQUANT]       = "Ajoutez 'ret [expression];' en fin de bloc pour '%1$s'",
     [E_RET_INCOHERENT]     = "Les ret d'un même corps doivent tous renvoyer le même type.",
+    [E_ACCES_TAB_HORS_BORNES]     = "Utilisez un indice compris entre %3$d et %4$d",
+    [E_ACCES_TAB_DIM_INCORRECTES] = "Ajoutez ou supprimez des indices pour accéder à '%1$s'",
+    [E_TYPE_INEXISTANT]           = "Modifiez le type avec un nouveau connu",
+
 };
 
 int doit_stopper_exec(int type_erreur){
@@ -288,7 +295,6 @@ void verif_types_args(int num_lex, int decla, arbre liste_args, int ligne) {
     } else {
         depart_params = id_rep + 1;
     }
-    printf("%d\n", nb_params);
     for (i = 0; i < nb_params; i++) {
         type_attendu = tab_rep[depart_params + (i * 2) + 1];
         
@@ -348,6 +354,83 @@ void verif_type_retour(int num_lex, int t_attendu, int t_recu, int decla, int li
         erreur_semantique(generer_erreur(ligne, 0, E_RET_MAUVAIS_TYPE, decla, 
                           nom_fct, nom_att, nom_rec));
     }
+}
+/*
+int verif_appel_correct(int idf, int decla, int ligne_courante, arbre liste_args, arbre appel){
+
+    if (decla != -1) {
+        int id_rep = tab_decla[decla][DESCRIPTION];
+        int nb_attendus = tab_rep[id_rep];
+        int nb_recus = compter_nombre_args(liste_args);
+
+
+        //verif du nb d'args..
+        verif_nombre_args(idf, nb_attendus, nb_recus, ligne_courante);
+
+        // puis des types
+        if (nb_attendus == nb_recus) {
+            verif_types_args(idf, decla, liste_args, ligne_courante);
+        appel = a_cr_appel(idf, liste_args, decla);
+                          
+    if (decla != -1 && tab_decla[decla][NATURE] == N_FCT) {
+        // si c'est une fct on fait remonter le type de retour
+        appel->nature = tab_rep[tab_decla[decla][DESCRIPTION] + 1];
+    } else {
+          appel->nature = -1; // Procédure ou erreur
+    }                          
+    appel->lineno = ligne_courante;
+    }
+}*/
+
+void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
+    int indice, borne_inf, borne_sup, desc, nb_dim, i = 1;
+    arbre tmp = liste_dim;
+
+    if (decla == -1 || liste_dim == NULL){
+        return;
+    } 
+
+    desc = tab_decla[decla][DESCRIPTION];
+    nb_dim = tab_rep[desc+1];
+
+    while(tmp != NULL && i < nb_dim){
+        indice = tmp->fils_gauche->valeur;
+
+        borne_inf = tab_rep[tab_decla[desc][DESCRIPTION]+2*i];
+        borne_sup = tab_rep[tab_decla[desc][DESCRIPTION]+(2*i)+1];
+
+        if(indice < borne_inf || indice > borne_sup){
+            erreur_semantique(generer_erreur(ligne, 0, E_ACCES_TAB_HORS_BORNES, decla, 
+                                recuperer_lexeme(num_lex), indice, borne_inf, borne_sup));
+        }
+        tmp = tmp->fils_gauche->frere_droit;
+        i++;
+    }
+}
+
+int compter_dims(arbre liste_dim){
+    int n = 0;
+    arbre tmp = liste_dim;
+    while(tmp != NULL){
+        n++;
+        tmp = tmp->fils_gauche->frere_droit;
+    }
+    return n;
+}
+
+void verif_nb_dim_taille(int num_lex, int decla, arbre liste_dim, int ligne){
+    int desc, nb_dim_decl, nb_dim_util; 
+    
+    if (decla == -1) return;
+
+    desc = tab_decla[decla][DESCRIPTION];
+    nb_dim_decl = tab_rep[tab_decla[desc][DESCRIPTION]+1];
+    nb_dim_util = compter_dims(liste_dim);
+
+    if (nb_dim_decl != nb_dim_util) {
+        erreur_semantique(generer_erreur(ligne, 0, E_ACCES_TAB_DIM_INCORRECTES, decla, recuperer_lexeme(num_lex), nb_dim_decl, nb_dim_util));
+    }
+
 }
 
 

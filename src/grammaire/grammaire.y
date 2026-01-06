@@ -297,7 +297,7 @@ nom_type              : type_simple {
                         }
                       |
                         IDF {
-                          $$ = verif_decla_idf($1, TYPE, ligne_courante);
+                          int decla_type = verif_decla_idf($1, TYPE, ligne_courante);
                         }
                       ;
 
@@ -316,6 +316,7 @@ type_simple           : ENTIER  {
                         CHAR  {
                           $$ = $1;
                         }
+                      ;
 
 instruction           : affectation PV {
                           $$ = $1;
@@ -415,6 +416,8 @@ variable              : IDF {
                         }
                       | IDF CO liste_acces_dim CF {
                           int decla = verif_decla_idf($1, N_VAR, ligne_courante);
+                          verif_nb_dim_taille($1, decla, $3.treeptr, ligne_courante);
+                          verif_dim_hors_tab($1, decla, $3.treeptr, ligne_courante);
                           $$.treeptr = a_cr_acces_tab($1, $3.treeptr, decla);
                           $$.treetype = (decla != -1) ? trouver_type_tab(decla) : -1;
                           $$.lineno = ligne_courante;

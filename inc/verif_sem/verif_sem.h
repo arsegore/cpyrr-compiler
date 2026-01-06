@@ -7,7 +7,7 @@
 
 #include "arbre/arbre.h"
 
-#define NB_TYPE_ERREURS 25
+#define NB_TYPE_ERREURS 30
 
 // erreurs de déclaration
 #define E_VAR_NON_DECLAREE 0
@@ -25,7 +25,7 @@
 #define E_TYPE_CALCUL 9
 #define E_TYPE_CONDITION 10
 #define E_TYPE_NON_COMPATIBLE 11
-
+#define E_TYPE_INEXISTANT 27
 // erreurs sur un appel de fct/proc
 #define E_NB_ARGS 12
 #define E_TYPE_ARG 13
@@ -37,6 +37,8 @@
 #define E_NON_TAB 16
 #define E_NON_STRUCT 17
 #define E_ID_NON_ENTIER 18
+#define E_ACCES_TAB_HORS_BORNES 25
+#define E_ACCES_TAB_DIM_INCORRECTES 26
 
 // erreurs de retours de fonction 
 #define E_RET_MANQUANT 19
@@ -195,11 +197,42 @@ void verif_double_decla(int num_lex, int region, int nature, int ligne);
  */
 void verif_type_retour(int num_lex, int t_attendu, int t_recu, int decla, int ligne);
 
+int verif_appel_correct(int idf, int decla, int ligne_courante, arbre liste_args, arbre appel);
+
+/**
+* Verifie que les dimension données lors d'un acces a un tableau sont coherente
+*(c'est a dire compris dans les bornes données)
+*
+* @param num_lex : Le numéro lexico du tableau
+* @param decla : Le numero de décla du tableau
+* @param liste_dim : un abre pointant sur la ou les dimension données
+* @param ligne : La ligne à laquelle a été lancée la verif
+* @author PELOUX Louis
+*/
+void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne);
+
+/**
+* Verifie lors de l'accès a un tablea uqu'on utilise le même nombre de 
+* dimension que la declaration 
+*
+* @param num_lex : Le numéro lexico du tableau
+* @param decla : Le numero de décla du tableau
+* @param liste_dim : un abre pointant sur la ou les dimension données
+* @param ligne : La ligne à laquelle a été lancée la verif
+* @author PELOUX Louis
+*/
+void verif_nb_dim_taille(int num_lex, int decla, arbre liste_dim, int ligne);
+
 /* helpers ... */
 const char *recup_nom_type(int type);
 
+/**
+* Permet de compter le nombre de dimension passé lors d'un acces au tableau
+*
+* @param a : nombre de dimension passé
+* @author PELOUX louis
+*/
 int compter_nombre_args(arbre a);
-
 
 
 
