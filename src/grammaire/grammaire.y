@@ -423,7 +423,17 @@ variable              : IDF {
                           $$.lineno = ligne_courante;
                           $$.ch_numlex = $1;
                         }
-                      ;
+                      | IDF CO liste_acces_dim CF POINT liste_acces_champs { // structure dans un tableau..
+                            int decla = verif_decla_idf($1, N_VAR, ligne_courante);
+                            verif_nb_dim_taille($1, decla, $3.treeptr, ligne_courante);
+                            verif_dim_hors_tab($1, decla, $3.treeptr, ligne_courante);
+                            $$.treeptr = a_cr_acces_tab($1, $3.treeptr, decla);
+                            concat_pere_frere($3.treeptr, $6.treeptr);
+                            $$.treetype = evaluer_type_acces_champ(decla, $6.treeptr);
+                            $$.lineno = ligne_courante;
+                            $$.ch_numlex = $6.ch_numlex;
+                        }
+                        
 
 liste_acces_dim       : acces_dim {
                           $$.treeptr = a_cr_liste_dim_fin($1.treeptr);
