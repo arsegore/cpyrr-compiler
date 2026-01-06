@@ -72,7 +72,7 @@ char *recuperer_lexeme(int num_lexico) {
 
 
 int inserer_lexeme(char *lexeme, int longueur) {
-    int hash, ligne_courante, num_lexico;
+    int hash, ligne_courante, num_lexico, precedent;
 
     hash = calculer_hash_code(lexeme);
 
@@ -81,21 +81,24 @@ int inserer_lexeme(char *lexeme, int longueur) {
         tab_lexico[num_lexico].longueur = longueur;
         tab_lexico[num_lexico].lexeme = strdup(lexeme);
         tab_hash_code[hash] = num_lexico;
+        tab_lexico[num_lexico].suivant = -1;
     } else {
         ligne_courante = tab_hash_code[hash];
-        do {
-            // si léxèmes de même longueur, on compare
+        
+        while (ligne_courante != -1) {
             if (longueur == tab_lexico[ligne_courante].longueur
                 && (strcmp(lexeme, tab_lexico[ligne_courante].lexeme) == 0)) {
-                num_lexico = ligne_courante;
-                return num_lexico;
+                return ligne_courante;
             }
+            precedent = ligne_courante;
             ligne_courante = tab_lexico[ligne_courante].suivant;
-        } while (tab_lexico[ligne_courante].suivant != -1);
+        }
+        
         num_lexico = premiere_ligne_libre_lexico++;
-        tab_lexico[ligne_courante].suivant = num_lexico;
+        tab_lexico[precedent].suivant = num_lexico;
         tab_lexico[num_lexico].longueur = longueur;
         tab_lexico[num_lexico].lexeme = strdup(lexeme);
+        tab_lexico[num_lexico].suivant = -1;
     }
     
     return num_lexico;

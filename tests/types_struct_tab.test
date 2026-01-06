@@ -7,12 +7,7 @@ main {
   typedef TTabEntier: tab[1..10] of int;
 
   var p: TPersonne;
-  var p: TPersonne;
-  var p: TPersonne;
-  var p: TPersonne;
 
-
-  var t: TTabEntier;
 
   p.age = 12;
 }

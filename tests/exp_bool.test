@@ -2,9 +2,9 @@ main {
   var a: bool;
   var b: bool;
 
-  a = vrai;
+  a = true;
 
-  if (vrai) && (faux) then {
+  if (true) && (false) then {
     none;
   }
 }

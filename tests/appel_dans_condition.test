@@ -1,11 +1,11 @@
 main {
+  var y: int;
   int fct inc(x: int) {
     ret x + 1;
   }
 
-  var y: int;
   y = 5;
-
+  
   if (inc(y) == 6) then {
     none;
   }
