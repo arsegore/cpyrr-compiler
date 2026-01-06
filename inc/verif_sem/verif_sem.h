@@ -7,7 +7,7 @@
 
 #include "arbre/arbre.h"
 
-#define NB_TYPE_ERREURS 28
+#define NB_TYPE_ERREURS 30
 
 // erreurs de déclaration
 #define E_VAR_NON_DECLAREE 0
@@ -25,7 +25,7 @@
 #define E_TYPE_CALCUL 9
 #define E_TYPE_CONDITION 10
 #define E_TYPE_NON_COMPATIBLE 11
-
+#define E_TYPE_INEXISTANT 27
 // erreurs sur un appel de fct/proc
 #define E_NB_ARGS 12
 #define E_TYPE_ARG 13
@@ -202,7 +202,7 @@ const char *recup_nom_type(int type);
 
 int compter_nombre_args(arbre a);
 
-
+int verif_appel_correct(int idf, int decla, int ligne_courante, arbre liste_args, arbre appel);
 
 // verifie si l'acces a un tableau est bien dans les bornes
 void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne);

@@ -297,7 +297,7 @@ nom_type              : type_simple {
                         }
                       |
                         IDF {
-                          $$ = verif_decla_idf($1, TYPE, ligne_courante);
+                          int decla_type = verif_decla_idf($1, TYPE, ligne_courante);
                         }
                       ;
 
