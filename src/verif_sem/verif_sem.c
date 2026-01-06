@@ -28,7 +28,7 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     [E_VAR_NON_DECLAREE]   = "La variable '%1$s' n'est pas déclarée",
     [E_FCT_NON_DECLAREE]   = "La fonction '%1$s' n'est pas déclarée",
     [E_PROC_NON_DECLAREE]  = "La procédure '%1$s' n'est pas déclarée",
-    [E_TYPE_NON_DECLARE]   = "Le type '%1$s' n'est pas déclarée",
+    [E_TYPE_NON_DECLARE]   = "Le type '%1$s' n'est pas déclaré",
     [E_TYPE_AFF]           = "Affectation impossible pour '%1$s' : %2$s attendu, %3$s reçu",
     [E_TYPE_CONDITION]     = "La condition doit être de type bool (reçu: %1$s)",
     [E_NB_ARGS]            = "Appel de '%1$s' incorrect : %2$d argument.s attendu.s, %3$d reçu.s",
@@ -270,12 +270,18 @@ void verif_nombre_args(int num_lex, int nb_attendu, int nb_recu, int ligne) {
 
 int verif_decla_appel(int num_lex, int ligne) {
     int decla = association_noms(num_lex, N_FCT);
+    int est_fct = 1;
     if (decla == -1) {
+        est_fct = 0;
         decla = association_noms(num_lex, N_PROC);
     }
     
     if (decla == -1) {
-        erreur_semantique(generer_erreur(ligne, 0, E_FCT_NON_DECLAREE, -1, recuperer_lexeme(num_lex)));
+        if (est_fct == 1) {
+            erreur_semantique(generer_erreur(ligne, 0, E_FCT_NON_DECLAREE, -1, recuperer_lexeme(num_lex)));
+        } else {
+            erreur_semantique(generer_erreur(ligne, 0, E_PROC_NON_DECLAREE, -1, recuperer_lexeme(num_lex)));
+        }
     }
     return decla;
 }
