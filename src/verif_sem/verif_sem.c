@@ -39,7 +39,7 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     [E_RET_INCOHERENT]    = "Types de retour contradictoires dans '%1$s' : mélange de %2$s et %3$s",
     [E_ACCES_TAB_HORS_BORNES]     = "Accès hors bornes au tableau '%1$s' : indice %2$d hors de [%3$d..%4$d]",
     [E_ACCES_TAB_DIM_INCORRECTES] = "Accès au tableau '%1$s' incorrect : %2$d dimension(s) attendue(s), %3$d fournie(s)",
-
+    [E_TYPE_INEXISTANT]           = "Type '%1$s' inconnu",
 };
 
 const char *msg_indice_tab[NB_TYPE_ERREURS] = {
@@ -55,8 +55,9 @@ const char *msg_indice_tab[NB_TYPE_ERREURS] = {
     [E_PROC_RET]           = "Supprimez l'expression après 'ret' ou transformez '%1$s' en fonction",
     [E_RET_MANQUANT]       = "Ajoutez 'ret [expression];' en fin de bloc pour '%1$s'",
     [E_RET_INCOHERENT]     = "Les ret d'un même corps doivent tous renvoyer le même type.",
-     [E_ACCES_TAB_HORS_BORNES]     = "Utilisez un indice compris entre %3$d et %4$d",
+    [E_ACCES_TAB_HORS_BORNES]     = "Utilisez un indice compris entre %3$d et %4$d",
     [E_ACCES_TAB_DIM_INCORRECTES] = "Ajoutez ou supprimez des indices pour accéder à '%1$s'",
+    [E_TYPE_INEXISTANT]           = "Modifiez le type avec un nouveau connu",
 
 };
 
@@ -355,6 +356,32 @@ void verif_type_retour(int num_lex, int t_attendu, int t_recu, int decla, int li
                           nom_fct, nom_att, nom_rec));
     }
 }
+/*
+int verif_appel_correct(int idf, int decla, int ligne_courante, arbre liste_args, arbre appel){
+
+    if (decla != -1) {
+        int id_rep = tab_decla[decla][DESCRIPTION];
+        int nb_attendus = tab_rep[id_rep];
+        int nb_recus = compter_nombre_args(liste_args);
+
+
+        //verif du nb d'args..
+        verif_nombre_args(idf, nb_attendus, nb_recus, ligne_courante);
+
+        // puis des types
+        if (nb_attendus == nb_recus) {
+            verif_types_args(idf, decla, liste_args, ligne_courante);
+        appel = a_cr_appel(idf, liste_args, decla);
+                          
+    if (decla != -1 && tab_decla[decla][NATURE] == N_FCT) {
+        // si c'est une fct on fait remonter le type de retour
+        appel->nature = tab_rep[tab_decla[decla][DESCRIPTION] + 1];
+    } else {
+          appel->nature = -1; // Procédure ou erreur
+    }                          
+    appel->lineno = ligne_courante;
+    }
+}*/
 
 void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
     int indice, borne_inf, borne_sup, desc, nb_dim, i = 1;

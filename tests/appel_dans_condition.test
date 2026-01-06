@@ -5,7 +5,7 @@ main {
   }
 
   y = 5;
-
+  
   if (inc(y) == 6) then {
     none;
   }
