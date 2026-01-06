@@ -6,7 +6,7 @@ UNAME_S := $(shell uname -s)
 # --- Configuration selon l'OS (en priant pour que ça marche à la fac) ---
 ifeq ($(UNAME_S), Darwin)
 	# Configuration macOS
-	YACC   = byacc
+	YACC   = bison
 	LEX    = flex
 	LIBS   = 
 	YFLAGS = -dv   # -d pour le .h, -v pour le y.output
@@ -15,7 +15,7 @@ else
 	# Configuration Linux (par défaut)
 	YACC   = yacc
 	LEX    = lex
-	LIBS   =   # lex (classique) nécessite libl
+	LIBS   =
 	YFLAGS = -dv
 	LFLAGS = 
 endif
