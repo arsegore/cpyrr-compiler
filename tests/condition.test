@@ -1,10 +1,11 @@
 main {
-  var x: int;
-  x = 3;
+  typedef Tab10: tab [1..10] of int;
 
-  if (x < 5) then {
-    x = x + 1;
-  } else {
-    x = x - 1;
+  var t: Tab10;
+
+  proc f(x:int) {
+    ret 0;
   }
+
+  t[3] = 42;
 }

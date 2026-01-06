@@ -47,6 +47,9 @@
 #define A_LISTE_ARG         32  // ok gen
 
 #define A_LISTE_DIM         33  // ok gen
+#define A_LISTE_CHAMPS      34
+#define A_CHAMP             35
+#define A_DIM               36
 
 #define A_TANT_QUE          18  // ok gen
 #define A_SI_ALORS_SINON    19  // ok gen
@@ -71,7 +74,7 @@
  * et d'une chaîne de frères droits)
  */
 typedef struct noeud {
-    int             nature;     // num decl 
+    int             nature;     
     int             valeur;
     int             decla;
     struct noeud *  fils_gauche;
@@ -151,8 +154,6 @@ arbre a_cr_div(arbre gauche, arbre droit);
 arbre a_cr_mod(arbre gauche, arbre droit);
 arbre a_cr_affect(arbre gauche, arbre droit);
 arbre a_cr_idf(int idf, int num_dec);
-arbre a_cr_acces_tab(int idf, arbre liste_acces_dim, int num_dec);
-arbre a_cr_acces_struct(int idf, arbre champ, int num_dec);
 arbre a_cr_sup(arbre gauche, arbre droit);
 arbre a_cr_inf(arbre gauche, arbre droit);
 arbre a_cr_supegal(arbre gauche, arbre droit);
@@ -171,11 +172,49 @@ arbre a_cr_inst(arbre instruction);
 arbre a_cr_tant_que(arbre condition, arbre liste_inst);
 arbre a_cr_liste_arg_fin(arbre un_arg);
 arbre a_cr_liste_arg_suiv(arbre un_arg, arbre liste_suivants);
-arbre a_cr_appel(int idf, arbre liste_args);
+arbre a_cr_appel(int idf, arbre liste_args, int decla);
 arbre a_cr_appel_fct(int idf, arbre liste_args, int num_dec);
 arbre a_cr_appel_proc(int idf, arbre liste_args, int num_dec);
 arbre a_cr_ret(arbre valeur);
-arbre a_cr_feuille_dim(int val);
+arbre a_cr_dim(int val);
 arbre a_cr_liste_dim_fin(arbre une_dim);
-arbre a_cr_liste_dim_suiv(arbre une_dim, arbre liste_suivante);
+arbre a_cr_liste_dim_suiv(arbre une_dim, arbre suite);
+arbre a_cr_acces_tab(int idf, arbre liste, int num_dec);
+arbre a_cr_champ(int num_lex, arbre liste_dim);
+arbre a_cr_liste_champs_fin(arbre noeud_champ);
+arbre a_cr_liste_champs_suiv(arbre noeud_champ, arbre suite_liste);
+arbre a_cr_acces_struct(int idf, arbre liste, int num_dec);
+
+// Gestion des types pour types complexes
+/**
+ * Recherche le type d'un champ à l'intérieur d'une structure.
+ * @param id_decla_struct : L'indice de la structure dans tab_decla.
+ * @param num_lex_champ : Le lexème du champ recherché.
+ * @return : L'indice du type du champ dans tab_decla, ou -1 si non trouvé.
+ */
+int trouver_type_champ(int id_decla_struct, int num_lex_champ);
+
+/**
+ * Recherche le type des éléments d'un tableau.
+ * @param id_decla_tab : L'indice du tableau dans tab_decla.
+ */
+int trouver_type_tab(int id_decla_tab);
+
+/**
+ * Renvoie le type d'un noeud (au sens des types du YACC, TREETYPE_TRUC)
+ * @param a : Le noeud dont on cherche le type
+ */
+int recuperer_type_noeud(arbre a);
+
+/**
+ * Evalue le type d'un corps, déterminé par ce qu'il retourne. Le type est placé dans le pointeur
+ * donné en param, et la fonction renvoie 0 si tout va bien, 1 en cas d'erreur (un corps qui renvoie
+ * deux types différents)
+ * @param a : L'arbre représentant les instructions à parcourir
+ * @param num_lex : Le num lex de la fct/proc
+ * @param type_corps : Un pointeur vers là ou sera stocké le résultat (le type du corps)
+ * @param ligne : La ligne courante
+ */
+int evaluer_type_corps(arbre a, int num_lex, int *type_corps, int decla, int ligne);
+
 #endif

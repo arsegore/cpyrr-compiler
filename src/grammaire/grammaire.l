@@ -13,7 +13,7 @@
         ligne[pos] = '\0'; \
     } while(0)
 
-char ligne[TAILLE_MAX_LIGNE];
+extern char ligne[TAILLE_MAX_LIGNE];
 int pos = 0;
 int ligne_courante = 1;
 

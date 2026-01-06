@@ -6,4 +6,6 @@ main {
   x = 1;
   y = x + 2 * 3;
   z = true;
+
+  x = x + y;
 }
