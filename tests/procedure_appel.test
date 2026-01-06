@@ -1,4 +1,5 @@
 main {
+  var x: int;
   proc afficher(i: int) {
     proc afficherrrr(ug: int) {
       none;
@@ -10,7 +11,6 @@ main {
     none;
   }
 
-  var x: int;
   x = 10;
   afficher(x);
 }
