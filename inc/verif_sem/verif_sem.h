@@ -197,18 +197,44 @@ void verif_double_decla(int num_lex, int region, int nature, int ligne);
  */
 void verif_type_retour(int num_lex, int t_attendu, int t_recu, int decla, int ligne);
 
+int verif_appel_correct(int idf, int decla, int ligne_courante, arbre liste_args, arbre appel);
+
+/**
+* Verifie que les dimension données lors d'un acces a un tableau sont coherente
+*(c'est a dire compris dans les bornes données)
+*
+* @param num_lex : Le numéro lexico du tableau
+* @param decla : Le numero de décla du tableau
+* @param liste_dim : un abre pointant sur la ou les dimension données
+* @param ligne : La ligne à laquelle a été lancée la verif
+* @author  Louis
+*/
+void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne);
+
+/**
+* Verifie lors de l'accès a un tablea uqu'on utilise le même nombre de 
+* dimension que la declaration 
+*
+* @param num_lex : Le numéro lexico du tableau
+* @param decla : Le numero de décla du tableau
+* @param liste_dim : un abre pointant sur la ou les dimension données
+* @param ligne : La ligne à laquelle a été lancée la verif
+* @author  Louis
+*/
+void verif_nb_dim_taille(int num_lex, int decla, arbre liste_dim, int ligne);
+
 /* helpers ... */
 const char *recup_nom_type(int type);
 
+/**
+* Permet de compter le nombre de dimension passé lors d'un acces au tableau
+*
+* @param a : nombre de dimension passé
+* @author  louis
+*/
 int compter_nombre_args(arbre a);
 
-int verif_appel_correct(int idf, int decla, int ligne_courante, arbre liste_args, arbre appel);
 
-// verifie si l'acces a un tableau est bien dans les bornes
-void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne);
-
-// verifie si on accede bien a un tableau avec toutes ses dimensions
-void verif_nb_dim_taille(int num_lex, int decla, arbre liste_dim, int ligne);
 
 
 //...

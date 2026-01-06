@@ -295,7 +295,6 @@ void verif_types_args(int num_lex, int decla, arbre liste_args, int ligne) {
     } else {
         depart_params = id_rep + 1;
     }
-    printf("%d\n", nb_params);
     for (i = 0; i < nb_params; i++) {
         type_attendu = tab_rep[depart_params + (i * 2) + 1];
         
