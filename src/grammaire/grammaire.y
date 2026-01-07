@@ -23,6 +23,7 @@
     #include "save/save.h"
     #include "verif_sem/verif_sem.h"
     #include "arbre/arbre.h"
+    #include "machine_virtuelle/machine_virtuelle.h"
 
     int yylex();
     int yyerror(char *msg);
@@ -80,14 +81,14 @@ programme             : PROG {
                           inserer_region(deplacement);
                         }
                         AO corps AF {
+                          mettre_a_jour_taille_region(num_region_courante, deplacement);
                           depiler_pile_regions();
-                          afficher_arbre($4.treeptr); // debug
                         }
                       ;
 
 corps                 : liste_declarations_tv liste_declarations_pf liste_instructions {
                           $$ = $3;
-                          /*ici on pourra associer la région à son arbre */
+                          modifier_arbre_region(num_region_courante, $$.treeptr);
                         }
                       ;
 
@@ -114,7 +115,6 @@ liste_instructions    : instruction {
                         }
                       ;
 
-// je note ici, il manque le remplissage du champ exec pour les déclas (!)
 declaration_tv        : declaration_type PV { remplir_fin_decla(sommet_pile_decla(), ligne_courante);
                         depiler_pile_decla();}
                       |
@@ -235,6 +235,7 @@ declaration_procedure : PROC
                           inserer_tab_rep_nb_elem(nbparam);
                         }
                         AO corps AF {
+                          mettre_a_jour_taille_region(num_region_courante, deplacement);
                           depiler_pile_regions();
                           $10.treetype = -1;
                           evaluer_type_corps($10.treeptr, $2, &$10.treetype, decla_courante, ligne_courante);
@@ -261,6 +262,7 @@ declaration_fonction  : nom_type FCT IDF {
                         } liste_param PF {
                             inserer_tab_rep_nb_elem(nbparam);
                         } AO corps AF {
+                            mettre_a_jour_taille_region(num_region_courante, deplacement);
                             depiler_pile_regions();
                             $11.treetype = -1;
                             evaluer_type_corps($11.treeptr, $3, &$11.treetype, decla_courante, ligne_courante);
@@ -375,21 +377,7 @@ resultat_retourne     : exp {
                         }
                       ;
 
-affectation           : variable OPAFF CSTE_BOOL  {
-                          verif_compatibilite_affect($1.ch_numlex, $1.treetype, TREETYPE_BOOL, $1.lineno);
-                          $$.treeptr = a_cr_affect($1.treeptr, a_cr_cste_bool($3));
-                          $$.treetype = $1.treetype;
-                          $$.lineno = $1.lineno;
-                        }
-                      |
-                        variable OPAFF CSTE_CHAR {
-                          verif_compatibilite_affect($1.ch_numlex, $1.treetype, TREETYPE_CHAR, $1.lineno);
-                          $$.treeptr = a_cr_affect($1.treeptr, a_cr_cste_char($3));
-                          $$.treetype = $1.treetype;
-                          $$.lineno = $1.lineno;
-                        }
-                      |
-                        variable OPAFF CSTE_CHAINE    // {$$ = a_cr_affect($1, a_cr_cste_chaine($3));}
+affectation           : variable OPAFF CSTE_CHAINE    // {$$ = a_cr_affect($1, a_cr_cste_chaine($3));}
                       |
                         variable OPAFF exp  {
                           verif_compatibilite_affect($1.ch_numlex, $1.treetype, $3.treetype, $1.lineno);
@@ -589,6 +577,11 @@ expa2                 : PO expa PF    {
                           $$.treetype = TREETYPE_ENTIER;
                           $$.lineno = ligne_courante;
                         }
+                      | CSTE_CHAR {
+                          $$.treeptr = a_cr_cste_char($1);
+                          $$.treetype = TREETYPE_CHAR;
+                          $$.lineno = ligne_courante;
+                        }
                       ;
 
 expb                  : expb OU expb1 {
@@ -706,6 +699,12 @@ int main(int argc, char **argv){
 
     afficher_tab_decla();
     afficher_tab_rep(0, 15);
+    afficher_tab_regions(0, 15);
+    afficher_tab_lexico(0,15);
+    afficher_arbres_regions();
+
+    lancer_execution();
+
 
     exit(EXIT_SUCCESS);
 }

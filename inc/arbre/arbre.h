@@ -68,6 +68,11 @@
 #define A_ACCES_TAB         29  // ok gen
 #define A_ACCES_STRUCT      30  // ok gen
 
+#define TREETYPE_ENTIER     0
+#define TREETYPE_REEL       1
+#define TREETYPE_BOOL       2
+#define TREETYPE_CHAR       3
+
 /**
  * Chaque noeud connait sa nature et sa valeur, ainsi qu'évidemment
  * qui sont ses fils (sous forme d'un pointeur sur le fils gauche
@@ -118,22 +123,9 @@ arbre creer_noeud(int nature, int valeur, int decla);
 void afficher_arbre(arbre a);
 
 /**
- * Exécute un arbre
- * 
- * @param a : L'arbre à exécuter
+ * Affiche les arbres de toutes les régions du programme
  */
-void execute_arbre(arbre a);
-
-// à faire
-int execute_arbre_fct(arbre a);
-
-/**
- * Evalue un arbre
- * 
- * @param a : L'arbre à évaluer
- * @return : L'évaluation de l'arbre
- */
-int evalue_arbre_int(arbre a);
+void afficher_arbres_regions();
 
 /**
  * Tout un tas de helper pour les arbres, ça devrait rendre le yacc plus lisible.. 
@@ -146,7 +138,7 @@ arbre a_cr_cste_entiere(int valeur);
 arbre a_cr_cste_bool(int valeur);
 arbre a_cr_cste_chaine(int valeur);
 arbre a_cr_cste_char(int valeur);
-arbre a_cr_cste_reelle(int valeur);
+arbre a_cr_cste_reelle(float valeur);
 arbre a_cr_plus(arbre gauche, arbre droit);
 arbre a_cr_moins(arbre gauche, arbre droit);
 arbre a_cr_mult(arbre gauche, arbre droit);
@@ -193,6 +185,14 @@ arbre a_cr_acces_struct(int idf, arbre liste, int num_dec);
  * @return : L'indice du type du champ dans tab_decla, ou -1 si non trouvé.
  */
 int trouver_type_champ(int id_decla_struct, int num_lex_champ);
+
+/**
+ * Recherche l'exec d'un champ à l'intérieur d'une structure.
+ * @param id_decla_struct : L'indice de la structure dans tab_decla.
+ * @param num_lex_champ : Le lexème du champ recherché.
+ * @return : L'indice du type du champ dans tab_decla, ou -1 si non trouvé.
+ */
+int trouver_exec_champ(int id_decla_struct, int num_lex_champ);
 
 /**
  * Recherche le type des éléments d'un tableau.

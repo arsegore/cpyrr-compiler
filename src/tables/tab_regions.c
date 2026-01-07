@@ -64,7 +64,15 @@ void modifier_taille(int num_region, int taille) {
     tab_region[num_region].taille = taille;
 }
 
-void modifier_arbre_region(int num_region, arbre *a) {
+void mettre_a_jour_taille_region(int num_region, int deplacement_final) {
+    if (tab_region[num_region].nis == 0) {
+        modifier_taille(num_region, deplacement_final);
+    } else {
+        modifier_taille(num_region, tab_region[num_region].nis + 1 + deplacement_final);
+    }
+}
+
+void modifier_arbre_region(int num_region, arbre a) {
     tab_region[num_region].arbre_region = a;
 }
 
