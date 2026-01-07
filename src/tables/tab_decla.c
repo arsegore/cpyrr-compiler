@@ -147,16 +147,17 @@ void remplir_desc(int num_decla, int desc){
 void remplir_exec(int num_decla){
     int nature = tab_decla[num_decla][NATURE];
     switch(nature){
-    case 1:
-    case 2:
+    case N_STRUCT:
+    case N_TAB:
         tab_decla[num_decla][EXECUTION] = taille_type(num_decla);
         break;
-    case 3:
-    case 4:
+    case N_VAR:
+    case N_PARAM:
         tab_decla[num_decla][EXECUTION] = deplacement + tab_region[num_region_courante].nis;
         break;
-    case 5:
-    case 6:
+    case N_PROC:
+    case N_FCT:
+        printf("num_region_courante = %d\n", num_region_courante);
         tab_decla[num_decla][EXECUTION] = num_region_courante;
         break;
     }

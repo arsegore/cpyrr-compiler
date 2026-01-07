@@ -1,0 +1,14 @@
+main {
+
+    proc test(x:int){
+        none;
+    }
+
+    proc test2(b: char){
+        none;
+    }
+
+    test(1);
+
+    none;
+}

@@ -10,23 +10,32 @@
  */
 
 #define TAILLE_PILE_EXEC 5000
+#define BC base_courante
+
+typedef enum {
+    CHAINAGE,
+    VARIABLE
+} type_cellule;
 
 typedef union {
     int entier;
     float reel;
-    int booleen;
+    int bool;
     char caractere;
 } val;
 
 typedef struct {
-    char * lexeme;
-    int a_valeur; // -1 si la variable n'a pas de valeur, sinon 0, 1, 2 ou 3
+    char *lexeme;
+    int type_var; // 0, 1, 2, 3
     val valeur;
 } var;
 
 typedef struct {
-    int chainage;
-    var variable;
+    union {
+        int chainage;
+        var donnees;
+    } contenu;
+    type_cellule type;
 } cellule;
 
 extern cellule pile_exec[TAILLE_PILE_EXEC];
@@ -40,36 +49,29 @@ extern int taille_pile_exec;
  */
 void init_pile_exec();
 
-/**
- * @return Le sommet de la pile d'exécution
- */
-cellule sommet_pile_exec();
-
-// Ancienne version en une seule fonction, à voir si c'était mieux au final
-/*
- * @param chainage : valeur du chainage, -1 si on veut empiler une variable
- * @param variable : valeur de la variable
- */
-//void empiler_pile_exec(int chainage, var variable);
 
 /**
- * @param chainage : valeur du chainage
+ * Empile un chainage 
+ * 
+ * @param base_courante : La valeur de BC à empiler
  */
-void empiler_pile_exec_chainage(int chainage);
+void empiler_pile_exec_chainage(int base_courante);
 
 /**
+ * Empile une variable
+ * 
  * @param variable : valeur de la variable
  */
 void empiler_pile_exec_variable(var variable);
 
 /**
- * Met à jour la variable globale base_courante
- */
-void maj_base_courante();
-
-/**
  * Affiche la pile d'exécution
  */
 void afficher_pile_exec();
+
+/**
+ * Fait des empilements "fantomes" pour augmenter la taille de la pile en prévision de ce qu'on va y remplir
+ */
+void allouer_taille(int taille);
 
 #endif

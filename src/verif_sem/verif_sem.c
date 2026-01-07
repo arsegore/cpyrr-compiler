@@ -222,7 +222,6 @@ const char *recup_nom_type(int type) {
 int verif_decla_idf(int num_lex, int nature, int ligne) {
     int decla = association_noms(num_lex, nature);
     int code;
-    printf("decla = %d, nature = %d\n", decla, nature);
     if (decla == -1) {
         switch (nature) {
             case N_VAR:

@@ -15,7 +15,7 @@
 typedef struct {
     int taille;
     int nis;
-    arbre *arbre_region;
+    arbre arbre_region;
 }cellule_region;
 
 typedef cellule_region tab_region_t[TAILLE_TAB_REGIONS];
@@ -51,12 +51,20 @@ void afficher_tab_regions(int depart, int arrivee);
 void modifier_taille(int num_region, int taille);
 
 /**
+ * Calcule la taille finale d'une région 
+ * 
+ * @param num_region : Le numéro de la région
+ * @param deplacement_final : Le déplacement final en sortant de la région
+ */
+void mettre_a_jour_taille_region(int num_region, int deplacement_final);
+
+/**
  * Modifie le pointeur vers l'arbre de la région d'une région
  *
  * @param num_region Le numéro de la région
- * @param a Le pointeur vers l'arbre de la région
+ * @param a L'arbre de la région
  */
-void modifier_arbre_region(int num_region, arbre *a);
+void modifier_arbre_region(int num_region, arbre a);
 
 
 
