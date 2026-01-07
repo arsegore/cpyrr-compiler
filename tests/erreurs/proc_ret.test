@@ -1,0 +1,7 @@
+main {
+    proc procedure(){
+        ret 0;
+    }
+
+    none;
+}

@@ -1,0 +1,12 @@
+main {
+    proc test1(x: int){
+        none;
+    }
+
+    int fct test2(x: int){
+        ret 0;
+    }
+
+    test1();
+    test2(1, 2);
+}

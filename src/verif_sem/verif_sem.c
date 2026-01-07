@@ -28,7 +28,7 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     [E_VAR_NON_DECLAREE]   = "La variable '%1$s' n'est pas déclarée",
     [E_FCT_NON_DECLAREE]   = "La fonction '%1$s' n'est pas déclarée",
     [E_PROC_NON_DECLAREE]  = "La procédure '%1$s' n'est pas déclarée",
-    [E_TYPE_NON_DECLARE]   = "Le type '%1$s' n'est pas déclarée",
+    [E_TYPE_NON_DECLARE]   = "Le type '%1$s' n'est pas déclaré",
     [E_TYPE_AFF]           = "Affectation impossible pour '%1$s' : %2$s attendu, %3$s reçu",
     [E_TYPE_CONDITION]     = "La condition doit être de type bool (reçu: %1$s)",
     [E_NB_ARGS]            = "Appel de '%1$s' incorrect : %2$d argument.s attendu.s, %3$d reçu.s",
@@ -201,7 +201,7 @@ int evaluer_type_acces_champ(int id_decla_parent, arbre liste_acces) {
                 }
             }
         }
-        courant = courant->frere_droit;
+        courant = courant->fils_gauche->frere_droit;
     }
     return type_actuel;
 }
@@ -405,9 +405,6 @@ void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
     desc = tab_decla[decla][DESCRIPTION];
     nb_dim = tab_rep[tab_decla[desc][DESCRIPTION] + 1];
 
-    printf("desc = %d\n", desc);
-
-    printf("nbdim = %d\n", nb_dim);
     while(tmp != NULL && i <= nb_dim){
         indice = tmp->fils_gauche->valeur;
 
