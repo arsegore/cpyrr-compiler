@@ -541,6 +541,7 @@ expa1                 : expa1 MU expa2  {
                         }
                       |
                         expa1 DIV expa2 {
+                          verif_division_par_zero($3.treeptr, ligne_courante);
                           $$.treeptr = a_cr_div($1.treeptr, $3.treeptr);
                           $$.treetype = $1.treetype;
                           $$.lineno = $1.lineno;
@@ -566,6 +567,7 @@ expa2                 : PO expa PF    {
                         }  
                       |
                         appel         {
+                          verif_proc_dans_exp_appel($1.treetype, ligne_courante);
                           $$ = $1;
                         }    
                       |
