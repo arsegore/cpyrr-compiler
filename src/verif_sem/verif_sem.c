@@ -367,32 +367,6 @@ void verif_type_retour(int num_lex, int t_attendu, int t_recu, int decla, int li
                           nom_fct, nom_att, nom_rec));
     }
 }
-/*
-int verif_appel_correct(int idf, int decla, int ligne_courante, arbre liste_args, arbre appel){
-
-    if (decla != -1) {
-        int id_rep = tab_decla[decla][DESCRIPTION];
-        int nb_attendus = tab_rep[id_rep];
-        int nb_recus = compter_nombre_args(liste_args);
-
-
-        //verif du nb d'args..
-        verif_nombre_args(idf, nb_attendus, nb_recus, ligne_courante);
-
-        // puis des types
-        if (nb_attendus == nb_recus) {
-            verif_types_args(idf, decla, liste_args, ligne_courante);
-        appel = a_cr_appel(idf, liste_args, decla);
-                          
-    if (decla != -1 && tab_decla[decla][NATURE] == N_FCT) {
-        // si c'est une fct on fait remonter le type de retour
-        appel->nature = tab_rep[tab_decla[decla][DESCRIPTION] + 1];
-    } else {
-          appel->nature = -1; // Procédure ou erreur
-    }                          
-    appel->lineno = ligne_courante;
-    }
-}*/
 
 void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
     int indice, borne_inf, borne_sup, desc, nb_dim, i = 1;

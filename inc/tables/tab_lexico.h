@@ -29,6 +29,8 @@ extern int tab_hash_code[TAILLE_TAB_HASH_CODE];
 
 /**
  * Initialise la table lexico, (-1 pour les entiers, NULL pour les léxèmes)
+ * 
+ * @author :  Adam
  */
 void init_tab_lexico();
 
@@ -38,6 +40,8 @@ void init_tab_lexico();
  *
  * @param lexeme : Un léxème 
  * @return : Le hash-code du léxème
+ * 
+ * @author :  Adam
  */
 int calculer_hash_code(char *lexeme);
 
@@ -47,6 +51,8 @@ int calculer_hash_code(char *lexeme);
  *
  * @param num_lexico : Le numéro lexico du léxème recherché
  * @return : Le léxème correspondant dans la table
+ * 
+ * @author :  Adam
  */
 char *recuperer_lexeme(int num_lexico);
 
@@ -57,6 +63,7 @@ char *recuperer_lexeme(int num_lexico);
  * @param longueur : La longueur du léxème
  * @return : Le numéro lexico du léxème inséré (ou du léxème déjà présent le
  * cas écheant)
+ * @author :  Adam
  */
 int inserer_lexeme(char *lexeme, int longueur);
 
@@ -66,6 +73,7 @@ int inserer_lexeme(char *lexeme, int longueur);
  *
  * @param depart : L'indice d'où l'affichage commence
  * @param arrivee : L'indice de fin de l'affichage
+ * @author :  Adam
  */
 void afficher_tab_lexico(int depart, int arrivee);
 

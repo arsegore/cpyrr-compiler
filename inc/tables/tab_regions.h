@@ -24,17 +24,24 @@ extern tab_region_t tab_region;
 
 /**
  * Initialise la table des régions
+ * 
+ * @author :  Adam
  */
 void init_tab_regions();
 
 /**
  * Insère une nouvelle région dans la table, remplit automatiquement son
  * champ NIS
+ * 
+ * @author :  Adam
+ * @author :  Louis
  */
 void inserer_region(int taille);
 
 /**
  * Affiche la table des régions
+ * 
+ * @author :  Adam
  */
 void afficher_tab_regions();
 
@@ -43,6 +50,7 @@ void afficher_tab_regions();
  *
  * @param num_region Le numéro de la région
  * @param taille Sa nouvelle taille à l'éxécution
+ * @author :  Baptiste
  */
 void modifier_taille(int num_region, int taille);
 
@@ -51,11 +59,14 @@ void modifier_taille(int num_region, int taille);
  * 
  * @param num_region : Le numéro de la région
  * @param deplacement_final : Le déplacement final en sortant de la région
+ * @author :  Adam
  */
 void mettre_a_jour_taille_region(int num_region, int deplacement_final);
 
 /**
  * Evalue la taille de la région 0
+ * 
+ * @author :  Adam
  */
 void evaluer_taille_programme();
 
@@ -64,6 +75,7 @@ void evaluer_taille_programme();
  *
  * @param num_region Le numéro de la région
  * @param a L'arbre de la région
+ * @author :  Adam
  */
 void modifier_arbre_region(int num_region, arbre a);
 

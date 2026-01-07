@@ -46,6 +46,8 @@ extern int taille_pile_exec;
 
 /**
  * Initialise la pile d'exécution
+ * @author :  Damien
+ * @author :  Adam
  */
 void init_pile_exec();
 
@@ -54,6 +56,8 @@ void init_pile_exec();
  * Empile un chainage 
  * 
  * @param base_courante : La valeur de BC à empiler
+ * @author :  Damien
+ * @author :  Adam
  */
 void empiler_pile_exec_chainage(int base_courante);
 
@@ -61,16 +65,20 @@ void empiler_pile_exec_chainage(int base_courante);
  * Empile une variable
  * 
  * @param variable : valeur de la variable
+ * @author :  Damien
+ * @author :  Adam
  */
 void empiler_pile_exec_variable(var variable);
 
 /**
  * Affiche la pile d'exécution
+ * @author :  Adam
  */
 void afficher_pile_exec();
 
 /**
  * Fait des empilements "fantomes" pour augmenter la taille de la pile en prévision de ce qu'on va y remplir
+ * @author :  Adam
  */
 void allouer_taille(int taille);
 

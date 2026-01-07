@@ -9,6 +9,8 @@ extern float tab_reels[TAILLE_TAB_REELS];
  * Insère un réel dans la table 
  * 
  * @param f : Le réel à insérer
+ * 
+ * @author :  Adam
  */
 int inserer_reel(float f);
 

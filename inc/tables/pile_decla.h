@@ -19,23 +19,37 @@ extern int nb_decla_pile;
 
 /**
  * Initialise la pile des decla
+ * 
+ * @author :  Louis
  */
 void init_pile_decla();
 /**
  * Empile un numéro de declaration 
+ * 
  * @param num_decla : Le num_decla qu'on veut empiler
+ * 
+ * @author :  Louis
  */
 void empiler_pile_decla(int num_region);
 
+/**
+ * Renvoie le sommet de la pile des déclarations
+ * 
+ * @author :  Louis
+ */
 int sommet_pile_decla();
 
 /**
  * Depile la pile des declarations
+ * 
+ * @author :  Louis
  */
 void depiler_pile_decla();
 
 /**
  * Affiche la pile des déclarations
+ * 
+ * @author :  Louis
  */
 void afficher_pile_decla();
 

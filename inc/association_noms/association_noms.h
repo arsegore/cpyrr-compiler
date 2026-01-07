@@ -1,11 +1,16 @@
 #ifndef _ASSOCIATION_NOMS_H_
 #define _ASSOCIATION_NOMS_H_
 
-/**
- * Auteur: Paul 
- */
 
-/* Donne le numero de declaration d'un lexeme a partir de son numero lexicographique et de sa nature */
+/**
+ * Renvoie le numéro d'une déclaration à partir d'un léxème et d'une
+ * nature recherchée
+ * 
+ * @param num_lex : Le numéro lexico du léxème
+ * @param nature : La nature recherchée
+ * @author :  Paul
+ * @author :  Adam
+ */
 int association_noms(int num_lex, int nature);
 
 #endif
