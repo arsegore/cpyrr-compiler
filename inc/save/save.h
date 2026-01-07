@@ -33,6 +33,7 @@
  * //------------(fin fichier)------------------------------------------------
  *
  *
+ * @author : MOULIN Baptiste
  */
 void save_tab_lex();
 
@@ -48,6 +49,7 @@ void save_tab_lex();
  * //------------(fin fichier)------------------------------------------------
  *
  *
+ * @author : MOULIN Baptiste
  */
 void save_tab_decla();
 
@@ -63,6 +65,7 @@ void save_tab_decla();
  * //------------(fin fichier)------------------------------------------------
  *
  *
+ * @author : MOULIN Baptiste
  */
 void save_tab_regions();
 
@@ -76,5 +79,6 @@ void save_tab_regions();
  * //------------(fin fichier)------------------------------------------------
  *
  *
+ * @author : MOULIN Baptiste
  */
 void save_tab_rep();
