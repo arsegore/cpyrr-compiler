@@ -1,8 +1,9 @@
 main {
-  var i: in;
+  var i: int;
   i = 0;
 
   while (i < 10) do {
-    i = i + 1.0;
+    i = i +1 ;
+   
   }
 }

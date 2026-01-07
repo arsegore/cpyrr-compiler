@@ -40,6 +40,9 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     [E_ACCES_TAB_HORS_BORNES]     = "Accès hors bornes au tableau '%1$s' : indice %2$d hors de [%3$d..%4$d]",
     [E_ACCES_TAB_DIM_INCORRECTES] = "Accès au tableau '%1$s' incorrect : %2$d dimension(s) attendue(s), %3$d fournie(s)",
     [E_TYPE_INEXISTANT]           = "Type '%1$s' inconnu",
+    [E_DIV_PAR_ZERO]              = "Division par zero detecter",
+    [E_PROC_DANS_EXP]             = "La procédure ne peut pas être utilisée dans une expression",
+
 };
 
 const char *msg_indice_tab[NB_TYPE_ERREURS] = {
@@ -58,7 +61,8 @@ const char *msg_indice_tab[NB_TYPE_ERREURS] = {
     [E_ACCES_TAB_HORS_BORNES]     = "Utilisez un indice compris entre %3$d et %4$d",
     [E_ACCES_TAB_DIM_INCORRECTES] = "Ajoutez ou supprimez des indices pour accéder à '%1$s'",
     [E_TYPE_INEXISTANT]           = "Modifiez le type avec un nouveau connu",
-
+    [E_DIV_PAR_ZERO]              = "Essayer de ne pas diviser par 0",
+    [E_PROC_DANS_EXP]             = "Indice : une procedure ne renvoie aucune valeur. Utilisez une fonction ou supprimez cet appel de l'expression.",
 };
 
 int doit_stopper_exec(int type_erreur){
@@ -391,9 +395,9 @@ void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
     } 
 
     desc = tab_decla[decla][DESCRIPTION];
-    nb_dim = tab_rep[desc+1];
+    nb_dim = tab_rep[tab_decla[desc][DESCRIPTION] + 1];
 
-    while(tmp != NULL && i < nb_dim){
+    while(tmp != NULL || i < nb_dim){
         indice = tmp->fils_gauche->valeur;
 
         borne_inf = tab_rep[tab_decla[desc][DESCRIPTION]+2*i];
@@ -433,5 +437,17 @@ void verif_nb_dim_taille(int num_lex, int decla, arbre liste_dim, int ligne){
 
 }
 
+void verif_division_par_zero(arbre denominateur, int ligne) {
+    if (denominateur == NULL) return;
+
+    if (denominateur->nature == A_CSTE_ENTIERE && denominateur->valeur == 0) {
+        erreur_semantique(generer_erreur(ligne, 0, E_DIV_PAR_ZERO, -1));
+    }
+}
+void verif_proc_dans_exp_appel(int nature, int ligne) {
+    if (nature == -1 ){
+        erreur_semantique(generer_erreur(ligne, 0, E_PROC_DANS_EXP, -1));
+    }
+}
 
 

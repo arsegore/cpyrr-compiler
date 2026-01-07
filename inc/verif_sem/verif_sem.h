@@ -26,6 +26,7 @@
 #define E_TYPE_CONDITION 10
 #define E_TYPE_NON_COMPATIBLE 11
 #define E_TYPE_INEXISTANT 27
+
 // erreurs sur un appel de fct/proc
 #define E_NB_ARGS 12
 #define E_TYPE_ARG 13
@@ -45,6 +46,10 @@
 #define E_RET_MAUVAIS_TYPE 20
 #define E_PROC_RET 21
 #define E_RET_INCOHERENT 24
+
+// errerurs d'expression
+#define E_DIV_PAR_ZERO 28
+#define E_PROC_DANS_EXP 29
 
 #define DEBUT_WARNINGS 25
 
@@ -223,6 +228,25 @@ void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne);
 */
 void verif_nb_dim_taille(int num_lex, int decla, arbre liste_dim, int ligne);
 
+/**
+* Verifie si une division par 0 est detecter
+*
+* @param denominateur : arbre permettant de savoir si c'est une constante egal a 0
+* @param ligne : La ligne à laquelle a été lancé la verif
+* @author  louis
+ */
+void verif_division_par_zero(arbre denominateur, int ligne);
+
+/**
+* Verifie qu'une procedure n'est pas utiliser lors d'un expression
+*
+* @param num_lex : permet de reccuperer l'idf de la procedure
+* @param nature : permet de savoir si c'est bel et bien un appel de procedure
+* @param : La lign a laquelle a été lancé la verif
+* @author  louis
+ */
+void verif_proc_dans_exp_appel(int nature, int ligne);
+
 /* helpers ... */
 const char *recup_nom_type(int type);
 
@@ -230,7 +254,7 @@ const char *recup_nom_type(int type);
 * Permet de compter le nombre de dimension passé lors d'un acces au tableau
 *
 * @param a : nombre de dimension passé
-* @author  louis
+* @author 
 */
 int compter_nombre_args(arbre a);
 

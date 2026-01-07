@@ -10,7 +10,5 @@ main {
   proc afficherr(ie: int) {
     none;
   }
-
-  x = 10;
-  afficher(x);
+  x = 1;
 }
