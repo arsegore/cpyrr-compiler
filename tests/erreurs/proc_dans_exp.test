@@ -1,0 +1,9 @@
+main {
+    var x: int;
+
+    proc calcul(){
+        none;
+    }
+
+    x = 1 + calcul();
+}

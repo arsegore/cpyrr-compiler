@@ -37,10 +37,12 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     [E_RET_MAUVAIS_TYPE]   = "Type de retour incorrect pour '%1$s' : attendu %2$s, reçu %3$s",
     [E_PROC_RET]           = "La procédure '%1$s' ne peut pas retourner de valeur",
     [E_RET_MANQUANT]       = "La fonction '%1$s' doit retourner une valeur de type %2$s",
-    [E_RET_INCOHERENT]    = "Types de retour contradictoires dans '%1$s' : mélange de %2$s et %3$s",
+    [E_RET_INCOHERENT]     = "Types de retour contradictoires dans '%1$s' : mélange de %2$s et %3$s",
     [E_ACCES_TAB_HORS_BORNES]     = "Accès hors bornes au tableau '%1$s' : indice %2$d hors de [%3$d..%4$d]",
     [E_ACCES_TAB_DIM_INCORRECTES] = "Accès au tableau '%1$s' incorrect : %2$d dimension(s) attendue(s), %3$d fournie(s)",
     [E_TYPE_INEXISTANT]           = "Type '%1$s' inconnu",
+    [E_DIV_PAR_ZERO]              = "Division par zero détectée",
+    [E_PROC_DANS_EXP]             = "La procédure ne peut pas être utilisée dans une expression",
 };
 
 const char *msg_indice_tab[NB_TYPE_ERREURS] = {
@@ -60,7 +62,8 @@ const char *msg_indice_tab[NB_TYPE_ERREURS] = {
     [E_ACCES_TAB_HORS_BORNES]     = "Utilisez un indice compris entre %3$d et %4$d",
     [E_ACCES_TAB_DIM_INCORRECTES] = "Ajoutez ou supprimez des indices pour accéder à '%1$s'",
     [E_TYPE_INEXISTANT]           = "Modifiez le type avec un nouveau connu",
-
+    [E_DIV_PAR_ZERO]              = "Une tentative de division par zéro est mathématiquement incorrecte...",
+    [E_PROC_DANS_EXP]             = "Indice : une procedure ne renvoie aucune valeur. Utilisez une fonction ou supprimez cet appel de l'expression.",
 };
 
 int doit_stopper_exec(int type_erreur){
@@ -416,7 +419,20 @@ void verif_nb_dim_taille(int num_lex, int decla, arbre liste_dim, int ligne){
     if (nb_dim_decl != nb_dim_util) {
         erreur_semantique(generer_erreur(ligne, 0, E_ACCES_TAB_DIM_INCORRECTES, decla, recuperer_lexeme(num_lex), nb_dim_decl, nb_dim_util));
     }
+}
 
+
+void verif_division_par_zero(arbre denominateur, int ligne) {
+    if (denominateur == NULL) return;
+
+    if (denominateur->nature == A_CSTE_ENTIERE && denominateur->valeur == 0) {
+        erreur_semantique(generer_erreur(ligne, 0, E_DIV_PAR_ZERO, -1));
+    }
+}
+void verif_proc_dans_exp_appel(int nature, int ligne) {
+    if (nature == -1 ){
+        erreur_semantique(generer_erreur(ligne, 0, E_PROC_DANS_EXP, -1));
+    }
 }
 
 
