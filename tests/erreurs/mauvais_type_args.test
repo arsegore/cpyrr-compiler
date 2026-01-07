@@ -1,0 +1,12 @@
+main {
+    proc test1(x: int){
+        none;
+    }
+
+    int fct test2(x: int, y: float){
+        ret 0;
+    }
+
+    test1('a');
+    test2(2, (true));
+}

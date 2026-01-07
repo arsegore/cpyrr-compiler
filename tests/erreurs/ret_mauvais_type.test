@@ -1,0 +1,7 @@
+main {
+    float fct pi(){
+        ret 3;
+    }
+
+    none;
+}

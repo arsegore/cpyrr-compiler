@@ -28,7 +28,7 @@ const char *msg_err_tab[NB_TYPE_ERREURS] = {
     [E_VAR_NON_DECLAREE]   = "La variable '%1$s' n'est pas déclarée",
     [E_FCT_NON_DECLAREE]   = "La fonction '%1$s' n'est pas déclarée",
     [E_PROC_NON_DECLAREE]  = "La procédure '%1$s' n'est pas déclarée",
-    [E_TYPE_NON_DECLARE]   = "Le type '%1$s' n'est pas déclarée",
+    [E_TYPE_NON_DECLARE]   = "Le type '%1$s' n'est pas déclaré",
     [E_TYPE_AFF]           = "Affectation impossible pour '%1$s' : %2$s attendu, %3$s reçu",
     [E_TYPE_CONDITION]     = "La condition doit être de type bool (reçu: %1$s)",
     [E_NB_ARGS]            = "Appel de '%1$s' incorrect : %2$d argument.s attendu.s, %3$d reçu.s",
@@ -201,7 +201,7 @@ int evaluer_type_acces_champ(int id_decla_parent, arbre liste_acces) {
                 }
             }
         }
-        courant = courant->frere_droit;
+        courant = courant->fils_gauche->frere_droit;
     }
     return type_actuel;
 }
@@ -222,7 +222,6 @@ const char *recup_nom_type(int type) {
 int verif_decla_idf(int num_lex, int nature, int ligne) {
     int decla = association_noms(num_lex, nature);
     int code;
-    printf("decla = %d, nature = %d\n", decla, nature);
     if (decla == -1) {
         switch (nature) {
             case N_VAR:
@@ -368,32 +367,6 @@ void verif_type_retour(int num_lex, int t_attendu, int t_recu, int decla, int li
                           nom_fct, nom_att, nom_rec));
     }
 }
-/*
-int verif_appel_correct(int idf, int decla, int ligne_courante, arbre liste_args, arbre appel){
-
-    if (decla != -1) {
-        int id_rep = tab_decla[decla][DESCRIPTION];
-        int nb_attendus = tab_rep[id_rep];
-        int nb_recus = compter_nombre_args(liste_args);
-
-
-        //verif du nb d'args..
-        verif_nombre_args(idf, nb_attendus, nb_recus, ligne_courante);
-
-        // puis des types
-        if (nb_attendus == nb_recus) {
-            verif_types_args(idf, decla, liste_args, ligne_courante);
-        appel = a_cr_appel(idf, liste_args, decla);
-                          
-    if (decla != -1 && tab_decla[decla][NATURE] == N_FCT) {
-        // si c'est une fct on fait remonter le type de retour
-        appel->nature = tab_rep[tab_decla[decla][DESCRIPTION] + 1];
-    } else {
-          appel->nature = -1; // Procédure ou erreur
-    }                          
-    appel->lineno = ligne_courante;
-    }
-}*/
 
 void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
     int indice, borne_inf, borne_sup, desc, nb_dim, i = 1;
@@ -406,9 +379,6 @@ void verif_dim_hors_tab(int num_lex, int decla, arbre liste_dim, int ligne){
     desc = tab_decla[decla][DESCRIPTION];
     nb_dim = tab_rep[tab_decla[desc][DESCRIPTION] + 1];
 
-    printf("desc = %d\n", desc);
-
-    printf("nbdim = %d\n", nb_dim);
     while(tmp != NULL && i <= nb_dim){
         indice = tmp->fils_gauche->valeur;
 

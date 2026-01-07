@@ -1,0 +1,27 @@
+main {
+    var res: bool;
+
+    bool fct est_bissextile(annee: int){
+        var ok: bool;
+        var non: bool;
+
+        ok = (true);
+        non = (false);
+
+        if ((annee % 4) == 0) then {
+            if ((annee % 100) == 0) then {
+                if ((annee % 400) == 0) then {
+                    ret ok;
+                } else {
+                    ret non;
+                }
+            } else {
+                ret ok;
+            }
+        } else {
+            ret non;
+        }
+    }
+
+    res = est_bissextile(2026);
+}

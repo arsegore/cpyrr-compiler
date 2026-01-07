@@ -4,6 +4,7 @@
 #include "tables/tab_lexico.h"
 #include "tables/tab_rep.h"
 #include "tables/tab_code.h"
+#include "tables/tab_reels.h"
 
 #define BUFFER_LIGNE() \
     do { \
@@ -74,9 +75,9 @@ none                 {BUFFER_LIGNE(); return(RIEN);}
                         return(IDF);
                      }
 {INT}                {yylval.intval = atoi(yytext); BUFFER_LIGNE(); return(CSTE_ENTIERE);}
-\'([^\'\\]|\\.)\'    {BUFFER_LIGNE(); return(CSTE_CHAR);}
+\'([^\'\\]|\\.)\'    {yylval.intval = (int) *(yytext + 1); BUFFER_LIGNE(); return(CSTE_CHAR); /* remonte le code ascii, décalage de 1 sur le ptr car 1er char de yytext = ' */}
 \"([^\"\\]|\\.)*\"   {BUFFER_LIGNE(); return(CSTE_CHAINE);}
-{INT}"."{INT}        {BUFFER_LIGNE(); return(CSTE_REELLE);}
+{INT}"."{INT}        {yylval.intval = inserer_reel(atof(yytext)); BUFFER_LIGNE(); return(CSTE_REELLE);}
 " "                  {BUFFER_LIGNE();}
 \t                   {BUFFER_LIGNE();}
 \n                   {ajouter_ligne_code(ligne); pos = 0; ligne[0] = '\0'; ligne_courante++;}

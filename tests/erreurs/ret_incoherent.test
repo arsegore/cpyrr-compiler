@@ -1,0 +1,11 @@
+main {
+    char fct blabla(x: int){
+        if (x > 3) then {
+            ret 'a';
+        } else {
+            ret 2;
+        }
+    }
+
+    none;
+}

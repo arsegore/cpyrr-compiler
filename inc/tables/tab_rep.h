@@ -34,6 +34,7 @@ extern int idx_type_element;
 
 /**
  * Initialise la table de représentation
+ * @author :  Louis
  */
 void init_tab_rep();
 
@@ -43,6 +44,7 @@ void init_tab_rep();
  * 
  * @param depart Indice de départ
  * @param arrivee Indice d'arrivée
+ * @author :  Louis
  */
 void afficher_tab_rep(int depart, int arrivee);
 
@@ -50,6 +52,7 @@ void afficher_tab_rep(int depart, int arrivee);
  * Insère val dans la première case libre de la table rep
  * 
  * @param val La valeur à insérer
+ * @author :  Louis
  */
 void inserer_tab_rep(int val);
 
@@ -58,6 +61,7 @@ void inserer_tab_rep(int val);
  * à l'indice préparé par la fonction "début" correspondante
  * 
  * @param val Le nb d'éléments à insérer
+ * @author :  Louis
  */
 void inserer_tab_rep_nb_elem(int val);
 
@@ -66,31 +70,42 @@ void inserer_tab_rep_nb_elem(int val);
  * à l'indice préparé par la fonction debut_tab
  * 
  * @param val Le type des élements du tableau
+ * @author :  Louis
  */
 void inserer_tab_rep_type(int type);
 
 /*------------------------------------------------------*/
 /* Fonctions appelées pour préparer les indices globaux */
 /*------------------------------------------------------*/
+/** @author :  Louis */
 void debut_proc();
 
+/** @author :  Louis */
 void debut_struct();
 
 /**
  * @param type Le type de retour de la fonction
+ * @author :  Louis 
+ * @author :  Adam
  */
 void debut_fct(int type);
 
+/** @author :  Louis */
 void debut_depl();
 
+/** @author :  Louis */
 void debut_tab();
 
+/** @author :  Louis */
 void incr_nb_dim();
 
+/** @author :  Louis */
 void incr_nb_champ();
 
+/** @author :  Baptiste */
 void incr_depl(int num_lexico);
 
+/** @author :  Baptiste */
 void incr_param();
 
 #endif

@@ -1,0 +1,9 @@
+main {
+    var x: char;
+
+    if x then {
+        none;
+    } else {
+        none;
+    }
+}

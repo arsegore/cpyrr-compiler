@@ -15,7 +15,7 @@
 typedef struct {
     int taille;
     int nis;
-    arbre *arbre_region;
+    arbre arbre_region;
 }cellule_region;
 
 typedef cellule_region tab_region_t[TAILLE_TAB_REGIONS];
@@ -24,39 +24,60 @@ extern tab_region_t tab_region;
 
 /**
  * Initialise la table des régions
+ * 
+ * @author :  Adam
  */
 void init_tab_regions();
 
 /**
  * Insère une nouvelle région dans la table, remplit automatiquement son
  * champ NIS
+ * 
+ * @author :  Adam
+ * @author :  Louis
  */
 void inserer_region(int taille);
 
 /**
- * Affiche la table des régions de depart à arrivee, ou entierement si les
- * deux valeurs sont égales à -1
- *
- * @param depart : L'indice d'où l'affichage commence
- * @param arrivee : L'indice de fin de l'affichage
+ * Affiche la table des régions
+ * 
+ * @author :  Adam
  */
-void afficher_tab_regions(int depart, int arrivee);
+void afficher_tab_regions();
 
 /**
  *  Modifie le champ taille_exec d'une région
  *
  * @param num_region Le numéro de la région
  * @param taille Sa nouvelle taille à l'éxécution
+ * @author :  Baptiste
  */
 void modifier_taille(int num_region, int taille);
+
+/**
+ * Calcule la taille finale d'une région 
+ * 
+ * @param num_region : Le numéro de la région
+ * @param deplacement_final : Le déplacement final en sortant de la région
+ * @author :  Adam
+ */
+void mettre_a_jour_taille_region(int num_region, int deplacement_final);
+
+/**
+ * Evalue la taille de la région 0
+ * 
+ * @author :  Adam
+ */
+void evaluer_taille_programme();
 
 /**
  * Modifie le pointeur vers l'arbre de la région d'une région
  *
  * @param num_region Le numéro de la région
- * @param a Le pointeur vers l'arbre de la région
+ * @param a L'arbre de la région
+ * @author :  Adam
  */
-void modifier_arbre_region(int num_region, arbre *a);
+void modifier_arbre_region(int num_region, arbre a);
 
 
 

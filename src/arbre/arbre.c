@@ -4,6 +4,8 @@
 #include "tables/tab_lexico.h"
 #include "tables/tab_decla.h"
 #include "tables/tab_rep.h"
+#include "tables/tab_regions.h"
+#include "tables/tab_reels.h"
 #include "association_noms/association_noms.h"
 #include "verif_sem/verif_sem.h"
 
@@ -94,7 +96,14 @@ void afficher_nat_noeud(arbre a){
 
     if (a->nature == A_IDF || a->nature == A_CHAMP) {
         printf(RESET ")[" MAGENTA "%s" RESET "][" VERT "%d" RESET "]\n", recuperer_lexeme(a->valeur), a->decla);
-    } else {
+    } else if (a->nature == A_CSTE_REELLE) {
+        printf(RESET ")[" MAGENTA "%f" RESET "][" VERT "%d" RESET "]\n", tab_reels[a->valeur], a->decla);
+    
+    } else if (a->nature == A_CSTE_CHAR) {
+        printf(RESET ")[" MAGENTA "%c" RESET "][" VERT "%d" RESET "]\n", (char) a->valeur, a->decla);
+
+    }
+    else {
         printf(RESET ")[" MAGENTA "%d" RESET "][" VERT "%d" RESET "]\n", a->valeur, a->decla);
     }
 }
@@ -119,156 +128,15 @@ void afficher_arbre(arbre a){
     afficher_arbre_aux(a, 0);
 }
 
-void execute_arbre(arbre a) {
-    int i, v;
-    switch (a->nature) {
-        
-        case A_IDF:
-            break;
-        case A_CSTE_ENTIERE:
-            break;
-        case A_CSTE_BOOL:
-            break;
-        case A_CSTE_CHAINE:
-            break;
-        case A_CSTE_CHAR:
-            break;
-        case A_CSTE_REELLE:
-            break;
+void afficher_arbres_regions(){
+    int i = 0;
 
-        case A_AFFECT:
-            //i = recuperer_case_variable(a->fils_gauche); // fct à faire
-            v = evalue_arbre_int(a->fils_gauche->frere_droit);
-            //stocker_pile_donnees(i, v); // fct à faire
-            break;
-        case A_PLUS:
-            break;
-        case A_MOINS:
-            break;
-        case A_MULT:
-            break;
-        case A_DIV:
-            break;
-        case A_MOD:
-            break;
-
-        case A_RIEN:
-            break;
-
-        case A_APPEL_PROC:
-            // gerer pile (mise en place de "pointeurs")
-            execute_arbre(a);
-            // gerer pile
-            break;
-        case A_APPEL_FCT:
-            // gerer pile
-            //v = execute_arbre_fct(a); // fct à faire
-            // gerer pile
-            break;
-        // normalement on aura pas ça :
-        /* case A_RET:
-            break;*/
-        // vu qu'on est pas dans une fonction
-
-        case A_LISTE_I:
-            execute_arbre(a->fils_gauche);
-            execute_arbre(a->fils_gauche->frere_droit);
-            break;
-
-        case A_TANT_QUE:
-            break;
-        case A_SI_ALORS_SINON:
-            break;
-
-        case A_ET:
-            break;
-        case A_OU:
-            break;
-        case A_NON:
-            break;
-        case A_EGAL:
-            break;
-        case A_DIFF:
-            break;
-        case A_INF:
-            break;
-        case A_SUP:
-            break;
-        case A_INFEGAL:
-            break;
-        case A_SUPEGAL:
-            break;
-
-    }
-}
-
-int evalue_arbre_int(arbre a) {
-    int i;
-    switch (a->nature) {
-
-        case A_IDF:
-            //i = recuperer_case_variable(a); // fct à faire
-            //return (valeur_pile(i)); // fct à faire
-            break;
-
-        case A_CSTE_ENTIERE:
-            return a->valeur;
-            break;
-
-        case A_PLUS:
-            return evalue_arbre_int(a->fils_gauche) + evalue_arbre_int(a->fils_gauche->frere_droit);
-            break;
-        case A_MOINS:
-            return evalue_arbre_int(a->fils_gauche) - evalue_arbre_int(a->fils_gauche->frere_droit);
-            break;
-        case A_MULT:
-            return evalue_arbre_int(a->fils_gauche) * evalue_arbre_int(a->fils_gauche->frere_droit);
-            break;
-        case A_DIV:
-            return evalue_arbre_int(a->fils_gauche) / evalue_arbre_int(a->fils_gauche->frere_droit);
-            break;
-        case A_MOD:
-            return evalue_arbre_int(a->fils_gauche) % evalue_arbre_int(a->fils_gauche->frere_droit);
-            break;
-
-        case A_EGAL:
-            if (evalue_arbre_int(a->fils_gauche) == evalue_arbre_int(a->fils_gauche->frere_droit)) {
-                return 1;
-            }
-            return 0;
-            break;
-        case A_DIFF:
-            if (evalue_arbre_int(a->fils_gauche) != evalue_arbre_int(a->fils_gauche->frere_droit)) {
-                return 1;
-            }
-            return 0;
-            break;
-        case A_INF:
-            if (evalue_arbre_int(a->fils_gauche) < evalue_arbre_int(a->fils_gauche->frere_droit)) {
-                return 1;
-            }
-            return 0;
-            break;
-        case A_SUP:
-            if (evalue_arbre_int(a->fils_gauche) > evalue_arbre_int(a->fils_gauche->frere_droit)) {
-                return 1;
-            }
-            return 0;
-            break;
-        case A_INFEGAL:
-            if (evalue_arbre_int(a->fils_gauche) <= evalue_arbre_int(a->fils_gauche->frere_droit)) {
-                return 1;
-            }
-            return 0;
-            break;
-        case A_SUPEGAL:
-            if (evalue_arbre_int(a->fils_gauche) >= evalue_arbre_int(a->fils_gauche->frere_droit)) {
-                return 1;
-            }
-            return 0;
-            break;
-    }
-    return 0; // pr enlever un warning, à revoir
+    while (tab_region[i].taille > -1) {
+        printf("\n --- Arbre de la région %d ---\n", i);
+        afficher_arbre(tab_region[i].arbre_region);
+        printf("\n -----------------------------\n");
+        i++;
+    }   
 }
 
 // CONSTANTES
@@ -292,7 +160,7 @@ arbre a_cr_cste_char(int valeur){
     return creer_noeud(A_CSTE_CHAR, valeur, -1);
 }
 
-arbre a_cr_cste_reelle(int valeur){
+arbre a_cr_cste_reelle(float valeur){
     return creer_noeud(A_CSTE_REELLE, valeur, -1);
 }
 
@@ -504,8 +372,6 @@ int trouver_type_champ(int id_type_struct, int num_lex_champ) {
     int id_rep = tab_decla[id_type_struct][DESCRIPTION];
     int nb_champs = tab_rep[id_rep];
 
-    printf("id type struct = %d\n", id_type_struct);
-
     if (id_type_struct == -1 || tab_decla[id_type_struct][NATURE] != N_STRUCT) {
         return -1; 
     }
@@ -514,6 +380,24 @@ int trouver_type_champ(int id_type_struct, int num_lex_champ) {
         base_champ = id_rep + 1 + (i * 3);
         if (tab_rep[base_champ] == num_lex_champ) {
             return tab_rep[base_champ + 1];
+        }
+    }
+    return -1;
+}
+
+int trouver_exec_champ(int id_type_struct, int num_lex_champ) {
+    int base_champ;
+    int id_rep = tab_decla[id_type_struct][DESCRIPTION];
+    int nb_champs = tab_rep[id_rep];
+
+    if (id_type_struct == -1 || tab_decla[id_type_struct][NATURE] != N_STRUCT) {
+        return -1; 
+    }
+    
+    for (int i = 0; i < nb_champs; i++) {
+        base_champ = id_rep + 1 + (i * 3);
+        if (tab_rep[base_champ] == num_lex_champ) {
+            return tab_rep[base_champ + 2];
         }
     }
     return -1;
@@ -528,12 +412,17 @@ int recuperer_type_noeud(arbre a) {
     if (a == NULL) return -1;
 
     switch (a->nature) {
-        case A_CSTE_ENTIERE: return 0; // TREETYPE_ENTIER
-        case A_CSTE_REELLE:  return 1; // TREETYPE_REEL
-        case A_CSTE_BOOL:    return 2; // TREETYPE_BOOL
-        case A_CSTE_CHAR:    return 3; // TREETYPE_CHAR
+        case A_CSTE_ENTIERE: return TREETYPE_ENTIER;
+        case A_CSTE_REELLE:  return TREETYPE_REEL;
+        case A_CSTE_BOOL:    return TREETYPE_BOOL;
+        case A_CSTE_CHAR:    return TREETYPE_CHAR;
 
         case A_IDF:
+            if (a->fils_gauche){
+                if (a->fils_gauche->nature == A_LISTE_DIM){
+                    return trouver_type_tab(a->decla);
+                }
+            }
             if (a->decla != -1) return tab_decla[a->decla][DESCRIPTION];
             break;
 
@@ -542,14 +431,13 @@ int recuperer_type_noeud(arbre a) {
 
         case A_ET: case A_OU: case A_NON:
         case A_EGAL: case A_DIFF: case A_INF: case A_SUP: case A_INFEGAL: case A_SUPEGAL:
-            return 2; // TREETYPE_BOOL
+            return TREETYPE_BOOL;
 
         case A_APPEL_FCT:
             if (a->decla != -1) return tab_rep[tab_decla[a->decla][DESCRIPTION]];
             break;
             
-        case A_ACCES_STRUCT:
-            return evaluer_type_acces_champ(a->decla, a->fils_gauche);
+
 
         default:
             break;

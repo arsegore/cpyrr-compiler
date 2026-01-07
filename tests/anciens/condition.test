@@ -1,0 +1,31 @@
+main {
+  typedef Tab10: tab[0..10] of int;
+  typedef Point: struct {
+    x: int;
+    y: int;
+  };
+  typedef Quadrilatere: tab[0..3] of Point;
+
+  var q:Quadrilatere;
+
+  int fct f(x:int) {
+    ret 1 + 1;
+  }
+
+  proc test(blabla: char) {
+    none;
+  }
+
+  char fct fc(f: float){
+    if (f < 3.14) then {
+      ret 'a';
+    } else {
+      ret 'b';
+    }
+  }
+
+  q[0].x = 1;
+  q[0].y = 2;
+  
+  test('a');
+}

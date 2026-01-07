@@ -1,0 +1,5 @@
+main {
+    var x:int;
+
+    x = f(3);
+}

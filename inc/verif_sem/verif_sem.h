@@ -81,6 +81,7 @@ typedef struct {
  * @param type_erreur : Le code représentant le type d'erreur
  * @param id_decla : Le numéro de déclaration qui va bien (c contextuel)
  * @param ... : Les divers arguments des messages d'erreur
+ * @author :  Adam
  */
 err_sem *generer_erreur(int ligne, int colonne, int type_erreur, int id_decla, ...);
 
@@ -88,6 +89,7 @@ err_sem *generer_erreur(int ligne, int colonne, int type_erreur, int id_decla, .
  * Libére la mémoire allouée à une structure err_sem
  * 
  * @param e : L'erreur à supprimer
+ * @author :  Adam
  */
 void supprimer_erreur(err_sem *e);
 
@@ -95,6 +97,7 @@ void supprimer_erreur(err_sem *e);
  * Affiche une erreur sémantique
  * 
  * @param e : L'erreur à afficher
+ * @author :  Adam
  */
 void erreur_semantique(err_sem *e);
 
@@ -102,6 +105,7 @@ void erreur_semantique(err_sem *e);
  * Affiche une ligne du code source
  * 
  * @param num_ligne : Le numéro de la ligne ) afficher
+ * @author :  Adam
  */
 void afficher_ligne_source(int num_ligne);
 
@@ -110,6 +114,7 @@ void afficher_ligne_source(int num_ligne);
  * 
  * @param debut : Le numéro de la ligne de début du bloc
  * @param fin : Le numéro de la ligne de fin du bloc
+ * @author :  Adam
  */
 void afficher_bloc_source(int debut, int fin);
 
@@ -118,6 +123,7 @@ void afficher_bloc_source(int debut, int fin);
  * 
  * @param id_decla_parent : Le numéro de déclaration de la variable dans laquelle se font les accès
  * @param liste_acces : L'arbre représentant la liste d'accès
+ * @author :  Adam
  */
 int evaluer_type_acces_champ(int id_decla_parent, arbre liste_acces);
 
@@ -127,6 +133,7 @@ int evaluer_type_acces_champ(int id_decla_parent, arbre liste_acces);
  * @param num_lex : Le numéro du léxème
  * @param nature : La nature recherchée
  * @param ligne : La ligne à laquelle est lancée la verif 
+ * @author :  Adam
  */
 int verif_decla_idf(int num_lex, int nature, int ligne);
 
@@ -137,6 +144,7 @@ int verif_decla_idf(int num_lex, int nature, int ligne);
  * @param t_dest : Le type attendu a gauche
  * @param t_src : Le type passé à droite
  * @param ligne : La ligne à laquelle est lancée la verif 
+ * @author :  Adam
  */
 void verif_compatibilite_affect(int num_lex, int t_dest, int t_src, int ligne);
 
@@ -145,6 +153,7 @@ void verif_compatibilite_affect(int num_lex, int t_dest, int t_src, int ligne);
  * 
  * @param t_recu : Le type reçu dans la condition
  * @param ligne : La ligne à laquelle est lancée la verif 
+ * @author :  Adam
  */
 void verif_condition_bool(int t_recu, int ligne);
 
@@ -155,6 +164,7 @@ void verif_condition_bool(int t_recu, int ligne);
  * @param nb_attendu : Le nombre d'arguments attendus
  * @param nb_recu : Le nombre d'arguments recus
  * @param ligne : La ligne à laquelle est lancée la verif 
+ * @author :  Adam
  */
 void verif_nombre_args(int num_lex, int nb_attendu, int nb_recu, int ligne);
 
@@ -163,6 +173,7 @@ void verif_nombre_args(int num_lex, int nb_attendu, int nb_recu, int ligne);
  * 
  * @param num_lex : Le numéro lexico de la fct/proc
  * @param ligne : La ligne à laquelle est lancée la verif 
+ * @author :  Adam
  */
 int verif_decla_appel(int num_lex, int ligne);
 
@@ -171,6 +182,7 @@ int verif_decla_appel(int num_lex, int ligne);
  * 
  * @param num_lex : Le numéro lexico de la fct/proc
  * @param decla : Le numéro de déclaration de la fct/proc
+ * @author :  Adam
  */
 void verif_types_args(int num_lex, int decla, arbre liste_args, int ligne);
 
@@ -182,6 +194,7 @@ void verif_types_args(int num_lex, int decla, arbre liste_args, int ligne);
  * @param region : La région dans laquelle chercher (sa scope, donc aussi régions englobantes)
  * @param nature : La nature de la déclaration 
  * @param ligne : La ligne à laquelle a été lancée la verif
+ * @author :  Adam
  */
 void verif_double_decla(int num_lex, int region, int nature, int ligne);
 
@@ -194,10 +207,9 @@ void verif_double_decla(int num_lex, int region, int nature, int ligne);
  * @param t_recu : Le type de retour recu
  * @param decla : Le numero de décla de la fct/proc
  * @param ligne : La ligne à laquelle a été lancée la verif
+ * @author :  Adam
  */
 void verif_type_retour(int num_lex, int t_attendu, int t_recu, int decla, int ligne);
-
-int verif_appel_correct(int idf, int decla, int ligne_courante, arbre liste_args, arbre appel);
 
 /**
 * Verifie que les dimension données lors d'un acces a un tableau sont coherente

@@ -6,7 +6,7 @@ int pile_regions[150];
 
 int nb_regions_pile = 0;
 
-int num_region_courante;
+int num_region_courante = 0;
 
 void init_pile_regions() {
     int i;
