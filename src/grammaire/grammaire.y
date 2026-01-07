@@ -10,7 +10,6 @@
  */ 
 
 %{
-    #include <stdio.h>
     #include <stdlib.h>
     #include "tables/tab_lexico.h"
     #include "tables/tab_decla.h"
@@ -23,8 +22,6 @@
     #include "save/save.h"
     #include "verif_sem/verif_sem.h"
     #include "arbre/arbre.h"
-    #include "machine_virtuelle/machine_virtuelle.h"
-
     int yylex();
     int yyerror(char *msg);
     extern int ligne_courante;
@@ -81,7 +78,7 @@ programme             : PROG {
                           inserer_region(deplacement);
                         }
                         AO corps AF {
-                          mettre_a_jour_taille_region(num_region_courante, deplacement);
+                          evaluer_taille_programme();
                           depiler_pile_regions();
                         }
                       ;
@@ -225,11 +222,11 @@ declaration_procedure : PROC
                           remplir_nature(decla_courante, N_PROC); 
                           remplir_region(decla_courante, num_region_courante); 
                           remplir_desc(decla_courante, id_rep_courante);
-                          remplir_exec(decla_courante);
                         } 
                         PO {
                           inserer_region(deplacement);
                           debut_depl();
+                          remplir_exec(decla_courante);
                         }
                         liste_param PF {
                           inserer_tab_rep_nb_elem(nbparam);
@@ -255,10 +252,10 @@ declaration_fonction  : nom_type FCT IDF {
                           remplir_nature(decla_courante, N_FCT); 
                           remplir_region(decla_courante, num_region_courante); 
                           remplir_desc(decla_courante, id_rep_courante);
-                          remplir_exec(decla_courante);
                         } PO {
                             inserer_region(deplacement);
                             debut_depl(); 
+                            remplir_exec(decla_courante);
                         } liste_param PF {
                             inserer_tab_rep_nb_elem(nbparam);
                         } AO corps AF {
@@ -492,7 +489,13 @@ appel                 : IDF PO liste_args PF {
                         }
                       ;
 
-liste_args            : exp {
+liste_args            : //aucun arg 
+                          {
+                            $$.treeptr = NULL;
+                            $$.treetype = -1;
+                            $$.lineno = ligne_courante;
+                          }
+                        | exp {
                           $$.treeptr = a_cr_liste_arg_fin($1.treeptr);
                           $$.treetype = $1.treetype;
                           $$.lineno = $1.lineno;
@@ -679,32 +682,4 @@ expb3                 : expa SUPEGAL expa {
 int yyerror(char *msg) {
     printf("Erreur de syntaxe : %s\n", msg);
     return 1;
-}
-
-int main(int argc, char **argv){
-    init_tab_code();
-    init_tab_lexico();
-    init_tab_decla();
-    init_tab_rep();
-    init_pile_decla();
-    init_tab_regions();
-
-    int resultat = yyparse();
-
-    if (resultat != 0 || nb_err_sem > 0) {
-        printf("\n[!] Analyse terminée avec %d erreur(s).\n", nb_err_sem);
-    } else {
-        printf("\n[OK] Analyse réussie.\n");
-    }
-
-    afficher_tab_decla();
-    afficher_tab_rep(0, 15);
-    afficher_tab_regions(0, 15);
-    afficher_tab_lexico(0,15);
-    afficher_arbres_regions();
-
-    lancer_execution();
-
-
-    exit(EXIT_SUCCESS);
 }

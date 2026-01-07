@@ -73,9 +73,6 @@ void debut_region(int num_decla) {
     int nouvelle_bc = taille_pile_exec;
     int i;
 
-    printf("region = %d\n", region);
-    allouer_taille(tab_region[region_courante].taille);
-
     // NIS croissant de n à n+1
     if (p == n+1){
         empiler_pile_exec_chainage(ancienne_bc); // copie du chainage dynamique
@@ -120,11 +117,11 @@ void execute_arbre(arbre a) {
             break;
         case A_AFFECT:
             printf("Entrée dans un noeud A_AFFECT\n");
-            valeur = evaluer_expression(a->fils_gauche->frere_droit);
-            adresse = recuperer_case_variable(a->fils_gauche);
-            pile_exec[adresse].contenu.donnees.valeur = valeur;
-            pile_exec[adresse].contenu.donnees.type_var = recuperer_type_noeud(a->fils_gauche); //fg et fd sont du mm type (sémantique oblige)
-            pile_exec[adresse].contenu.donnees.lexeme = recuperer_lexeme(a->fils_gauche->valeur);
+            // valeur = evaluer_expression(a->fils_gauche->frere_droit);
+            // adresse = recuperer_case_variable(a->fils_gauche);
+            // pile_exec[adresse].contenu.donnees.valeur = valeur;
+            // pile_exec[adresse].contenu.donnees.type_var = recuperer_type_noeud(a->fils_gauche); //fg et fd sont du mm type (sémantique oblige)
+            // pile_exec[adresse].contenu.donnees.lexeme = recuperer_lexeme(a->fils_gauche->valeur);
             printf("Sortie d'un noeud A_AFFECT\n");
             break;
         case A_SI_ALORS:
@@ -155,17 +152,67 @@ void execute_arbre(arbre a) {
             printf("Entrée dans un noeud A_RET\n");
             valeur_retour = evaluer_expression(a->fils_gauche);
             retourne = 1;
-            break;
             printf("Sortie d'un noeud A_RET\n");
+            break;
         case A_APPEL_FCT: case A_APPEL_PROC:
             printf("Entrée dans un noeud A_APPEL (FCT OU PROC)\n");
             afficher_arbre(a->fils_gauche);
-            debut_region(a->fils_gauche->decla);
-            break;
+            appel_region(a);
             printf("Sortie d'un noeud A_APPEL (FCT OU PROC)\n");
+            break;
         default:
             break;
     }
+}
+
+void appel_region(arbre a) {
+    int decla;
+    int region;
+    int nb_args;
+    int i;
+    int bc_appelante;
+    int region_appelante;
+    int adresse_param;
+    val args[50];
+    int type[50];
+    arbre arg_courant;
+    arbre idf_noeud;
+
+    nb_args = 0;
+    idf_noeud = a->fils_gauche;
+    decla = idf_noeud->decla;
+    region = tab_decla[decla][EXECUTION];
+    arg_courant = idf_noeud->frere_droit;
+
+    while (arg_courant != NULL && arg_courant->nature == A_LISTE_ARG) {
+        if (arg_courant->fils_gauche != NULL) {
+            args[nb_args] = evaluer_expression(arg_courant->fils_gauche);
+            type[nb_args] = recuperer_type_noeud(arg_courant->fils_gauche);
+            nb_args++;
+        }
+        arg_courant = arg_courant->frere_droit;
+    }
+    
+    bc_appelante = BC;
+    region_appelante = region_courante;
+
+    debut_region(decla);
+    allouer_taille(tab_region[region].taille - (tab_region[region].nis + 1)); // les chainages sont déjà empilés
+
+    for (i = 0; i < nb_args; i++) {
+        adresse_param = BC + tab_region[region].nis + 1 + i;
+        pile_exec[adresse_param].contenu.donnees.valeur = args[i];
+        pile_exec[adresse_param].contenu.donnees.type_var = type[i];
+    }
+
+    afficher_pile_exec();
+
+    execute_arbre(tab_region[region].arbre_region);
+
+    retourne = 0;
+    region_courante = region_appelante;
+    taille_pile_exec = BC;
+    BC = bc_appelante;
 }
 
 int evaluer_arbre_int(arbre a) {
@@ -286,11 +333,11 @@ void lancer_execution() {
     printf("\n --- L'éxécution commence ... --- \n");
     // on lance l'éxécution sur la région 0
     allouer_taille(tab_region[0].taille);
+    afficher_pile_exec();
     if (tab_region[0].arbre_region != NULL) {
         execute_arbre(tab_region[0].arbre_region);
     }
     printf("\n ------ Éxécution terminée ----- \n");
 
-    afficher_pile_exec();
 }
 

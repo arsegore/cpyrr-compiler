@@ -34,13 +34,9 @@ void init_tab_regions();
 void inserer_region(int taille);
 
 /**
- * Affiche la table des régions de depart à arrivee, ou entierement si les
- * deux valeurs sont égales à -1
- *
- * @param depart : L'indice d'où l'affichage commence
- * @param arrivee : L'indice de fin de l'affichage
+ * Affiche la table des régions
  */
-void afficher_tab_regions(int depart, int arrivee);
+void afficher_tab_regions();
 
 /**
  *  Modifie le champ taille_exec d'une région
@@ -57,6 +53,11 @@ void modifier_taille(int num_region, int taille);
  * @param deplacement_final : Le déplacement final en sortant de la région
  */
 void mettre_a_jour_taille_region(int num_region, int deplacement_final);
+
+/**
+ * Evalue la taille de la région 0
+ */
+void evaluer_taille_programme();
 
 /**
  * Modifie le pointeur vers l'arbre de la région d'une région

@@ -157,7 +157,6 @@ void remplir_exec(int num_decla){
         break;
     case N_PROC:
     case N_FCT:
-        printf("num_region_courante = %d\n", num_region_courante);
         tab_decla[num_decla][EXECUTION] = num_region_courante;
         break;
     }
@@ -183,10 +182,10 @@ int taille_type(int num_type){
     switch(nature){
     case N_STRUCT:
         for(i = commencement+2; i < commencement+(nb_champs * 3); i +=3){
-            printf("Le champ %s est de type %s (num decla = %d)\n",
-                   tab_lexico[tab_rep[i-1]].lexeme,
-                   tab_lexico[tab_rep[i]].lexeme,
-                   tab_rep[i]);
+            // printf("Le champ %s est de type %s (num decla = %d)\n",
+            //        tab_lexico[tab_rep[i-1]].lexeme,
+            //        tab_lexico[tab_rep[i]].lexeme,
+            //        tab_rep[i]);
             acc += tab_decla[tab_rep[i]][EXECUTION];
         }
         break;

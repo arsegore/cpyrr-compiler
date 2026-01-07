@@ -1,0 +1,24 @@
+main {
+    typedef Point: struct {
+        x: float;
+        y: float;
+    };
+
+    typedef Cercle: struct {
+        centre: Point;
+        rayon: float;
+    };
+
+    var c: Cercle;
+
+    proc deplace_cercle(nx: float, ny: float) {
+        c.centre.x = nx;
+        c.centre.y = ny;
+    }
+
+    c.centre.x = 0.0;
+    c.centre.y = 0.0;
+    c.rayon = 2.0;
+
+    deplace_cercle(1.1, 3.14);
+}

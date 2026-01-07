@@ -32,20 +32,36 @@ void empiler_pile_exec_variable(var variable) {
 }
 
 void afficher_pile_exec() {
-    printf("\n--- PILE À L'EXECUTION (BC: %d, TAILLE: %d) ---\n", base_courante, taille_pile_exec);
-    for (int i = 0; i < taille_pile_exec; i++) {
-        printf("[%3d] ", i);
+    int i;
+    int t;
+    char *nom_var;
+
+    printf("\n----------- PILE A L'EXECUTION -----------\n");
+
+    for (i = 0; i < taille_pile_exec; i++) {
+        printf("[%03d] ", i);
+
         if (pile_exec[i].type == CHAINAGE) {
-            printf("| CHAINAGE -> %d |\n", pile_exec[i].contenu.chainage);
+            printf("| Chaînage -> %5d", pile_exec[i].contenu.chainage);
+            printf("                 |");
         } else {
-            var *v = &pile_exec[i].contenu.donnees;
-            printf("| VAR %-10s | Type: %-7s | Val: ", v->lexeme, recup_nom_type(v->type_var));
-            if (v->type_var == 0) printf("%d", v->valeur.entier);
-            else if (v->type_var == 1) printf("%f", v->valeur.reel);
-            else if (v->type_var == 2) printf("%s", v->valeur.bool ? "true" : "false");
-            else if (v->type_var == 3) printf("%c", v->valeur.caractere);
-            printf(" |\n");
+            t = pile_exec[i].contenu.donnees.type_var;
+            nom_var = pile_exec[i].contenu.donnees.lexeme;
+
+            // Protection si le lexeme est NULL
+            printf("| %-10s | Type:%d | Valeur: ", (nom_var ? nom_var : "cellule vide"), t);
+
+            if (t == TREETYPE_ENTIER) printf("%d", pile_exec[i].contenu.donnees.valeur.entier);
+            else if (t == TREETYPE_REEL) printf("%f", pile_exec[i].contenu.donnees.valeur.reel);
+            else if (t == TREETYPE_BOOL) printf("%s", pile_exec[i].contenu.donnees.valeur.bool ? "T" : "F");
+            else if (t == TREETYPE_CHAR) printf("'%c'", pile_exec[i].contenu.donnees.valeur.caractere);
+            else printf("?");
+            printf("|");
+
         }
+        if (i == BC) printf(" <--[BC]");
+        printf("\n");
+        printf("-------------------------------------------\n");
     }
 }
 

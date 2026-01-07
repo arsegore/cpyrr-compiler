@@ -1,0 +1,20 @@
+main {
+    var x:int;
+
+    proc test2(){
+        none;
+    }
+
+    proc test(){
+        proc test3(){
+            test2();
+            none;
+        }
+
+        test3();
+    }
+
+    test();
+
+    none;
+}
